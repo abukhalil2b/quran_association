@@ -1,0 +1,51 @@
+.course-show-title{
+    background-color: #6a829c;
+    color: #fff;
+    width: 100%;
+    text-align: center;
+    font-size: 25px;
+    padding: 10px
+}
+
+
+.btn-container{
+	width: 100%;
+	margin: auto;
+	text-align: center;
+}
+
+.display-flex{
+	display: flex;
+}
+
+.display-flex span{
+	color:#6a829c;
+	padding: 0 5px;
+}
+
+.flex-center{
+	justify-content:center;
+}
+
+.course-show-learn{
+    color: #6a829c;
+    width: 100%;
+    font-size: 25px;
+}
+.details{
+	margin-right: 10px;
+}
+.text-lg{
+	font-size: 20px;
+}
+
+.course-show-avatar{
+    border-radius: 50%;
+    border: 1px solid #6a829c;
+    width: 50px;
+    height: 50px;
+}
+.course-show-username{
+	margin: 10px;
+    font-weight: bold;
+}

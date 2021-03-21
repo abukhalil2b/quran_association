@@ -1,0 +1,46 @@
+<?php
+
+return [
+
+	'Please enter your password to confirm you would like to log out of your other browser sessions across all of your devices.'=>'يرجى إدخال كلمة المرور الخاصة بك لتأكيد رغبتك في تسجيل الخروج من جلسات المتصفح الأخرى عبر جميع أجهزتك.',
+	'Log Out Other Browser Sessions'=>'تسجيل الخروج جلسات المتصفح الأخرى',
+	'Last active'=>'النشاط الأخير',
+	'This device'=>'هذا الجهاز',
+	'If necessary, you may log out of all of your other browser sessions across all of your devices. Some of your recent sessions are listed below; however, this list may not be exhaustive. If you feel your account has been compromised, you should also update your password.'=>'إذا لزم الأمر ، يمكنك تسجيل الخروج من جميع جلسات المتصفح الأخرى عبر جميع أجهزتك. بعض جلساتك الأخيرة مذكورة أدناه ؛ ومع ذلك ، قد لا تكون هذه القائمة شاملة. إذا شعرت أنه تم اختراق حسابك ، يجب عليك أيضًا تحديث كلمة المرور الخاصة بك.',
+	'Browser Sessions'=>'جلسات المتصفح',
+	'Manage and log out your active sessions on other browsers and devices.'=>'إدارة جلساتك النشطة وتسجيل الخروج منها على متصفحات وأجهزة أخرى.',
+	'Cancel'=>'إلغاء',
+	'Are you sure you want to delete your account? Once your account is deleted, all of its resources and data will be permanently deleted. Please enter your password to confirm you would like to permanently delete your account.'=>'هل انت متأكد انك تريد حذف حسابك؟ بمجرد حذف حسابك ، سيتم حذف جميع موارده وبياناته نهائيًا. الرجاء إدخال كلمة المرور الخاصة بك لتأكيد رغبتك في حذف حسابك بشكل دائم.',
+	'Once your account is deleted, all of its resources and data will be permanently deleted. Before deleting your account, please download any data or information that you wish to retain.'=>'بمجرد حذف حسابك ، سيتم حذف جميع موارده وبياناته نهائيًا. قبل حذف حسابك ، يرجى تنزيل أي بيانات أو معلومات ترغب في الاحتفاظ بها.',
+	'Permanently delete your account.'=>'احذف حسابك بشكل دائم.',
+	'Delete Account'=>'حذف الحساب',
+	'Profile'=>'الملف الشخصي',
+	'Email'=>'البريد الإلكتروني',
+	'Password'=>'كلمة المرور',
+	'Remember me'=>'تذكرني',
+	'Forgot your password?'=>'هل نسيت كلمة المرور',
+	'Log in'=>'تسجيل الدخول',
+	'Log Out'=>'تسجيل الخروج',
+	'Manage Account'=>'إدارة الحساب',
+	'Dashboard' => 'الواجهة الرئيسية',
+	'nowcourse' => 'الدورات الحالية',
+	'comingcourse' => 'الدورات القادمة',
+	'pastcourse' => 'الدورات الماضية',
+	'studentlist' => 'قائمة الطلاب',
+	'totalpoints' => 'مجموع النقاط',
+	'points' => 'النقاط',
+	'mycomingcourse' => 'دوراتي القادمة',
+	'mynowcourse' => 'دوراتي الحالية',
+	'mypastcourse' => 'دوراتي السابقة',
+	'you will learn from this course' => 'توصيف الدورة',
+
+	/* week days*/
+	'Sun' => 'الأحد',
+	'Mon' => 'الإثنين',
+	'Tue' => 'الثلاثاء',
+	'Wed' => 'الأربعاء',
+	'Thu' => 'الخميس',
+	'Fri' => 'الجمعة',
+	'Sat' => 'السبت',
+
+];

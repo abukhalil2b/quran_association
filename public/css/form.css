@@ -1,0 +1,45 @@
+body{
+	margin:0;
+	padding:0;
+	height: 100vh;
+}
+.img{
+	position: relative;
+	height: 100%;
+	width: 50%;
+	float: right;
+}
+
+img{
+	height: 100%;
+	position: absolute;
+}
+
+.content{
+	position: absolute;
+	width: 80%;
+}
+
+.controls{
+	width: 50%;
+	float: left;
+	top: 0;
+}
+
+button{
+	width: 100px;
+	height: 40px;
+	border-radius:5px;
+	border:1px solid #ddd;
+	color:purple;
+}
+
+.table{
+	width: 80vh;	
+	margin: 200px auto;
+}
+.table td{
+	background-color: #ccc;
+	width: 100%;
+
+}

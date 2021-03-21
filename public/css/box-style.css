@@ -1,0 +1,81 @@
+	.box{
+		border:1px solid;
+		border-radius:4px;
+		overflow: hidden;
+	}
+	.box-top{
+		font-weight: bolder;
+		padding: 2px;
+		text-align: center;
+		width: 100%;
+		border-bottom: 1px solid ;
+	}
+	.box-body{
+		padding: 2px;
+	}
+/* --- grey  ---*/
+	.box-grey{
+		border-color: #000;
+	}
+
+	.box-top-grey{
+		color: #000;
+		background-color: #ccc;
+		border-bottom: 1px solid #000;
+	}
+
+/* --- orange  ---*/
+	.box-orange{
+		border-color: #ff9800;
+	}
+
+	.box-top-orange{
+		color: #ff9800;
+		background-color: #ffefea;
+		border-bottom: 1px solid #ff9800;
+	}
+
+/* --- purple  ---*/
+	.box-purple{
+		border-color: #673ab7;
+	}
+
+	.box-top-purple{
+		color: #673ab7;
+		background-color: #decff9;
+		border-bottom: 1px solid #673ab7;
+	}
+
+/* --- green  ---*/
+	.box-green{
+		border-color: #009688;
+	}
+
+	.box-top-green{
+		color: #009688;
+		background-color: #c2f5f0;
+		border-bottom: 1px solid #009688;
+	}
+
+/* --- red  ---*/
+	.box-red{
+		border-color: #f44336;
+	}
+
+	.box-top-red{
+		color: #f44336;
+		background-color: #ffdbd8;
+		border-bottom: 1px solid #f44336;
+	}
+
+/* --- blue  ---*/
+	.box-blue{
+		border-color: #0025f5;
+	}
+
+	.box-top-blue{
+		color: #0025f5;
+		background-color: #dbd8ff;
+		border-bottom: 1px solid #0025f5;
+	}
+

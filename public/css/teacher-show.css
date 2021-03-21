@@ -1,0 +1,24 @@
+.display-flex{
+	display: flex;
+}
+
+.display-flex span{
+	color:#6a829c;
+	padding: 0 5px;
+}
+
+.flex-center{
+	justify-content:center;
+}
+
+
+.teacher-show-avatar{
+    border-radius: 50%;
+    border: 1px solid #6a829c;
+    width: 150px;
+    height: 150px;
+}
+.teacher-show-username{
+	margin: 10px;
+	font-weight: bold;
+}
