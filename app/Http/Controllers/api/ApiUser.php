@@ -13,8 +13,9 @@ use Illuminate\Http\Request;
 class ApiUser extends Controller
 {
 	public function getUserType(Request $request) {
+		$user = auth()->user();
 		$response = [
-            'userType' => $user->model;
+            'userType' => $user->model
         ];
         return response($response, 200);
 }
