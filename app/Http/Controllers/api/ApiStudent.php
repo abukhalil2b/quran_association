@@ -46,8 +46,8 @@ class ApiStudent extends Controller
 			'avatar'=>$student->avatar,
 			'memorizedJuzs'=>MemorizedJuzResource::collection($student->memorizedJuzs),
 			'memorizedSowars'=>MemorizedSowarResource::collection($student->memorizedSowars),
-			'todaymeeting'=>new ProgramReportResource($todaymeeting),
-			'nextmeeting'=>new ProgramReportResource($nextmeeting)
+			'todaymeeting'=>new ProgramReportResource($todaymeeting)||null,
+			'nextmeeting'=>new ProgramReportResource($nextmeeting)||null
 			];
 
 			$response = [

@@ -16,7 +16,7 @@ class DatabaseSeeder extends Seeder
     	User::truncate();
 		User::create([
 			'name' => 'إدارة البرنامج',
-			'email' => 'quran.alamarat@gmail.com',
+			'email' => 'abukhalil2b@gmail.com',
 			'userType' => 'superadmin',
 			'password' => Hash::make('11112222'),
 		]);

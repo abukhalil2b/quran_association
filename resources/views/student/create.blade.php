@@ -17,6 +17,12 @@
 	                            </td>
 	                    	</tr>
 	                    	<tr>
+	                    		<td>كلمة المرور</td>
+	                    		<td>
+		                          <input name="password" class="form-control" placeholder="كلمة المرور">
+	                            </td>
+	                    	</tr>
+	                    	<tr>
 	                    		<td>الجنس</td>
 	                    		<td>
 		                          <select name="gender" class="form-control">
