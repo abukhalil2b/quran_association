@@ -13,16 +13,16 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-  //   	User::truncate();
-		// User::create([
-		// 	'name' => 'إدارة البرنامج',
-		// 	'email' => 'quran.alamarat@gmail.com',
-		// 	'userType' => 'superadmin',
-		// 	'password' => Hash::make('11112222'),
-		// ]);
+    	User::truncate();
+		User::create([
+			'name' => 'إدارة البرنامج',
+			'email' => 'quran.alamarat@gmail.com',
+			'userType' => 'superadmin',
+			'password' => Hash::make('11112222'),
+		]);
         
-        // $this->call(SowarTableSeeder::class);
-        // $this->call(PageTableSeeder::class);
-        // $this->call(JuzTableSeeder::class);
+        $this->call(SowarTableSeeder::class);
+        $this->call(PageTableSeeder::class);
+        $this->call(JuzTableSeeder::class);
     }
 }

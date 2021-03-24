@@ -120,15 +120,14 @@ Route::prefix('student')->group(function () {
 	Route::get('index', [StudentController::class,'index'])->name('student.index');
 	Route::get('create', [StudentController::class,'create'])->name('student.create');
 	Route::post('store', [StudentController::class,'store'])->name('student.store');
-
-});	
-
-Route::prefix('admin')->group(function () {
-	Route::get('circle/{circle}/show', [StudentController::class,'circleShow'])
+	Route::get('{student}/circle/{circle}/show', [StudentController::class,'circleShow'])
 		->name('student.circle.show');
 	Route::post('mark/store',[MarkController::class,'store'])
 		->name('student.mark.store');
-	Route::get('trainee/index', [TraineeController::class,'index'])->name('trainee.index');
+});	
+
+Route::prefix('trainee')->group(function () {
+	Route::get('index', [TraineeController::class,'index'])->name('trainee.index');
 });
 
 Route::prefix('contractor')->group(function () {
@@ -156,7 +155,9 @@ Route::prefix('program')->group(function () {
 	Route::get('{program}/dashboard',[ProgramController::class,'dashboard'])->name('program.dashboard');
 	Route::get('index',[ProgramController::class,'index'])->name('program.index');
 	Route::get('{building}/create', [ProgramController::class,'create'])->name('program.create');
+	Route::get('{building}/quarterly/create', [ProgramController::class,'quarterlyCreate'])->name('program.quarterly.create');
 	Route::post('store', [ProgramController::class,'store'])->name('program.store');
+	Route::post('quarterly/store', [ProgramController::class,'quarterlyStore'])->name('program.quarterly.store');
 
 });
 

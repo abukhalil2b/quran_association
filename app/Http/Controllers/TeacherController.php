@@ -5,6 +5,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Supervisor;
 use App\Models\MemorizeProgram;
 use App\Models\Teacher;
+use App\Models\Circle;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -53,7 +54,8 @@ class TeacherController extends Controller {
 		switch ($loggedUser->userType) {
 		case 'usercenter':
 			$teacher = $teacher->checkUserPermission($loggedUser);
-			return view('teacher.show', compact('teacher'));
+			$circles = Circle::where('teacher_id',$teacher->id)->get();
+			return view('teacher.show', compact('teacher','circles'));
 			break;
 		case 'supervisor':
 			$supervisor = $loggedUser->supervisorAccount()->first();

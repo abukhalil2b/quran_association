@@ -49,7 +49,8 @@ class BuildingController extends Controller {
 				'user_id' => $loggedUser->id,
 			]);
 			$loggedUser->userBuildingPermission()->attach($building->id);
-			return redirect()->route('building.dashboard', ['building' => $building->id])->with(['status' => 'success', 'message' => 'تم']);
+			return redirect()->route('building.dashboard', ['building' => $building->id])
+			->with(['status' => 'success', 'message' => 'تم']);
 		}
 
 		die('أنت لاتملك الصلاحية');
@@ -58,20 +59,17 @@ class BuildingController extends Controller {
 
 	public function dashboard(Building $building) {
 		$loggedUser = auth()->user();
-
 		$building = Building::whereHas('userBuildingPermission', function ($q) use ($loggedUser, $building) {
 			$q->where('user_building_permission.user_id', $loggedUser->id)
 				->where('user_building_permission.building_id', $building->id);
 		})->first();
-
 		if (!$building) {
 			die('أنت لاتملك الصلاحية');
 		}
-
 		$thisyear = Year::orderby('id', 'desc')->first();
-		$programs = Program::where(['building_id' => $building->id, 'semester_id' => $thisyear->lastSemester()->id])->get();
-
+		$programs = Program::where(['building_id' => $building->id, 'quarterly' => 0])->get();
+		$quarterlyPrograms = Program::where(['building_id' => $building->id, 'semester_id' => $thisyear->lastSemester()->id])->get();
 		$semester = Semester::latest()->first();
-		return view('building.dashboard', compact('building', 'semester', 'programs'));
+		return view('building.dashboard', compact('building', 'semester', 'programs', 'quarterlyPrograms'));
 	}
 }

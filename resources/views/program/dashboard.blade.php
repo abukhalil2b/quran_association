@@ -2,14 +2,7 @@
 <div class="container">
   <div class="row">
       <div class="col-md-12">
-        @if(session('status'))
-            <center class="alert alert-{{session('status')}}">
-                <b>{{session('message')}}</b>
-            </center>
-        @endif
-
         <h2 class="alert alert-info">
-
           <small>برنامج: {{$program->title}}</small>
         </h2>
         <a href="{{route('circle.create',['program'=>$program])}}">

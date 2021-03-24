@@ -36,8 +36,10 @@ class StudentController extends Controller {
 			$usercenter = $supervisor->usercenter();
 			$student = $student->checkUserPermission($usercenter);
 			$circles = $student->circles;
-
-			return view('student.show', compact('student', 'circles', 'usercenter'));
+			$programReports=ProgramReport::where('student_id',$student->id)->get();
+			$memorizedJuzs=MemorizedJuz::where('student_id',$student->id)->get();
+			$memorizedSowars=MemorizedSowar::where('student_id',$student->id)->get();
+			return view('student.show', compact('student', 'circles', 'usercenter','programReports','memorizedJuzs','memorizedSowars'));
 			break;
 		case 'teacher':
 
@@ -140,9 +142,26 @@ class StudentController extends Controller {
 
 	}
 
-	public function circleShow(Circle $circle) {
-		$marks = Mark::where(['circle_id' => $circle->id])->get();
-		return view('student.circle.show', compact('circle', 'marks'));
+	public function circleShow(Student $student,Circle $circle) {
+		$loggedUser = auth()->user();
+		switch ($loggedUser->userType) {
+			case 'usercenter':
+				$student->checkUserPermission($loggedUser);
+				break;
+			case 'supervisor':
+			$usercenter = $loggedUser->supervisorAccount->usercenter();
+				$student->checkUserPermission($usercenter);
+				break;
+			case 'teacher':
+			$usercenter = $loggedUser->teacherAccount->usercenter();
+			$student->checkUserPermission($usercenter);	
+				break;	
+			default:
+				
+				break;
+		}
+		$marks = Mark::where(['circle_id' => $circle->id,'student_id'=>$student->id])->get();
+		return view('student.circle.show', compact('circle', 'marks','student'));
 	}
 
 }

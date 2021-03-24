@@ -69,5 +69,8 @@
         @stack('modals')
 
         @livewireScripts
+        <footer class="py-3">
+            
+        </footer>
     </body>
 </html>

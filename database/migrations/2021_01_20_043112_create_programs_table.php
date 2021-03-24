@@ -15,7 +15,7 @@ class CreateProgramsTable extends Migration {
 			$table->id();
 			$table->string('title');
 			$table->integer('building_id');
-			$table->integer('semester_id');
+			$table->integer('semester_id')->nullable();
 			$table->boolean('quarterly')->default(0);// type of program weather every semester or daily until finsh his program
 			$table->timestamps();
 		});

@@ -21,13 +21,28 @@
 
         <div class="col-md-12">
             <div class="card">
-                <div class="card-header"><h5>برامج الفصل: {{$lastSemester->title}}</h5></div>
+                <div class="p-3">برامج الفصل: {{$lastSemester->title}}</div>
+                <div class="card-body">
+                    @foreach($quarterlyPrograms as $program)
+                        <h4>البرنامج: {{$program->title}}</h4>
+                        @foreach($program->circles as $circle)
+                            <h5>الحلقة: {{$circle->title}}</h5>
+                            <h6>السنة الدراسية: {{$circle->program->semester->year->title}} / {{$circle->program->semester->title}}</h6>
+                        @endforeach
+                        <div class="divider"></div>
+                    @endforeach
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-12 mt-3">
+            <div class="card">
+                <div class="p-3">برامج مستمرة</div>
                 <div class="card-body">
                     @foreach($programs as $program)
                         <h4>البرنامج: {{$program->title}}</h4>
                         @foreach($program->circles as $circle)
                             <h5>الحلقة: {{$circle->title}}</h5>
-                            <h6>السنة الدراسية: {{$circle->program->semester->year->title}} / {{$circle->program->semester->title}}</h6>
                         @endforeach
                         <div class="divider"></div>
                     @endforeach

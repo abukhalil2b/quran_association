@@ -7,7 +7,7 @@
     	<div class="col-md-12">
     		@foreach($circles as $key => $circle)
             <div class="card mt-3">
-                <a class="alert alert-secondary" href="{{route('student.circle.show',['circle'=>$circle->id])}}">
+                <a class="alert alert-secondary" href="{{route('student.circle.show',['student'=>$student->id,'circle'=>$circle->id])}}">
                  [{{$key+1}}] {{$circle->title}} 
                 </a>
                 <div class="text-info px-3">
@@ -19,8 +19,12 @@
                             @endif
                         </div>
                         <div><span class="text-primary">البرنامج: </span>{{$circle->program->title}}</div>
+                        @if($circle->program->semester)
                         {{$circle->program->semester->year->title}} -
                         {{$circle->program->semester->title}}
+                        @else
+                        برنامج مستمر
+                        @endif
                     </small>
                 </div>
                 @if($circle->teacher)
@@ -63,100 +67,16 @@
                 <center>لا يوجد مدرس</center>
                 @endif
             </div>
-
-            <div class="py-4">
-               <h5 class="mt-3"> التقارير المرسلة</h5>
-
-                <div class="card">
-                    <div class="card-body">
-                        @foreach($programReports as $report)
-                        <div>
-                            {{$report->donedate}} | 
-                            {{__($report->meeting)}} | 
-                            {{$report->mission}} | 
-                            
-                            {{$report->evaluation}} | 
-                            {{$report->note}} 
-                        </div>
-                        @endforeach
-                    </div>
-                </div>
-            </div>
-
-            <div class="py-4">
-                <h5 class="mt-3">
-                    الأجزاء التي يحفظها
-                    <div class="pull-left">
-                        <a href="{{route('student.memorized_juz.create',['student'=>$student->id])}}">+ إدارة</a>
-                    </div>
-                </h5>
-                <div class="card">
-                    <div class="card-body">
-                        @foreach($memorizedJuzs as $juz)
-                        <div>
-                            {{$juz->juz->title}}
-                        </div>
-                        @endforeach
-                    </div>
-                </div>
-            </div>
-
-            <div class="py-4">
-               <h5 class="mt-3">
-                السور التي يحفظها 
-                <div class="pull-left">
-                    <a href="{{route('student.memorized_sowar.create',['student'=>$student->id])}}">
-                    + إدارة
-                    </a>
-                </div>
-               </h5>
-                <div class="card">
-                    <div class="card-body">
-                        @foreach($memorizedSowars as $sowar)
-                        <div>
-                            {{$sowar->sowar->title}}
-                        </div>
-                        @endforeach
-                    </div>
-                </div>
-            </div>
-
-
-    		<div class="card my-5">
-                <div class="card-body">
-                    <form action="{{route('student.mark.store')}}" method="post">
-                        @csrf
-                        <div class="row">
-                            <div class="col-md-12">
-                                مجموع الدرجات : {{$student->marks->where('circle_id',$circle->id)->sum('point')}}
-                                <div class="divider"></div>
-                                <div class="text-primary">إضافة درجات</div>
-                            </div>
-                            <div class="col-md-4">
-                                الدرجة
-                                 <input type="number" name="point" class="form-control">
-                            </div>
-                            <div class="col-md-4">
-                                حدد المناسبة
-                                 <select class="form-control" name="cate">
-                                     <option>الحضور في الوقت</option>
-                                     <option>متميز في السلوك</option>
-                                 </select>
-                            </div>
-                            <div class="col-md-4">
-                                <input type="hidden" name="circle_id" value="{{$circle->id}}">
-                                <input type="hidden" name="student_id" value="{{$student->id}}">
-                                 <button class="btn bnt-sm btn-outline-primary mt-4"> حفظ </button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
     		@endforeach
     	</div>
 
     </div>
 </div>
+
+@include('student._memorized_juz')
+@include('student._memorized_sowar')
+@include('student._program_report')
+
 <script>
     var jsMeeting = document.getElementById('js-meeting');
     var jsToggleDiv = document.getElementById('js-toggle-div');

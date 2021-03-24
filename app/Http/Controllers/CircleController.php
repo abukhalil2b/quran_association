@@ -39,7 +39,7 @@ class CircleController extends Controller {
 		})->get();
 		if(count($supervisors))
 		return view('circle.create', compact('program', 'supervisors'));
-		die('لا يوجد مشرفين');
+		abort(404,'لا يوجد مشرفين');
 	}
 
 	/**
@@ -66,13 +66,13 @@ class CircleController extends Controller {
 			})->first();
 
 			if (!$user) {
-				die('wrong ID');
+				abort(404);
 			}
 
 			//check program
 			$program = Program::find($program_id);
 			if (!$program) {
-				die('wrong ID');
+				abort(404);
 			}
 			$program->checkUserPermission($user);
 
@@ -80,7 +80,7 @@ class CircleController extends Controller {
 				$circle->userCirclePermission()->attach($user->id);
 				return redirect()->route('program.dashboard', ['program' => $request->program_id])->with(['status' => 'تم']);
 			} else {
-				die('something went wrong ');
+				abort(404,'حدثت مشكلة');
 			}
 
 			break;
@@ -103,14 +103,14 @@ class CircleController extends Controller {
 			})->first();
 
 			if (!$supervisor || !$program) {
-				die('wrong ID');
+				abort(404);
 			}
 
 			if ($circle = Circle::create(['title' => $request->title, 'program_id' => $program->id, 'supervisor_id' => $supervisor->id])) {
 				$circle->userCirclePermission()->attach($loggedUser->id);
 				return redirect()->route('program.dashboard', ['program' => $request->program_id])->with(['status' => 'تم']);
 			} else {
-				die('something went wrong ');
+				abort(404,'حدثت مشكلة');
 			}
 
 			break;
@@ -123,7 +123,7 @@ class CircleController extends Controller {
 
 	}
 
-	/**
+	/**die
 	 * Display the specified resource.
 	 *
 	 * @param  \App\Circle  $circle
@@ -198,6 +198,21 @@ class CircleController extends Controller {
 			return view('circle.dashboard', compact('circle', 'attendances'));
 			break;
 
+		case 'teacher':
+
+			$teacher = $loggedUser->teacherAccount;
+			$usercenter = $teacher->usercenter();
+			$circle = $circle->checkUserPermission($usercenter);
+
+			$lastDailyrecord = $circle->lastDailyrecord();
+			if ($lastDailyrecord) {
+				$attendances = Attendance::where('dailyrecord_id', $lastDailyrecord->id)->get();
+			} else {
+				$attendances = [];
+			}
+
+			return view('circle.dashboard', compact('circle', 'attendances'));
+			break;
 		default:
 			# code...
 			break;
@@ -239,7 +254,7 @@ class CircleController extends Controller {
 			}
 			abort(404,'لا يوجد مشرفين');
 		}
-		die('أنت لاتملك الصلاحية');
+		abort(401,'أنت لاتملك الصلاحية ');
 	}
 
 	public function supervisorStore(Request $request) {
@@ -255,7 +270,7 @@ class CircleController extends Controller {
 			}
 
 		}
-		die('أنت لاتملك الصلاحية');
+		abort(401,'أنت لاتملك الصلاحية ');
 	}
 
 	//teacher
@@ -280,7 +295,7 @@ class CircleController extends Controller {
 				abort(404,'لا يوجد مدرسين');
 			break;
 		default:
-			# code...
+			abort(401,'لا تملك الصلاحية');
 			break;
 		}
 
@@ -293,12 +308,12 @@ class CircleController extends Controller {
 
 		$Teacher = Teacher::find($request->teacher_id);
 		if (!$Teacher) {
-			die('wrong ID');
+			abort(404);
 		}
 
 		$Circle = Circle::find($request->circle_id);
 		if (!$Circle) {
-			die('wrong ID');
+			abort(404);
 		}
 
 		$loggedUser = auth()->user();
@@ -309,13 +324,13 @@ class CircleController extends Controller {
 			//check user permission on teacher
 			$teacher = $Teacher->checkUserPermission($loggedUser);
 			if (!$teacher) {
-				die('أنت لاتملك الصلاحية');
+				abort(401,'أنت لاتملك الصلاحية ');
 			}
 
 			//check circle
 			$circle = $Circle->checkUserPermission($loggedUser);
 			if (!$circle) {
-				die('أنت لاتملك الصلاحية');
+				abort(401,'أنت لاتملك الصلاحية ');
 			}
 
 			break;
@@ -327,19 +342,19 @@ class CircleController extends Controller {
 			//check teacher
 			$teacher = $Teacher->checkUserPermission($usercenter);
 			if (!$teacher) {
-				die('أنت لاتملك الصلاحية ');
+				abort(401,'أنت لاتملك الصلاحية ');
 			}
 
 			//check circle
 			$circle = $Circle->checkUserPermission($usercenter);
 			if (!$circle) {
-				die('أنت لاتملك الصلاحية ');
+				abort(401,'أنت لاتملك الصلاحية ');
 			}
 
 			break;
 
 		default:
-			die('something went wrong');
+			abort(404,'حدثت مشكلة');
 			break;
 		}
 
@@ -392,7 +407,7 @@ class CircleController extends Controller {
 			return view('circle.student.create', compact('circle', 'students'));
 			break;
 		default:
-			die('أنت لاتملك الصلاحية ');
+			abort(401,'أنت لاتملك الصلاحية ');
 			break;
 		}
 
@@ -400,7 +415,7 @@ class CircleController extends Controller {
 
 	public function studentStore(Request $request) {
 		if (!$request->student_ids) {
-			die('no students');
+			abort(400,'لايوجد طلاب');
 		}
 
 		$Circle = Circle::find($request->circle_id);

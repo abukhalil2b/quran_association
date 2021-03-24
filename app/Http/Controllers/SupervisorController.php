@@ -5,6 +5,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Semester;
 use App\Models\Supervisor;
 use App\Models\User;
+use App\Models\Program;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
@@ -19,15 +20,7 @@ class SupervisorController extends Controller {
 		$teachers = [];
 		$loggedUser = auth()->user();
 		if ($loggedUser->userType === 'usercenter') {
-			$supervisor = Supervisor::whereHas('userSupervisorPermission', function ($query) use ($supervisor, $loggedUser) {
-				$query->where([
-					'user_supervisor_permission.supervisor_id' => $supervisor->id,
-					'user_supervisor_permission.user_id' => $loggedUser->id,
-				]);
-			})->first();
-			if (!$supervisor) {
-				die('أنت لاتملك الصلاحية');
-			}
+			$supervisor->checkUserPermission($loggedUser);
 
 			$usercenter = $supervisor->usercenter();
 
@@ -36,11 +29,13 @@ class SupervisorController extends Controller {
 			}
 
 			$lastSemester = Semester::orderby('id', 'desc')->first();
-			$programs = $lastSemester->programs()->whereHas('circles', function ($q) use ($supervisor) {
+			$quarterlyPrograms = $lastSemester->programs()->whereHas('circles', function ($q) use ($supervisor) {
 				$q->where('circles.supervisor_id', $supervisor->id);
 			})->with('circles')->get();
-
-			return view('supervisor.dashboard', compact('supervisor', 'usercenter', 'programs', 'lastSemester'));
+			$programs=Program::whereHas('circles', function ($q) use ($supervisor) {
+				$q->where('circles.supervisor_id', $supervisor->id);
+			})->with('circles')->get(); 
+			return view('supervisor.dashboard', compact('supervisor', 'usercenter', 'quarterlyPrograms', 'programs', 'lastSemester'));
 
 		}
 		die('أنت لاتملك الصلاحية');

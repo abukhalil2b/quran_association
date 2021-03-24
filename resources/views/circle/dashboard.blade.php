@@ -59,7 +59,7 @@
     <div class="row">
 
       <div class="col-md-12">
-        <div  class="text-primary">قائمة الطلاب المنتسبين للحلقة</div>
+        <div  class="text-primary">قائمة الطلاب المسجلون في الحلقة</div>
         <ol>
         	@foreach($circle->students as $student)
         	<div>

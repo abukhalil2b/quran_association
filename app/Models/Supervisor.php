@@ -23,4 +23,17 @@ class Supervisor extends Model {
 		})->first();
 	}
 
+	public function checkUserPermission($user) {
+		$supervisor = $this->whereHas('userSupervisorPermission', function ($query) use ($user) {
+				$query->where([
+					'user_supervisor_permission.supervisor_id' => $this->id,
+					'user_supervisor_permission.user_id' => $user->id,
+				]);
+			})->first();
+			if (!$supervisor) {
+				die('أنت لاتملك الصلاحية');
+			}
+		return $supervisor;
+	}
+
 }

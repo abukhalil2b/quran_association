@@ -12,6 +12,7 @@ use App\Models\Permission;
 use App\Models\Student;
 use App\Models\Supervisor;
 use App\Models\Teacher;
+use App\Models\Program;
 use App\Models\Trainee;
 use App\Models\Trainer;
 use App\Models\User;
@@ -87,32 +88,61 @@ class DashboardController extends Controller {
 			break;
 
 		case 'teacher':
+			//inital values
+			$quarterlyProgramPresentStudents =[];
+			$incessantProgramPresentStudents =[];
+			$quarterlyProgramLastDailyrecord =null;
+			$incessantProgramLastDailyrecord =null;
 
 			$teacher = $loggedUser->teacherAccount;
 			$usercenter = $teacher->usercenter();
 			
 			// teacher's circles in this semester.
-			$circle = Circle::whereHas('program.semester', function ($q) use ($thisyear) {
+			$quarterlyProgramCircle = Circle::whereHas('program.semester', function ($q) use ($thisyear) {
 				$q->where('semesters.id', $thisyear->lastSemester()->id);
 			})->where('teacher_id', $teacher->id)->orderby('id', 'desc')->first();
 
-			if ($circle) {
-				$presentStudents = [];
-				$lastDailyrecord = Dailyrecord::where('circle_id', $circle->id)
+			$incessantProgramCircle = Circle::whereHas('program',function($q){
+				$q->where('programs.quarterly',0);
+			})->where('teacher_id',$teacher->id)
+			->orderby('id', 'desc')->first();
+
+			if($quarterlyProgramCircle){
+				$quarterlyProgramLastDailyrecord = Dailyrecord::where('circle_id', $quarterlyProgramCircle->id)
 				->whereDate('created_at', Carbon::today())->orderby('id', 'desc')->first();
-				if ($lastDailyrecord) {
-					$presentStudents = Attendance::whereHas('student', function ($q) use ($lastDailyrecord) {
-						$q->where(['dailyrecord_id' => $lastDailyrecord->id]);
-					})->with('student')->get();
-				}
-			}else{
-				$lastDailyrecord =null;
-				$presentStudents =null;
+			}
+			
+				
+			if ($quarterlyProgramLastDailyrecord) {
+				$quarterlyProgramPresentStudents = Attendance::whereHas('student', function ($q) use ($quarterlyProgramLastDailyrecord) {
+					$q->where(['dailyrecord_id' => $quarterlyProgramLastDailyrecord->id]);
+				})->with('student')->get();
 			}
 
+			if($incessantProgramCircle){
+				$incessantProgramLastDailyrecord = Dailyrecord::where('circle_id', $incessantProgramCircle->id)
+				->whereDate('created_at', Carbon::today())->orderby('id', 'desc')->first();
+			}
+			
+				
+			if ($incessantProgramLastDailyrecord) {
+				$incessantProgramPresentStudents = Attendance::whereHas('student', function ($q) use ($incessantProgramLastDailyrecord) {
+					$q->where(['dailyrecord_id' => $incessantProgramLastDailyrecord->id]);
+				})->with('student')->get();
+			}
 			
 
-			return view('dashboard', compact('loggedUser', 'teacher', 'circle', 'lastDailyrecord', 'usercenter', 'presentStudents'));
+			return view('dashboard', compact(
+				'loggedUser',
+				'usercenter',
+				'teacher',
+				'quarterlyProgramCircle',
+				'incessantProgramCircle',
+				'quarterlyProgramLastDailyrecord',
+				'incessantProgramLastDailyrecord',
+				'quarterlyProgramPresentStudents',
+				'incessantProgramPresentStudents'
+			));
 			break;
 		case 'supervisor':
 			$supervisor = $loggedUser->supervisorAccount;
@@ -127,11 +157,14 @@ class DashboardController extends Controller {
 			})->get();
 
 			//supervisor's circles in this year.
-			$circles = Circle::whereHas('program.semester', function ($q) use ($thisyear) {
+			$quarterlyProgramCircles = Circle::whereHas('program.semester', function ($q) use ($thisyear) {
 				$q->where('semesters.id', $thisyear->lastSemester()->id);
 			})->where('supervisor_id', $supervisor->id)->orderby('id', 'desc')->get();
 
-			return view('dashboard', compact('usercenter', 'teachers', 'students', 'circles', 'supervisor', 'loggedUser'));
+			$programs=Program::whereHas('circles', function ($q) use ($supervisor) {
+				$q->where('circles.supervisor_id', $supervisor->id);
+			})->where('quarterly',0)->get(); 
+			return view('dashboard', compact('usercenter', 'teachers', 'students', 'quarterlyProgramCircles','programs', 'supervisor', 'loggedUser'));
 			break;
 		case 'trainer':
 			$trainer = $loggedUser->trainerAccount;
