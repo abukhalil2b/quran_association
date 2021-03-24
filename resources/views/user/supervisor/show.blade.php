@@ -17,25 +17,36 @@
 			<hr>
 			<span class="text-primary">المدرسين التابعين للمركز</span>
 			<a class="pull-left" href="{{route('user.teacher.create')}}"><span class="plus-icon">+</span> إضافة مدرس</a>
-	    	<ol>
-	    	@foreach($teachers as $teacher)
-	    	<div>
-	    		{{$teacher->accountOwner->name}} 
-	    		<small>{{$teacher->accountOwner->email}}</small>
-	    	</div>
-	    	@endforeach
-	    	</ol>
+	    	@if($teachers)
+			@foreach($teachers as $teacher)
+			<div class="card p-2">
+				<div> اسم المدرس: {{$teacher->accountOwner->email}} </div>
+				<small>{{$teacher->accountOwner->email}}</small>
+			</div>
+			@endforeach
+			@else
+				<h5>لايوجد حلقة</h5>
+			@endif
+
     	</div>
 
 		<div class="col-md-12">
 			<hr>
 			<span class="text-primary">الطلاب التابعين للمركز</span>
 			<a class="pull-left" href="{{route('student.create')}}"><span class="plus-icon">+</span> إضافة طالب</a>
-	    	<ol>
-	    	@foreach($students as $student)
-	    	<li>{{$student->name}}</li>
-	    	@endforeach
-	    	</ol>
+			@if($students)
+			@foreach($students as $student)
+			<div class="card p-2">
+				<a href="{{route('student.show',['student'=>$student->id])}}">
+				<div>رقم الطالب: {{$student->id}}</div>
+				<div> اسم الطالب: {{$student->name}}</div>
+				<small> كلمة المرور: {{$student->password}}</small>
+				</a>
+			</div>
+			@endforeach
+			@else
+				<h5>لايوجد حلقة</h5>
+			@endif
     	</div>
 
     	<h4 class="text-primary">البرامج: </h4>

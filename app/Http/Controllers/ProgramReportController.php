@@ -51,9 +51,8 @@ class ProgramReportController extends Controller
     {
          // return $request->all();
         
-        if($request->meeting==='todaymeeting'){
-            $request['donedate'] = date('Y-m-d',time());
-        }
+        $request['donedate'] = date('Y-m-d',time());
+        
         if($request->meeting==='nextmeeting'){
             $this->validate($request,[
                 'tobedonedate'=>'required'

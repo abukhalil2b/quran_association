@@ -1,18 +1,15 @@
 <div class="col-lg-12  mt-1">
+	<h6 class="mt-3">الطلاب المسجلون في الحلقة</h6>
+	@if($quarterlyProgramCircle)
+	@foreach($quarterlyProgramCircle->students as $student)
 	<div class="card p-2">
-		الطلاب المسجلون في الحلقة
-		<ol>
-		@if($quarterlyProgramCircle)
-			@foreach($quarterlyProgramCircle->students as $student)
-				<li>
-					<a href="{{route('student.show',['student'=>$student->id])}}">
-					{{$student->name}}
-					</a>
-				</li>
-			@endforeach
-		@else
-		<h5>لايوجد حلقة</h5>
-		@endif
-		</ol>
+		<a href="{{route('student.show',['student'=>$student->id])}}">
+		<div>رقم الطالب: {{$student->id}}</div>
+		<div> اسم الطالب: {{$student->name}}</div>
+		</a>
 	</div>
+	@endforeach
+	@else
+		<h5>لايوجد حلقة</h5>
+	@endif
 </div>
