@@ -64,7 +64,7 @@
         	@foreach($circle->students as $student)
         	<div>
             <li class="text-sm">
-              <a href="{{route('student.show',['student'=>$student->id])}}">{{$student->name}}</a>
+              <a href="{{route('student.show',['student'=>$student->id])}}">[{{$student->id}}] {{$student->name}}</a>
             </li>
           </div>
         	@endforeach

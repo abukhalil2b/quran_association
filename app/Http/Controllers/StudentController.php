@@ -55,7 +55,7 @@ class StudentController extends Controller {
 				->pluck('id');
 
 			//check if teacher has permission
-			$student = $student->checkUserPermission($usercenter);
+			return$student = $student->checkUserPermission($usercenter);
 			$programReports=ProgramReport::where('student_id',$student->id)->get();
 			$memorizedJuzs=MemorizedJuz::where('student_id',$student->id)->get();
 			$memorizedSowars=MemorizedSowar::where('student_id',$student->id)->get();
