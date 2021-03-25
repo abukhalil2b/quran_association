@@ -1,7 +1,7 @@
 <div class="col-md-12 mt-3">
-    <h5 class="p-3">برامج مستمرة</h5>
+    <span class="text-primary">برامج مستمرة</span>
     @foreach($programs as $program)
-    <div class="card mt-3">
+    <div class="card">
         <div class="card-body">
             <h4>البرنامج: {{$program->title}}</h4>
             @foreach($program->circles as $circle)

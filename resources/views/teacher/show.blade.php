@@ -7,20 +7,19 @@
                     {{$teacher->accountOwner->name}}
                 </div>
                 <div class="card-body">
-                    <a class="btn btn-sm btn-info" href="">تعديل</a>
-                    
+                    <a class="btn btn-sm btn-info" href="{{route('user.teacher.edit',['teacher'=>$teacher->id])}}">تعديل</a>
                 </div>
             </div>
             <h5 class="mt-5">الحلقات</h5>
             @foreach($circles as $circle)
-            <div class="card">
+            <div class="card mt-1">
                 <div class="card-header">
                     {{$circle->title}}
                 </div>
                 <div class="p-3">الطلاب</div>
                 <div class="card-body">
                     @foreach($circle->students as $key => $student)
-                    <div> ({{$key+1}}) {{$student->name}}</div>
+                    <div>{{$student->name}}</div>
                     @endforeach
                 </div>
             </div>

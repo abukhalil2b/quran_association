@@ -5,6 +5,7 @@
             <table class="table table-bordered table-striped">
                 <tr>
                     <td>الإسم</td>
+                    <td>الهاتف</td>
                     <td>الجنس</td>
                     <td>إدارة</td>
                 </tr>
@@ -14,11 +15,15 @@
                         {{$student->name}}
                     </td>
                     <td>
-                       {{__($student->gender)}}
+                        {{$student->phone}}
                     </td>
                     <td>
-                        <a class="btn" href="">تعديل</a>
-                        <a class="btn" href="">حذف</a>
+                       {{__($student->gender)}}
+                    </td>
+                    <td  class="{{$student->active?'text-success':'text-danger'}}">
+                        <a class="btn" href="{{route('student.edit',['student'=>$student->id])}}">تعديل</a>
+                        <a class="btn" href="{{route('student.active.toggle',['student'=>$student->id])}}">تعطيل وتفعيل</a>
+                        ({{$student->active?'مفعل':'معطل'}})
                     </td>
                 </tr>
                 @endforeach

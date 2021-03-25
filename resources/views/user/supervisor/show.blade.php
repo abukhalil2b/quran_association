@@ -3,14 +3,9 @@
     <div class="row">
 
     	<div class="col-md-12">
-	    	<div >
-	    		<h4><span class="text-primary">الإسم: </span>{{$loggedUser->name}}</h4>
-				<span class="text-primary">الوصف: </span>{{$supervisor->title}}
-	    	</div>
-			<div>
-				<span class="text-primary">المركز التابع له: </span>{{$usercenter->name}}
-	    	</div>
-
+    		<h4>{{$loggedUser->name}}</h4>
+			<small>{{$supervisor->title}}</small>
+			<div><small>{{$usercenter->name}}</small></div>
     	</div>
 
 		<div class="col-md-12">
@@ -40,7 +35,7 @@
 				<a href="{{route('student.show',['student'=>$student->id])}}">
 				<div>رقم الطالب: {{$student->id}}</div>
 				<div> اسم الطالب: {{$student->name}}</div>
-				<small> كلمة المرور: {{$student->password}}</small>
+				<small>الهاتف: {{$student->phone}}</small>
 				</a>
 			</div>
 			@endforeach
@@ -49,7 +44,7 @@
 			@endif
     	</div>
 
-    	<h4 class="text-primary">البرامج: </h4>
+    	<hr>
 		@include('user.supervisor._program')
 		@include('user.supervisor._quraterly_program')
 

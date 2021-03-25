@@ -18,7 +18,7 @@
 
                     </td>
                     <td>
-                        <a class="btn" href="">تعديل</a>
+                        <a class="btn" href="{{route('user.teacher.edit',['teacher'=>$teacher->id])}}">تعديل</a>
                         <a class="btn" href="">حذف</a>
                     </td>
                 </tr>

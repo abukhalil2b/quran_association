@@ -102,6 +102,8 @@ Route::prefix('user')->group(function () {
 	Route::get('teacher/create', [TeacherController::class,'create'])->name('user.teacher.create');
 	Route::get('teacher/{teacher}/show', [TeacherController::class,'show'])->name('user.teacher.show');
 	Route::post('teacher/store', [TeacherController::class,'store'])->name('user.teacher.store');
+	Route::get('teacher/{teacher}/edit', [TeacherController::class,'edit'])->name('user.teacher.edit');
+	Route::post('teacher/{teacher}/update', [TeacherController::class,'update'])->name('user.teacher.update');
 
 	Route::get('supervisor/create', [SupervisorController::class,'create'])->name('user.supervisor.create');
 	Route::post('supervisor/store', [SupervisorController::class,'store'])->name('user.supervisor.store');
@@ -124,6 +126,9 @@ Route::prefix('student')->group(function () {
 		->name('student.circle.show');
 	Route::post('mark/store',[MarkController::class,'store'])
 		->name('student.mark.store');
+	Route::get('{student}/edit', [StudentController::class,'edit'])->name('student.edit');
+	Route::post('{student}/update', [StudentController::class,'update'])->name('student.update');
+	Route::get('{student}/active/toggle', [StudentController::class,'activeToggle'])->name('student.active.toggle');
 });	
 
 Route::prefix('trainee')->group(function () {

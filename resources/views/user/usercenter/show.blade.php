@@ -24,7 +24,6 @@
 
         </div>
         <div class="col-md-6">
-
     		<h4 class="alert alert-info">أماكن الدراسة
             | (العدد: {{count($buildings)}}) |
               <a href="{{route('building.create')}}">
@@ -47,10 +46,11 @@
     		@foreach($supervisors as $key =>  $supervisor)
             <div class="card mt-2 mb-2 px-2">
                  <a href="{{route('supervisor.dashboard',['supervisor'=>$supervisor->id])}}">
-                   <div> [ {{$key+1}} ] {{$supervisor->accountOwner->name}}</div>
+                   <div>الاسم: {{$supervisor->accountOwner->name}}</div>
                    <div><small class="text-info">{{$supervisor->title}}</small></div>
+                   <div>الهاتف:  <small>{{$supervisor->accountOwner->phone}}</small></div>
                 </a>
-               <small> {{$supervisor->accountOwner->email}} </small>
+                <div>البريد الالكتروني:  <small>{{$supervisor->accountOwner->email}}</small></div>
             </div>
     		@endforeach
         </div>
@@ -64,10 +64,11 @@
             @foreach($maleTeachers as $key =>  $teacher)
             <div class="card mt-2 mb-2 px-2">
                 <a href="{{route('user.teacher.show',['teacher'=>$teacher->id])}}">
-                    <div>[ {{$key+1}} ] {{$teacher->accountOwner->name}}</div>
+                    <div>الاسم: {{$teacher->accountOwner->name}}</div>
                      <div><small class="text-info">{{$teacher->title}}</small></div>
+                     <div>الهاتف:  <small>{{$teacher->accountOwner->phone}}</small></div>
                 </a>
-                <small>{{$teacher->accountOwner->email}}</small>
+                <div>البريد الالكتروني:  <small>{{$teacher->accountOwner->email}}</small></div>
             </div>
             @endforeach
 
@@ -75,10 +76,11 @@
     		@foreach($femaleTeachers as $key =>  $teacher)
     		<div class="card mt-2 mb-2 px-2">
                 <a href="{{route('user.teacher.show',['teacher'=>$teacher->id])}}">
-                    <div>[ {{$key+1}} ] {{$teacher->accountOwner->name}}</div>
+                    <div>الاسم: {{$teacher->accountOwner->name}}</div>
                      <div><small class="text-info">{{$teacher->title}}</small></div>
+                     <div>الهاتف:  <small>{{$teacher->accountOwner->phone}}</small></div>
                 </a>
-                <small>{{$teacher->accountOwner->email}}</small>
+                <div>البريد الالكتروني:  <small>{{$teacher->accountOwner->email}}</small></div>
             </div>
     		@endforeach
 
@@ -91,13 +93,17 @@
             <h5>زكور  | (العدد: {{count($maleStudents)}}) </h5>
             @foreach($maleStudents as $key => $student)
             <div class="card mt-2 mb-2 px-2">
-                [ {{$key+1}} ] {{$student->name}}
+                <div>رقم الطالب: {{$student->id}}</div>
+                <div>الاسم: {{$student->name}}</div>
+                <div>الهاتف: {{$student->phone}}</div>
             </div>
             @endforeach
             <h5>إناث  | (العدد: {{count($femaleStudents)}}) </h5>
             @foreach($femaleStudents as $key => $student)
             <div class="card mt-2 mb-2 px-2">
-                [ {{$key+1}} ] {{$student->name}}
+                <div>رقم الطالب: {{$student->id}}</div>
+                <div>الاسم: {{$student->name}}</div>
+                <div>الهاتف: {{$student->phone}}</div>
             </div>
             @endforeach
 

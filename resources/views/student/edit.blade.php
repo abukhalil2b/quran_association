@@ -4,36 +4,35 @@
         <div class="col-md-12">
             <div class="card">
                 <div class="card-header">
-                    <h4>اضافة طالب  جديد  للمركز</h4>
+                    <h4>تعديل طالب</h4>
                 </div>
                 <div class="card-body">
-					<form method="post" action="{{route('student.store')}}">
+					<form method="post" action="{{route('student.update',['student'=>$student->id])}}">
 						@csrf
 	                    <table class="table">
 							<tr>
 	                    		<td>الإسم</td>
 	                    		<td>
-		                          <input name="name" class="form-control" placeholder="الإسم">
+		                          <input value="{{$student->name}}" name="name" class="form-control" placeholder="الإسم">
 	                            </td>
 	                    	</tr>
 	                    	<tr>
 	                    		<td>رقم الهاتف</td>
 	                    		<td>
-		                          <input name="phone" class="form-control" placeholder="رقم الهاتف">
+		                          <input value="{{$student->phone}}" name="phone" class="form-control" placeholder="رقم الهاتف">
 	                            </td>
 	                    	</tr>
 	                    	<tr>
 	                    		<td>الجنس</td>
 	                    		<td>
 		                          <select name="gender" class="form-control">
-		                          	<option value="male">{{__('male')}}</option>
-		                          	<option value="female">{{__('female')}}</option>
+		                          	<option @if($student->gender=='male') selected @endif value="male">{{__('male')}}</option>
+		                          	<option @if($student->gender=='female') selected @endif value="female">{{__('female')}}</option>
 		                          </select>
 	                            </td>
 	                    	</tr>
 	                        <tr>
 	                            <td colspan="2">
-	                            	كلمة المرور ستكون نفس رقم الهاتف
 	                                <button class="btn btn-info btn-block">حفظ</button>
 	                            </td>
 	                        </tr>

@@ -103,7 +103,7 @@ class StudentController extends Controller {
 
 	public function store(Request $request) {
 		$user = auth()->user();
-
+		$request['password'] = $request->phone;
 		// only supervisor and usercenter to add new students
 		if ($user->userType == 'usercenter') {
 			$request['createdby_model'] = 'usercenter';
@@ -164,4 +164,17 @@ class StudentController extends Controller {
 		return view('student.circle.show', compact('circle', 'marks','student'));
 	}
 
+	public function edit(Student $student) {
+		return view('student.edit', compact('student'));
+	}
+
+	public function update(Request $request,Student $student) {
+		$student->update($request->all());
+		return redirect()->route('student.index');
+	}
+
+	public function activeToggle(Student $student) {
+		$student->update(['active'=>!$student->active]);
+		return redirect()->route('student.index');
+	}
 }

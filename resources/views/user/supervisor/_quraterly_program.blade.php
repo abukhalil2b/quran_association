@@ -1,9 +1,8 @@
-<div class="col-md-12">
-	<hr>
+<div class="col-md-12 mt-3">
 	<div>
-		<h5 class="p-3">برامج فصلية</h5>
+		<span class="text-primary">برامج فصلية</span>
 		@foreach($quarterlyProgramCircles as $circle)
-			<div class="card mt-3">
+			<div class="card ">
 
 				<a href="{{route('circle.dashboard',['circle'=>$circle->id])}}">
 				<div class="alert alert-secondary">

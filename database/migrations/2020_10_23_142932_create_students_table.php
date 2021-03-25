@@ -11,6 +11,7 @@ class CreateStudentsTable extends Migration {
 			$table->increments('id');
 			$table->string('model')->default('student');
 			$table->string('name')->nullable();
+			$table->string('phone',8)->nullable();
 			$table->string('gender',6);
 			$table->string('avatar')->nullable();
 			$table->string('createdby_model');

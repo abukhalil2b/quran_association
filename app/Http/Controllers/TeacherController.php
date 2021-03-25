@@ -108,4 +108,61 @@ class TeacherController extends Controller {
 		return redirect()->route('user.teacher.index');
 	}
 
+	public function edit(Teacher $teacher) {
+		$loggedUser = auth()->user();
+
+		switch ($loggedUser->userType) {
+		case 'usercenter':
+			$teacher = $teacher->checkUserPermission($loggedUser);
+			return view('teacher.edit', compact('teacher'));
+			break;
+		case 'supervisor':
+			$supervisor = $loggedUser->supervisorAccount()->first();
+			$user = $supervisor->usercenter();
+			$teacher = $teacher->checkUserPermission($user);
+			return view('teacher.edit', compact('teacher'));
+			break;
+		default:
+			# code...
+			break;
+		}
+		die('أنت لاتملك الصلاحية');
+
+	}
+
+	public function update(Request $request,Teacher $teacher) {
+		// return $request->all();
+		$this->validate($request, [
+			'name' => 'required',
+		]);
+		$loggedUser = auth()->user();
+
+		if ($loggedUser->userType !== 'usercenter' && $loggedUser->userType !== 'supervisor') {
+			die('أنت لاتملك الصلاحية');
+		}
+		
+
+		switch ($loggedUser->userType) {
+		case 'usercenter':
+			$teacher->checkUserPermission($loggedUser);
+
+			break;
+		case 'supervisor':
+			$supervisor = $loggedUser->supervisorAccount;
+			$usercenter = $supervisor->usercenter();
+			$teacher->checkUserPermission($usercenter);
+
+
+			break;
+		default:
+			abort(404);
+			break;
+		}
+
+		$teacher->update($request->all());
+		$user = $teacher->accountOwner;
+		$user->update($request->all());
+		return redirect()->route('user.teacher.index');
+	}
+
 }

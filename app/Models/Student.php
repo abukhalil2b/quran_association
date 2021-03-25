@@ -6,7 +6,19 @@ use Illuminate\Database\Eloquent\Model;
 use Laravel\Sanctum\HasApiTokens;
 class Student extends Model {
 	use HasApiTokens;
-	protected $fillable = ['avatar', 'name', 'gender','createdby_model', 'createdby_id', 'usercenter_id', 'password','father_id'];
+	protected $fillable = 
+	[
+		'active',
+		'avatar',
+		'name',
+		'phone',
+		'gender',
+		'createdby_model',
+		'createdby_id',
+		'usercenter_id',
+		'password',
+		'father_id'
+	];
 	
 	public function father() {
 		return $this->belongsTo(Father::class);
