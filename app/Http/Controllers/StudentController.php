@@ -55,14 +55,11 @@ class StudentController extends Controller {
 				->pluck('id');
 
 			//check if teacher has permission
-			return$student = $student->checkUserPermission($usercenter);
+			$student = $student->checkUserPermission($usercenter);
 			$programReports=ProgramReport::where('student_id',$student->id)->get();
 			$memorizedJuzs=MemorizedJuz::where('student_id',$student->id)->get();
 			$memorizedSowars=MemorizedSowar::where('student_id',$student->id)->get();
-			$circles = Circle::whereHas('students', function ($q) use ($teacherCircleIds, $student) {
-				$q->whereIn('circle_student.circle_id', $teacherCircleIds)
-					->where('circle_student.student_id', $student->id);
-			})->get();
+			$circles = $circles = $student->circles;
 
 			return view('student.show', compact('student', 'circles', 'usercenter','programReports','memorizedJuzs','memorizedSowars'));
 			break;
