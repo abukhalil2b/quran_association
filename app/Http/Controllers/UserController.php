@@ -61,12 +61,22 @@ class UserController extends Controller {
 
 	public function shiftaccountToTeacher() {
 		$loggedUser = Auth::user();
-		$teacher = Teacher::where('user_id', $loggedUser->id)->first();
+		$teacher = Teacher::where('owner', $loggedUser->id)->first();
 		if (!$teacher) {
-			return redirect()->back()->with(['status' => 'هذا الحساب اطلبه من الإدارة']);
+			return redirect()->back()->with(['status'=>'danger','message' => 'الحساب غير موجود']);
 		}
 		$loggedUser->update(['userType' => 'teacher']);
-		return redirect()->back();
+		return redirect()->back()->with(['status'=>'success','message' => 'تم']);
+	}
+
+	public function shiftaccountToSupervisor() {
+		$loggedUser = Auth::user();
+		$supervisor = Supervisor::where('owner', $loggedUser->id)->first();
+		if (!$supervisor) {
+			return redirect()->back()->with(['status'=>'danger','message' => 'الحساب غير موجود']);
+		}
+		$loggedUser->update(['userType' => 'supervisor']);
+		return redirect()->back()->with(['status'=>'success','message' => 'تم']);
 	}
 
 }

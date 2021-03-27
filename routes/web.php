@@ -218,6 +218,14 @@ Route::get('user/shiftaccount/tostudent', [UserController::class,'shiftaccountTo
 	->name('user.shiftaccount.tostudent');
 Route::get('user/shiftaccount/toteacher', [UserController::class,'shiftaccountToTeacher'])
 	->name('user.shiftaccount.toteacher');
+Route::get('user/shiftaccount/tosupervisor', [UserController::class,'shiftaccountToSupervisor'])
+	->name('user.shiftaccount.tosupervisor');
+
+
+Route::get('add_supervisor_account_for_user/{teacher}/create', [TeacherController::class,'addSupervisorAccountForUserCreate'])
+->name('add_supervisor_account_for_user.create');
+Route::post('add_supervisor_account_for_user/store', [TeacherController::class,'addSupervisorAccountForUserStore'])
+->name('add_supervisor_account_for_user.store');
 
 /*	permissions	*/
 Route::prefix('permission')->group(function () {

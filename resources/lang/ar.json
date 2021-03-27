@@ -1,4 +1,6 @@
 {
+    "supervisor": "مشرف",
+    "teacher": "مدرس",
     "Email": "البريد الإلكتروني",
     "Password": "كلمة المرور",
     "male": "ذكر",
@@ -6,6 +8,7 @@
     "Not Found": "الصفحة غير متوفرة",
     "todaymeeting": "لقاء اليوم",
     "nextmeeting": "اللقاء القادم",
+    "Done.": "تم",
     "Save": "حفظ",
     "Disable": "تعطيل",
     "Enable": "تفعيل",
@@ -17,7 +20,7 @@
     "Ensure your account is using a long, random password to stay secure.":"يجب ان تكون كلمة المرور قوية",
     "Two Factor Authentication":"التحقق بخطوتين",
     "Add additional security to your account using two factor authentication.":"اضف حماية أكثر لحسابك من خلال التحقق بخطوتين",
-    "You have not enabled two factor authentication.":"لم تفعل التحقق بخطوتيت",
+    "You have not enabled two factor authentication.":"لم تفعل التحقق بخطوتين",
     "When two factor authentication is enabled, you will be prompted for a secure, random token during authentication. You may retrieve this token from your phone's Google Authenticator application.":"عند تمكين المصادقة الثنائية ، ستتم مطالبتك برمز مميز آمن وعشوائي أثناء المصادقة. يمكنك استرداد هذا الرمز المميز من تطبيق Google Authenticator بهاتفك.",
     "Browser Sessions":"جلسات المتصفح",
     "Manage and log out your active sessions on other browsers and devices.":"إدارة جلساتك النشطة وتسجيل الخروج منها على متصفحات وأجهزة أخرى.",
@@ -30,6 +33,8 @@
     "You have enabled two factor authentication.":"لقد قمت بتمكين المصادقة الثنائية (التحقق بخطوتين).",
     "Two factor authentication is now enabled. Scan the following QR code using your phone's authenticator application.":"تم تمكين المصادقة الثنائية الآن. امسح رمز الاستجابة السريعة التالي ضوئيًا باستخدام تطبيق المصادقة بهاتفك.",
     "Store these recovery codes in a secure password manager. They can be used to recover access to your account if your two factor authentication device is lost.":"قم بتخزين رموز الاسترداد هذه في مدير كلمات مرور آمن. يمكن استخدامها لاستعادة الوصول إلى حسابك في حالة فقد جهاز المصادقة الثنائية الخاص بك.",
+    "This password does not match our records.":"كلمة المرور غير صحيحة",
     "Regenerate Recovery Codes":"إعادة إنشاء رموز الاسترداد",
-    "Show Recovery Codes":"إظهار رموز الاسترداد"
+    "Show Recovery Codes":"إظهار رموز الاسترداد",
+    "Please enter your password to confirm you would like to log out of your other browser sessions across all of your devices.":"من فضلك أدخل كلمة المرور للتأكيد"
 }

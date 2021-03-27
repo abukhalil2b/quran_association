@@ -18,9 +18,13 @@ class Supervisor extends Model {
 	}
 
 	public function usercenter() {
-		return User::whereHas('userSupervisorPermission', function ($q) {
+		$usercenter = User::whereHas('userSupervisorPermission', function ($q) {
 			$q->where('user_supervisor_permission.supervisor_id', $this->id);
 		})->first();
+		if($usercenter){
+			return $usercenter;
+		}
+		abort(404);
 	}
 
 	public function checkUserPermission($user) {

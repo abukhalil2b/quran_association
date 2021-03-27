@@ -8,10 +8,10 @@
 				<div class="form-group mt-3">
 					<input type="hidden" name="circle_id" value="{{$circle->id}}">
 					@foreach($students as $student)
-					<label class="btn-block">
+					<div>
 						<input type="checkbox" name="student_ids[]" value="{{$student->id}}">
 						{{$student->name}}
-					</label>
+					</div>
 					@endforeach
                     @if(count($students))
 					<button class="btn btn-outline-secondary btn-block">اضافة الطلاب إلى {{$circle->title}}</button>

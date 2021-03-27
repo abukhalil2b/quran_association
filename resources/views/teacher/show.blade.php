@@ -8,6 +8,14 @@
                 </div>
                 <div class="card-body">
                     <a class="btn btn-sm btn-info" href="{{route('user.teacher.edit',['teacher'=>$teacher->id])}}">تعديل</a>
+                    <a class="btn btn-sm btn-info" href="{{route('add_supervisor_account_for_user.create',['teacher'=>$teacher->id])}}">
+                    اضافة حساب مشرف
+                    </a>
+                </div>
+                <div class="card-body">
+                    @if($supervisor = $accountOwner->supervisorAccount)
+                    الحساب الآخر: <span class="text-blue-900 font-bold">{{$supervisor->title}}</span>
+                    @endif
                 </div>
             </div>
             <h5 class="mt-5">الحلقات</h5>

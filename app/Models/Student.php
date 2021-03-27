@@ -51,9 +51,13 @@ class Student extends Model {
 	}
 
 	public function usercenter() {
-		return User::whereHas('userStudentPermission', function ($q) {
+		$usercenter = User::whereHas('userStudentPermission', function ($q) {
 			$q->where('user_student_permission.student_id', $this->id);
 		})->first();
+		if($usercenter){
+			return $usercenter;
+		}
+		abort(404);
 	}
 
 	public function checkUserPermission($user) {
