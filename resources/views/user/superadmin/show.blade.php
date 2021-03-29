@@ -70,6 +70,7 @@
 	    			<div class="px-2">[{{$user->id}}]{{$user->name}} - {{__($user->userType)}} - {{$user->created_at->diffForHumans()}}</div>
 	    		@endforeach
     		</div>
+    		{{ $users->links() }}
     	</div>
 
     	<div class="col-md-12">
@@ -82,6 +83,7 @@
 	    		<div class="px-2">[{{$supervisor->id}}]{{$supervisor->owner}}  - {{$supervisor->created_at->diffForHumans()}}</div>
 	    		@endforeach
     		</div>
+    		{{ $supervisors->links() }}
     	</div>
 
     	<div class="col-md-12">
@@ -98,6 +100,7 @@
 	    			</span>
 	    		</div>
 	    		@endforeach
+	    		{{ $teachers->links() }}
     		</div>
     	</div>
     </div>

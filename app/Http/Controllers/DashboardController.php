@@ -182,7 +182,7 @@ class DashboardController extends Controller {
 				return redirect()->route('year.create');
 			}
 			$years = Year::all();
-			$users = User::where('id','<>',1)->paginate(10);
+			$users = User::where('id','<>',1)->paginate(50);
 			$supervisors = Supervisor::paginate(50);
 			$teachers = Teacher::paginate(50);
 			$studentPermissions = Permission::whereCate('student')->get();
