@@ -23,6 +23,7 @@ use App\Http\Controllers\TraineeController;
 use App\Http\Controllers\TrainerController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\YearController;
+use App\Http\Controllers\OwnerController;
 use Illuminate\Support\Facades\Route;
 /*
 |--------------------------------------------------------------------------
@@ -243,4 +244,11 @@ Route::prefix('permission')->group(function () {
 	Route::get('index',[PermissionController::class,'index'])->name('permission.index');
 	Route::get('about/student',[PermissionController::class,'aboutStudent'])->name('permission.about.student');
 	Route::get('about/student/toggle/{teacher}',[PermissionController::class,'aboutStudentToggle'])->name('permission.about.student.toggle');
+});
+
+/*	owner	*/
+Route::prefix('owner')->group(function () {
+	Route::get('{teacher}/edit_teacher_owner',[OwnerController::class,'edit'])->name('edit_teacher_owner');
+	Route::post('{teacher}/update_teacher_owner',[OwnerController::class,'update'])->name('update_teacher_owner');
+
 });

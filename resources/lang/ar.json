@@ -1,6 +1,8 @@
 {
     "supervisor": "مشرف",
     "teacher": "مدرس",
+    "trainee":"متدرب",
+    "usercenter":"مدير المركز",
     "Email": "البريد الإلكتروني",
     "Password": "كلمة المرور",
     "male": "ذكر",

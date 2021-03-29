@@ -30,7 +30,7 @@
     	<div class="col-md-12">
 			<div class="box box-blue mt-2">
 	    		<center class="box-top box-top-blue">
-	    			المشرف
+	    			صلاحيات المشرف
 	    		</center>
 	    		@foreach($supervisorPermissions as $supervisorPermission)
 	    		<div class="px-2">{{$supervisorPermission->title}}</div>
@@ -41,7 +41,7 @@
     	<div class="col-md-12">
 			<div class="box  mt-2">
 	    		<center class="box-top ">
-	    			المدرس
+	    			صلاحيات المدرس
 	    		</center>
 	    		@foreach($teacherPermissions as $teacherPermission)
 	    		<div class="px-2">{{$teacherPermission->title}}</div>
@@ -52,11 +52,51 @@
 	    <div class="col-md-12">
 	    	<div class="box box-orange mt-2">
 	    		<center class="box-top box-top-orange">
-	    			الطالب
+	    			صلاحيات الطالب
 	    		</center>
 
 	    		@foreach($studentPermissions as $studentPermission)
 	    		<div class="px-2">{{$studentPermission->title}}</div>
+	    		@endforeach
+    		</div>
+    	</div>
+
+    	<div class="col-md-12">
+	    	<div class="box box-orange mt-2">
+	    		<center class="box-top box-top-orange">
+	    			المستخدمين للبرنامج
+	    		</center>
+	    		@foreach($users as $user)
+	    			<div class="px-2">[{{$user->id}}]{{$user->name}} - {{__($user->userType)}} - {{$user->created_at->diffForHumans()}}</div>
+	    		@endforeach
+    		</div>
+    	</div>
+
+    	<div class="col-md-12">
+	    	<div class="box box-orange mt-2">
+	    		<center class="box-top box-top-orange">
+	    			المشرفين
+	    		</center>
+
+	    		@foreach($supervisors as $supervisor)
+	    		<div class="px-2">[{{$supervisor->id}}]{{$supervisor->owner}}  - {{$supervisor->created_at->diffForHumans()}}</div>
+	    		@endforeach
+    		</div>
+    	</div>
+
+    	<div class="col-md-12">
+	    	<div class="box box-orange mt-2">
+	    		<center class="box-top box-top-orange">
+	    			المدرسين
+	    		</center>
+
+	    		@foreach($teachers as $teacher)
+	    		<div class="px-2">
+	    			[{{$teacher->id}}]{{$teacher->owner}}  - {{$teacher->created_at->diffForHumans()}} 
+	    			<span class="pull-left">
+	    				<a href="{{route('edit_teacher_owner',['teacher'=>$teacher->id])}}">تعديل</a>
+	    			</span>
+	    		</div>
 	    		@endforeach
     		</div>
     	</div>
