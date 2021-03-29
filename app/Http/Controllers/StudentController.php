@@ -11,7 +11,7 @@ use App\Models\MemorizedSowar;
 use App\Models\Student;
 use App\Models\User;
 use Illuminate\Http\Request;
-
+use Carbon\Carbon;
 class StudentController extends Controller {
 
 	public function __construct() {
@@ -56,7 +56,7 @@ class StudentController extends Controller {
 
 			//check if teacher has permission
 			$student = $student->checkUserPermission($usercenter);
-			$programReports=ProgramReport::where('student_id',$student->id)->get();
+			$programReports=ProgramReport::where('student_id',$student->id)->whereDate('created_at',Carbon::now())->get();
 			$memorizedJuzs=MemorizedJuz::where('student_id',$student->id)->get();
 			$memorizedSowars=MemorizedSowar::where('student_id',$student->id)->get();
 			$circles = $circles = $student->circles;
@@ -71,28 +71,36 @@ class StudentController extends Controller {
 	}
 
 	public function index() {
+
 		$loggedUser = auth()->user();
 		switch ($loggedUser->userType) {
 		case 'superadmin':
-			$students = Student::all();
+			$malestudents = Student::where('gender','male')->get();
+			$femalestudents = Student::where('gender','female')->get();
 			break;
 		case 'usercenter':
-			$students = Student::whereHas('userStudentPermission', function ($q) use ($loggedUser) {
+			$malestudents = Student::whereHas('userStudentPermission', function ($q) use ($loggedUser) {
 				$q->where('user_student_permission.user_id', $loggedUser->id);
-			})->get();
+			})->where('gender','male')->get();
+			$femalestudents = Student::whereHas('userStudentPermission', function ($q) use ($loggedUser) {
+				$q->where('user_student_permission.user_id', $loggedUser->id);
+			})->where('gender','female')->get();
 			break;
 		case 'supervisor':
 			$supervisor = $loggedUser->supervisorAccount;
 			$usercenter = $supervisor->usercenter();
-			$students = Student::whereHas('userStudentPermission', function ($q) use ($usercenter) {
+			$malestudents = Student::whereHas('userStudentPermission', function ($q) use ($usercenter) {
 				$q->where('user_student_permission.user_id', $usercenter->id);
-			})->get();
+			})->where('gender','male')->get();
+			$femalestudents = Student::whereHas('userStudentPermission', function ($q) use ($usercenter) {
+				$q->where('user_student_permission.user_id', $usercenter->id);
+			})->where('gender','female')->get();
 			break;
 		default:
 			$students = [];
 			break;
 		}
-		return view('student.index', compact('students'));
+		return view('student.index', compact('malestudents','femalestudents'));
 	}
 	public function create() {
 		return view('student.create');

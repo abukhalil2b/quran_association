@@ -33,12 +33,15 @@ class ApiStudent extends Controller
 	    if($student)
 	    {
 			$todaymeeting = ProgramReport::where(['student_id'=>$student->id,'meeting'=>'todaymeeting'])
-			->whereDate('created_at',Carbon::now()->format('Y-m-d'))
+			->orderby('id','DESC')
 			->first();
 
 			$nextmeeting = ProgramReport::where(['student_id'=>$student->id,'meeting'=>'nextmeeting'])
-			->whereDate('created_at',Carbon::now()->format('Y-m-d'))
+			->orderby('id','DESC')
 			->first();
+			
+			$todaymeeting = $todaymeeting? new ProgramReportResource($todaymeeting): null;
+			$nextmeeting = $nextmeeting? new ProgramReportResource($nextmeeting): null;
 
 			$student=[
 			'name' => $student->name,
@@ -46,8 +49,8 @@ class ApiStudent extends Controller
 			'avatar'=>$student->avatar,
 			'memorizedJuzs'=>MemorizedJuzResource::collection($student->memorizedJuzs),
 			'memorizedSowars'=>MemorizedSowarResource::collection($student->memorizedSowars),
-			'todaymeeting'=>new ProgramReportResource($todaymeeting)||null,
-			'nextmeeting'=>new ProgramReportResource($nextmeeting)||null
+			'todaymeeting'=>$todaymeeting,
+			'nextmeeting'=>$nextmeeting
 			];
 
 			$response = [

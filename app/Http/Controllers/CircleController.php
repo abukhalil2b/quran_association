@@ -140,7 +140,7 @@ class CircleController extends Controller {
 	 * @return \Illuminate\Http\Response
 	 */
 	public function edit(Circle $circle) {
-		//
+		return view('circle.edit',compact('circle'));
 	}
 
 	/**
@@ -151,7 +151,8 @@ class CircleController extends Controller {
 	 * @return \Illuminate\Http\Response
 	 */
 	public function update(Request $request, Circle $circle) {
-		//
+		$circle->update(['title'=>$request->title]);
+		return redirect()->route('dashboard')->with(['message' => 'تم', 'status' => 'success']);
 	}
 
 	/**

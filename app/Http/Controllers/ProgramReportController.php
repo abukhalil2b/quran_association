@@ -112,8 +112,9 @@ class ProgramReportController extends Controller
      * @param  \App\Models\ProgramReport  $programReport
      * @return \Illuminate\Http\Response
      */
-    public function destroy(ProgramReport $programReport)
+    public function delete(ProgramReport $programReport)
     {
-        //
+        $programReport->delete();
+        return redirect()->back()->with(['status'=>'success','message' => 'تم']);
     }
 }

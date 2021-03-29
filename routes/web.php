@@ -60,6 +60,8 @@ Route::prefix('building')->group(function () {
 });
 /** circle */
 Route::prefix('circle')->group(function () {
+	Route::get('{circle}/edit',[CircleController::class,'edit'])->name('circle.edit');
+	Route::post('{circle}/update',[CircleController::class,'update'])->name('circle.update');
 	Route::post('store', [CircleController::class,'store'])->name('circle.store');
 	Route::get('create/{program}', [CircleController::class,'create'])->name('circle.create');
 	Route::get('dashboard/{circle}',[CircleController::class,'dashboard'] )->name('circle.dashboard');
@@ -131,6 +133,8 @@ Route::prefix('student')->group(function () {
 	Route::get('{student}/active/toggle', [StudentController::class,'activeToggle'])->name('student.active.toggle');
 });	
 
+
+
 Route::prefix('trainee')->group(function () {
 	Route::get('index', [TraineeController::class,'index'])->name('trainee.index');
 });
@@ -157,6 +161,8 @@ Route::prefix('course')->group(function () {
 });
 
 Route::prefix('program')->group(function () {
+	Route::get('{program}/edit',[ProgramController::class,'edit'])->name('program.edit');
+	Route::post('{program}/update',[ProgramController::class,'update'])->name('program.update');
 	Route::get('{program}/dashboard',[ProgramController::class,'dashboard'])->name('program.dashboard');
 	Route::get('index',[ProgramController::class,'index'])->name('program.index');
 	Route::get('{building}/create', [ProgramController::class,'create'])->name('program.create');
@@ -171,6 +177,7 @@ Route::prefix('program')->group(function () {
 Route::prefix('program_report')->group(function () {
 	Route::get('{program}/{student}/create', [ProgramReportController::class,'create'])->name('program_report.create');
 	Route::post('store', [ProgramReportController::class,'store'])->name('program_report.store');
+	Route::get('{programReport}/delete', [ProgramReportController::class,'delete'])->name('program_report.delete');
 });
 
 Route::prefix('student/memorized_juz')->group(function () {

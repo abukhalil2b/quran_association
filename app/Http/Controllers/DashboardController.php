@@ -64,14 +64,13 @@ class DashboardController extends Controller {
 			
 			$trainees = Trainee::all();
 			
-			$maleStudents = Student::whereHas('userStudentPermission', function ($query) use ($loggedUser) {
+			$students = Student::whereHas('userStudentPermission', function ($query) use ($loggedUser) {
 				$query->where('user_student_permission.user_id', $loggedUser->id);
-			})->where('gender','male')->get();
+			})->get();
 			
-			$femaleStudents = Student::whereHas('userStudentPermission', function ($query) use ($loggedUser) {
-				$query->where('user_student_permission.user_id', $loggedUser->id);
-			})->where('gender','female')->get();
 			
+			$programs = Program::all();
+			$circles = Circle::all();
 			return view('dashboard', compact(
 				'loggedUser',
 				'finance_reports',
@@ -82,8 +81,9 @@ class DashboardController extends Controller {
 				'femaleTeachers',
 				'trainers',
 				'trainees',
-				'maleStudents',
-				'femaleStudents',
+				'students',
+				'programs',
+				'circles',
 			));
 			break;
 

@@ -68,4 +68,14 @@ class ProgramController extends Controller {
 		}
 	}
 
+	public function edit(Program $program) {
+		return view('program.edit', compact('program'));
+	}
+
+	public function update(Request $request,Program $program) {
+		$program->update(['title'=>$request->title]);
+		return redirect()->route('dashboard')->with(['message' => 'تم', 'status' => 'success']);
+	}
+	
+
 }

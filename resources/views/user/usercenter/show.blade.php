@@ -87,25 +87,17 @@
         </div>
 
         <div class="col-md-6">
-            <h4 class="alert alert-info">
-            الطلاب | <a href="{{route('student.create')}}">+ إضافة طلاب</a>
-            </h4>
-            <h5>زكور  | (العدد: {{count($maleStudents)}}) </h5>
-            @foreach($maleStudents as $key => $student)
-            <div class="card mt-2 mb-2 px-2">
-                <div>رقم الطالب: {{$student->id}}</div>
-                <div>الاسم: {{$student->name}}</div>
-                <div>الهاتف: {{$student->phone}}</div>
+            <div class="alert alert-info">
+            
+            <a href="{{route('student.index')}}">
+                الطلاب 
+                <h5>(العدد: {{count($students)}}) </h5>
+            </a>
+
+            | 
+
+            <a href="{{route('student.create')}}">+ إضافة طلاب</a>
             </div>
-            @endforeach
-            <h5>إناث  | (العدد: {{count($femaleStudents)}}) </h5>
-            @foreach($femaleStudents as $key => $student)
-            <div class="card mt-2 mb-2 px-2">
-                <div>رقم الطالب: {{$student->id}}</div>
-                <div>الاسم: {{$student->name}}</div>
-                <div>الهاتف: {{$student->phone}}</div>
-            </div>
-            @endforeach
 
         </div>
 
@@ -137,6 +129,36 @@
             </h4>
             <div class="card mt-2 mb-2 px-2">
                  <a href="{{route('permission.about.student')}}">قدرة المدرسين على فتح سجل الحضور والغياب للطلاب</a>
+            </div>
+           
+        </div>
+
+
+        <div class="col-md-6">
+            <h4 class="alert alert-info">
+                البرامج
+            </h4>
+            <div class="card mt-2 mb-2 px-2">
+                @foreach($programs as $program)
+                <div>{{$program->title}} <span class="pull-left"><a href="{{route('program.edit',['program'=>$program->id])}}">تعديل</a></span></div>
+                @endforeach
+            </div>
+           
+        </div>
+
+
+        <div class="col-md-6">
+            <h4 class="alert alert-info">
+                الحلقات
+            </h4>
+            <div class="card mt-2 mb-2 px-2">
+                @foreach($circles as $circle)
+                <div>{{$circle->title}} 
+                    <span class="pull-left">
+                        <a href="{{route('circle.edit',['circle'=>$circle->id])}}">تعديل</a>
+                    </span>
+                </div>
+                @endforeach
             </div>
            
         </div>

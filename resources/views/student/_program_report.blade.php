@@ -5,14 +5,19 @@
 			   <h5 class="mt-3"> التقارير المرسلة</h5>
 			    <div class="card">
 			        <div class="card-body">
-			            @foreach($programReports as $report)
+			            @foreach($programReports as $programReport)
 			            <div>
-			                {{$report->donedate}} | 
-			                {{__($report->meeting)}} | 
-			                {{$report->mission}} | 
+
+			                {{$programReport->donedate}} | 
+			                {{__($programReport->meeting)}} | 
+			                {{$programReport->mission}} | 
 			                
-			                {{$report->evaluation}} | 
-			                {{$report->note}} 
+			                {{$programReport->evaluation}} | 
+			                {{$programReport->note}} 
+
+			                <a class="pull-left text-red-400" href="{{route('program_report.delete',['programReport'=>$programReport->id])}}">
+			                	حذف
+			                </a>
 			            </div>
 			            @endforeach
 			        </div>
