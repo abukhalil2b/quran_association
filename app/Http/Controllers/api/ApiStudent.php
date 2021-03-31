@@ -13,18 +13,15 @@ use Illuminate\Http\Request;
 class ApiStudent extends Controller
 {
 	public function login(Request $request) {
-	    $found = Student::find($request->id);
-	    if($found){
-	        $student = $found->wherePassword($request->password)->first();
-	        if($student){
-	            $response = [
-	            'success'=>true,
-	            'userType'=>'student',
-	            'token' => $student->createToken('student')->plainTextToken,
-	        	];
-	        return response($response, 200);
-	        }
-	    }
+	    $student = Student::whereId($request->id)->wherePassword($request->password)->first();
+        if($student){
+            $response = [
+            'success'=>true,
+            'userType'=>'student',
+            'token' => $student->createToken('student')->plainTextToken,
+        	];
+        return response($response, 200);
+        }
 	    return response(['success'=>false,'message'=>"البيانات خاطئة"], 200);
 	}
 
