@@ -7,7 +7,7 @@
 			<div class="mt-3">[ {{$program_report->donedate}} ]</div>
             <div class="card mt-1">
                 <div class="card-body text-xs">
-                    {{$program_report->mission}}
+                    {!!nl2br($program_report->mission)!!}
                 </div>
                 <div class="text-left">
                     <a class="text-red-400 mx-2" href="{{route('program_report.delete',['programReport'=>$program_report->id])}}">
@@ -27,7 +27,7 @@
             <div class="card mt-1">
                
                 <div class="card-body text-xs">
-                    {{$program_report->mission}}
+                   {!!nl2br($program_report->mission)!!}
                 </div>
                 <div class="text-left">
                     <a class="text-red-400 mx-2" href="{{route('program_report.delete',['programReport'=>$program_report->id])}}">

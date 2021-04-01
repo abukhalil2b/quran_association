@@ -20,6 +20,7 @@
 						تعديل
 						</a>
 					</div>
+					 <small>{{$programReport->created_at->diffForHumans()}}</small>
 				</div>
 				@endforeach
 			</div>
