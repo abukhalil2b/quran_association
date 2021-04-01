@@ -176,9 +176,12 @@ Route::prefix('program')->group(function () {
 
 
 Route::prefix('program_report')->group(function () {
+	Route::get('{student}/index', [ProgramReportController::class,'index'])->name('program_report.index');
 	Route::get('{program}/{student}/create', [ProgramReportController::class,'create'])->name('program_report.create');
 	Route::post('store', [ProgramReportController::class,'store'])->name('program_report.store');
 	Route::get('{programReport}/delete', [ProgramReportController::class,'delete'])->name('program_report.delete');
+	Route::get('{programReport}/edit', [ProgramReportController::class,'edit'])->name('program_report.edit');
+	Route::post('{programReport}/update', [ProgramReportController::class,'update'])->name('program_report.update');
 });
 
 Route::prefix('student/memorized_juz')->group(function () {

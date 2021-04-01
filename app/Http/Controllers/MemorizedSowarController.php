@@ -31,6 +31,8 @@ class MemorizedSowarController extends Controller
             $teacher = $loggedUser->teacherAccount;
             // $student = $teacher->checkHisStudent($student);
             $sowars = Sowar::all();
+        }else{
+            abort(401);
         }
         return view('student.memorized_sowar.create',compact('student','sowars'));
     }

@@ -32,6 +32,8 @@ class MemorizedJuzController extends Controller
              // ->circles()->where('teacher_id',$teacher->id)->get();
             
             $juzs = Juz::all();
+        }else{
+            abort(401);
         }
         return view('student.memorized_juz.create',compact('student','juzs'));
     }

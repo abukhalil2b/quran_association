@@ -25,7 +25,7 @@ class StudentController extends Controller {
 			$usercenter = $loggedUser;
 			$student = $student->checkUserPermission($usercenter);
 			$circles = $student->circles;
-			$programReports=ProgramReport::where('student_id',$student->id)->get();
+			$programReports=ProgramReport::where('student_id',$student->id)->limit(5)->get();
 			$memorizedJuzs=MemorizedJuz::where('student_id',$student->id)->get();
 			$memorizedSowars=MemorizedSowar::where('student_id',$student->id)->get();
 			return view('student.show', compact('student', 'circles', 'usercenter','programReports','memorizedJuzs','memorizedSowars'));
@@ -36,7 +36,7 @@ class StudentController extends Controller {
 			$usercenter = $supervisor->usercenter();
 			$student = $student->checkUserPermission($usercenter);
 			$circles = $student->circles;
-			$programReports=ProgramReport::where('student_id',$student->id)->get();
+			$programReports=ProgramReport::where('student_id',$student->id)->limit(5)->get();
 			$memorizedJuzs=MemorizedJuz::where('student_id',$student->id)->get();
 			$memorizedSowars=MemorizedSowar::where('student_id',$student->id)->get();
 			return view('student.show', compact('student', 'circles', 'usercenter','programReports','memorizedJuzs','memorizedSowars'));

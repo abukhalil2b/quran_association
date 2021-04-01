@@ -16,9 +16,11 @@ class ProgramReportController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Student $student)
     {
-        //
+        $todaymeeting_program_reports = ProgramReport::where(['student_id'=>$student->id,'meeting'=>'todaymeeting'])->get();
+        $nextmeeting_program_reports = ProgramReport::where(['student_id'=>$student->id,'meeting'=>'nextmeeting'])->get();
+       return view('program_report.index',compact('todaymeeting_program_reports','nextmeeting_program_reports')); 
     }
 
     /**
@@ -91,7 +93,7 @@ class ProgramReportController extends Controller
      */
     public function edit(ProgramReport $programReport)
     {
-        //
+        return view('program_report.edit',compact('programReport'));
     }
 
     /**
@@ -103,7 +105,8 @@ class ProgramReportController extends Controller
      */
     public function update(Request $request, ProgramReport $programReport)
     {
-        //
+        $programReport->update($request->all());
+        return redirect()->back()->with(['status'=>'success','message' => 'تم']);
     }
 
     /**
