@@ -5,10 +5,9 @@
     		<h5><span class="text-primary">حلقات الطالب: </span>{{$student->name}}</h5>
     	</div>
     	<div class="col-md-12">
-    		@foreach($circles as $key => $circle)
             <div class="card mt-3">
                 <a class="alert alert-secondary" href="{{route('student.circle.show',['student'=>$student->id,'circle'=>$circle->id])}}">
-                 [{{$key+1}}] {{$circle->title}} 
+                 {{$circle->title}} 
                 </a>
                 <div class="text-info px-3">
                     <small>
@@ -67,7 +66,7 @@
                 <center>لا يوجد مدرس</center>
                 @endif
             </div>
-    		@endforeach
+    		
     	</div>
 
     </div>

@@ -79,4 +79,64 @@ class UserController extends Controller {
 		return redirect()->back()->with(['status'=>'success','message' => 'تم']);
 	}
 
+	public function addSupervisorAccountForUserCreate(Teacher $teacher) {
+		return view('user.add_supervisor_account_for_user', compact('teacher'));
+	}
+
+	public function addSupervisorAccountForUserStore(Request $request) {
+		$loggedUser = auth()->user();
+		if($loggedUser->userType==='usercenter'){
+			$teacher = Teacher::findOrFail($request->teacher_id);
+			$teacher->checkUserPermission($loggedUser);
+			$user = $teacher->accountOwner;
+			$created= null;
+			if(!$user->supervisorAccount){
+				$created=Supervisor::create(['title'=>$request->title,'owner'=>$user->id]);
+				$loggedUser->userSupervisorPermission()->attach($created->id);
+			}
+			
+		}else{
+			abort(403);
+		}
+
+		if($created){
+			return redirect()->route('user.teacher.show',['teacher'=>$teacher->id])->with(['status'=>'success','message'=>'تم']);
+		}
+		else{
+			return redirect()->route('user.teacher.show',['teacher'=>$teacher->id])->with(['status'=>'warning','message'=>'لم يتم، قد يكون عنده نفس الحساب']);
+		}
+	}
+
+
+	public function addTeacherAccountForUserCreate(Supervisor $supervisor) {
+		return view('user.add_teacher_account_for_user', compact('supervisor'));
+	}
+
+	public function addTeacherAccountForUserStore(Request $request) {
+		$loggedUser = auth()->user();
+		if($loggedUser->userType==='usercenter'){
+			$supervisor = Supervisor::findOrFail($request->supervisor_id);
+			$supervisor->checkUserPermission($loggedUser);
+			$user = $supervisor->accountOwner;
+			$created= null;
+			if(!$user->teacherAccount){
+				$created=Teacher::create(['title'=>$request->title,'owner'=>$user->id]);
+				$loggedUser->userTeacherPermission()->attach($created->id);
+			}
+			
+		}else{
+			abort(403);
+		}
+
+		if($created){
+			return redirect()->route('dashboard',['supervisor'=>$supervisor->id])
+			->with(['status'=>'success','message'=>'تم']);
+		}
+		else{
+			return redirect()->route('dashboard',['supervisor'=>$supervisor->id])
+			->with(['status'=>'warning','message'=>'لم يتم، قد يكون عنده نفس الحساب']);
+		}
+	}
+
+
 }

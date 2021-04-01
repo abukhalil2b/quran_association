@@ -19,7 +19,13 @@
 	                    	<tr>
 	                    		<td>رقم الهاتف</td>
 	                    		<td>
-		                          <input value="{{$student->phone}}" name="phone" class="form-control" placeholder="رقم الهاتف">
+		                          <input value="{{$student->phone}}" name="phone" type="number" class="form-control" placeholder="رقم الهاتف">
+	                            </td>
+	                    	</tr>
+	                    	<tr>
+	                    		<td>كلمة المرور</td>
+	                    		<td>
+		                          <input value="{{$student->password}}" name="password" type="number" class="form-control" placeholder="رقم الهاتف">
 	                            </td>
 	                    	</tr>
 	                    	<tr>

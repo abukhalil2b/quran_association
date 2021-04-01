@@ -43,4 +43,14 @@ class Circle extends Model {
 		
 	}
 
+
+	public function checkStudentInCircle($student){
+		 $student = $this->students()->where('students.id',$student->id)->first();
+		 if($student){
+		 	return $student;
+		 }
+		 abort(401);
+		 
+	}
+
 }

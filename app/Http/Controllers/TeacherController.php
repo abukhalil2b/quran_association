@@ -166,30 +166,6 @@ class TeacherController extends Controller {
 	}
 
 	
-	public function addSupervisorAccountForUserCreate(Teacher $teacher) {
-		return view('user.add_teacher_account_for_user', compact('teacher'));
-	}
 
-	public function addSupervisorAccountForUserStore(Request $request) {
-		$loggedUser = auth()->user();
-		if($loggedUser->userType==='usercenter'){
-			$teacher = Teacher::findOrFail($request->teacher_id);
-			$teacher->checkUserPermission($loggedUser);
-			$user = $teacher->accountOwner;
-			$created= null;
-			if(!$user->supervisorAccount){
-				$created=Supervisor::create(['title'=>$request->title,'owner'=>$user->id]);
-				$loggedUser->userSupervisorPermission()->attach($created->id);
-			}
-			
-		}
-
-		if($created){
-			return redirect()->route('user.teacher.show',['teacher'=>$teacher->id])->with(['status'=>'success','message'=>'تم']);
-		}
-		else{
-			return redirect()->route('user.teacher.show',['teacher'=>$teacher->id])->with(['status'=>'warning','message'=>'لم يتم، قد يكون عنده نفس الحساب']);
-		}
-	}
 
 }

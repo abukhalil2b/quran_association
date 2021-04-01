@@ -74,6 +74,8 @@ class SupervisorController extends Controller {
 		}
 		die('أنت لاتملك الصلاحية');
 	}
+
+
 	public function store(Request $request) {
 		$this->validate($request, [
 			'password' => 'required',

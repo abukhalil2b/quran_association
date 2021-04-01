@@ -17,7 +17,11 @@
             </h5>
     	</div>
 
-
+        <div class="col-md-12">
+            <a class="btn btn-sm btn-info" href="{{route('add_teacher_account_for_user.create',['supervisor'=>$supervisor->id])}}">
+                    اضافة حساب مدرس
+                    </a>
+        </div>
 
         <div class="col-md-12">
             <div class="card">

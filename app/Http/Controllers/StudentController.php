@@ -41,27 +41,23 @@ class StudentController extends Controller {
 			$memorizedSowars=MemorizedSowar::where('student_id',$student->id)->get();
 			return view('student.show', compact('student', 'circles', 'usercenter','programReports','memorizedJuzs','memorizedSowars'));
 			break;
-		case 'teacher':
 
+		case 'teacher':
 			$teacher = $loggedUser->teacherAccount;
 			$usercenter = $teacher->usercenter();
-			$lastSemester = Semester::orderby('id', 'desc')->first();
-			if (!$lastSemester) {
-				die('لايوجد فصل دراسي');
-			}
-			$lastSemesterPrograms = $lastSemester->lastSemesterPrograms();
-			$teacherCircleIds = Circle::where('teacher_id', $teacher->id)
-				->whereIn('program_id', $lastSemesterPrograms->pluck('id'))
-				->pluck('id');
+			$circle = Circle::where('teacher_id',$teacher->id)->orderby('id','DESC')->first();
 
 			//check if teacher has permission
 			$student = $student->checkUserPermission($usercenter);
+
+			//check if student belongs to this teacher
+			$student = $circle->checkStudentInCircle($student);
+			
 			$programReports=ProgramReport::where('student_id',$student->id)->whereDate('created_at',Carbon::now())->get();
 			$memorizedJuzs=MemorizedJuz::where('student_id',$student->id)->get();
 			$memorizedSowars=MemorizedSowar::where('student_id',$student->id)->get();
-			$circles = $circles = $student->circles;
 
-			return view('student.show', compact('student', 'circles', 'usercenter','programReports','memorizedJuzs','memorizedSowars'));
+			return view('student.show', compact('student', 'circle', 'usercenter','programReports','memorizedJuzs','memorizedSowars'));
 			break;
 		default:
 			# code...

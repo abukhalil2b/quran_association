@@ -4,10 +4,10 @@
         <div class="col-md-12">
             <div class="card">
                 <div class="card-header">
-                    <h4>اضافة حساب  {{__('teacher')}} لـ {{$supervisor->accountOwner->name}}</h4>
+                    <h4>اضافة حساب  {{__('supervisor')}} لـ {{$teacher->accountOwner->name}}</h4>
                 </div>
                 <div class="card-body">
-					<form method="post" action="{{route('add_teacher_account_for_user.store')}}">
+					<form method="post" action="{{route('add_supervisor_account_for_user.store')}}">
 					@csrf
                     <table class="table">
                         <tr>
@@ -18,7 +18,7 @@
                     	</tr>
                         <tr>
                             <td colspan="2">
-                            	<input type="hidden" name="supervisor_id" value="{{$supervisor->id}}">
+                            	<input type="hidden" name="teacher_id" value="{{$teacher->id}}">
                                 <button class="btn btn-info btn-block">حفظ</button>
                             </td>
                         </tr>
