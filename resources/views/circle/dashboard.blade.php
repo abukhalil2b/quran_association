@@ -76,7 +76,16 @@
         <div  class="text-primary">الحضور والغياب</div>
         <ol>
         @foreach($attendances as $attendance)
-          <li>{{$attendance->student->name}} - {{$attendance->present?'وقت الحضور '. $attendance->present_time:'غائب'}}</li>
+          <div>
+            {{$attendance->student->name}} 
+            <div class="pull-left">
+              @if($attendance->present)
+              <div class="text-green-400">حاضر</div>
+              @else
+              <div class="text-red-300">غائب</div>
+              @endif
+            </div>
+          </div>
         @endforeach
         </ol>
       </div>

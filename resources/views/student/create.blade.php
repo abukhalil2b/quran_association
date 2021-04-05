@@ -6,6 +6,7 @@
                 <div class="card-header">
                     <h4>اضافة طالب  جديد  للمركز</h4>
                 </div>
+                
                 <div class="card-body">
 					<form method="post" action="{{route('student.store')}}">
 						@csrf
@@ -40,6 +41,7 @@
 	                    </table>
                     </form>
                 </div>
+
             </div>
         </div>
     </div>

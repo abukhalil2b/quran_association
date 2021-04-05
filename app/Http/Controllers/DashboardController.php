@@ -18,6 +18,7 @@ use App\Models\Trainer;
 use App\Models\User;
 use App\Models\MemorizeProgram;
 use App\Models\Year;
+use App\Models\Juz;
 use Auth;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -148,13 +149,7 @@ class DashboardController extends Controller {
 			$supervisor = $loggedUser->supervisorAccount;
 			$usercenter = $supervisor->usercenter();
 			
-			$teachers = Teacher::whereHas('userTeacherPermission', function ($q) use ($usercenter) {
-				$q->where('user_teacher_permission.user_id', $usercenter->id);
-			})->get();
-
-			$students = Student::whereHas('userStudentPermission', function ($q) use ($usercenter) {
-				$q->where('user_student_permission.user_id', $usercenter->id);
-			})->get();
+			
 
 			//supervisor's circles in this year.
 			$quarterlyProgramCircles = Circle::whereHas('program.semester', function ($q) use ($thisyear) {
@@ -164,7 +159,7 @@ class DashboardController extends Controller {
 			$programs=Program::whereHas('circles', function ($q) use ($supervisor) {
 				$q->where('circles.supervisor_id', $supervisor->id);
 			})->where('quarterly',0)->get(); 
-			return view('dashboard', compact('usercenter', 'teachers', 'students', 'quarterlyProgramCircles','programs', 'supervisor', 'loggedUser'));
+			return view('dashboard', compact('usercenter',  'quarterlyProgramCircles','programs', 'supervisor', 'loggedUser'));
 			break;
 		case 'trainer':
 			$trainer = $loggedUser->trainerAccount;
@@ -178,6 +173,7 @@ class DashboardController extends Controller {
 			return view('dashboard', compact('loggedUser', 'trainee'));
 			break;
 		default:
+
 			if(!$thisyear){
 				return redirect()->route('year.create');
 			}
@@ -188,7 +184,8 @@ class DashboardController extends Controller {
 			$studentPermissions = Permission::whereCate('student')->get();
 			$teacherPermissions = Permission::whereCate('teacher')->get();
 			$supervisorPermissions = Permission::whereCate('supervisor')->get();
-			return view('dashboard', compact('teachers','supervisors','users','studentPermissions', 'teacherPermissions', 'supervisorPermissions','years'));
+			$juzs = Juz::all();
+			return view('dashboard', compact('teachers','supervisors','users','studentPermissions', 'teacherPermissions', 'supervisorPermissions','years','juzs'));
 			break;
 		}
 

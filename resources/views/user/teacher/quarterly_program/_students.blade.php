@@ -1,5 +1,5 @@
 <div class="col-lg-12  mt-1">
-	<h6 class="mt-3">الطلاب المسجلون في الحلقة</h6>
+	<h6 class="mt-3">الطلاب المسجلون في الحلقة ({{$quarterlyProgramCircle->students->count()}})</h6>
 	@if($quarterlyProgramCircle)
 	@foreach($quarterlyProgramCircle->students as $student)
 	<div class="card p-2">

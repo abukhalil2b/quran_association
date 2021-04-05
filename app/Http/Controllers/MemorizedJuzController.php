@@ -71,27 +71,17 @@ class MemorizedJuzController extends Controller
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\MemorizedJuz  $memorizedJuz
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(MemorizedJuz $memorizedJuz)
+
+    public function juzEdit(Juz $juz)
     {
-        //
+        return view('juz.edit',compact('juz'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\MemorizedJuz  $memorizedJuz
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, MemorizedJuz $memorizedJuz)
+
+    public function juzUpdate(Request $request, Juz $juz)
     {
-        //
+        $juz->update(['title'=>$request->title]);
+        return redirect()->route('dashboard')->with(['status'=>'success','message'=>'تم']);
     }
 
     /**

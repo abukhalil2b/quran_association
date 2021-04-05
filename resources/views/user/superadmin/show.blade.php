@@ -2,12 +2,30 @@
 <link rel="stylesheet" href="{{asset('css/box-style.css')}}">
 <div class="container">
     <div class="row">
+
+
+    	<div class="col-md-12">
+	    	<div class="box box-blue mt-2">
+	    		<center class="box-top box-top-blue">
+	    			الأجزاء
+	    		</center>
+
+	    		@foreach($juzs as $juz)
+	    		<div class="px-2 divider">
+	    			{{$juz->title}} <a class="pull-left" href="{{route('juz.edit',['juz'=>$juz->id])}}">تعديل</a>
+	    		</div>
+	    		@endforeach
+	    		
+    		</div>
+    	</div>
+
     	<div class="col-md-12">
 			<div class="box box-blue mt-2">
 	    		<a class="btn btn-primary btn-sm" href="{{route('year.create')}}">create year</a>
 	    		<a class="btn btn-primary btn-sm" href="{{route('usercenter.create')}}">usercenter.create</a>
     		</div>
     	</div>
+
     	<div class="col-md-12">
 			<div class="box box-blue mt-2">
 	    		<center class="box-top box-top-blue">
@@ -103,5 +121,8 @@
 	    		{{ $teachers->links() }}
     		</div>
     	</div>
+
+
+
     </div>
 </div>

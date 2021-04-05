@@ -18,9 +18,10 @@ class ProgramReportController extends Controller
      */
     public function index(Student $student)
     {
-        $todaymeeting_program_reports = ProgramReport::where(['student_id'=>$student->id,'meeting'=>'todaymeeting'])->get();
-        $nextmeeting_program_reports = ProgramReport::where(['student_id'=>$student->id,'meeting'=>'nextmeeting'])->get();
-       return view('program_report.index',compact('todaymeeting_program_reports','nextmeeting_program_reports')); 
+        $todaymeeting_program_reports = ProgramReport::where(['student_id'=>$student->id,'meeting'=>'todaymeeting'])
+        ->orderby('id','DESC')
+        ->get();
+       return view('program_report.index',compact('todaymeeting_program_reports')); 
     }
 
     /**
@@ -52,25 +53,28 @@ class ProgramReportController extends Controller
     public function store(Request $request)
     {
          // return $request->all();
-        
-        $request['donedate'] = date('Y-m-d',time());
-        
-        if($request->meeting==='nextmeeting'){
-            $this->validate($request,[
-                'tobedonedate'=>'required'
-            ]);
-        }
-        $this->validate($request,[
-            'donedate'=>'required',
-            'meeting'=>'required',
-            'circle_id'=>'required',
-            'teacher_id'=>'required',
-            'student_id'=>'required',
-            'mission'=>'required'
-        ]);
+        if(auth()->user()->userType=='teacher'){
+
+            $request['donedate'] = date('Y-m-d',time());
             
-        ProgramReport::create($request->all());
-        return redirect()->route('student.show',['student'=>$request->student_id]);
+            if($request->meeting==='nextmeeting'){
+                $this->validate($request,[
+                    'tobedonedate'=>'required'
+                ]);
+            }
+            $this->validate($request,[
+                'donedate'=>'required',
+                'meeting'=>'required',
+                'circle_id'=>'required',
+                'teacher_id'=>'required',
+                'student_id'=>'required',
+                'mission'=>'required'
+            ]);
+                
+            ProgramReport::create($request->all());
+            return redirect()->route('student.show',['student'=>$request->student_id]);
+        }
+        abort(401);
 
     }
 

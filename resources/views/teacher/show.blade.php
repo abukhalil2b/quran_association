@@ -27,7 +27,9 @@
                 <div class="p-3">الطلاب</div>
                 <div class="card-body">
                     @foreach($circle->students as $key => $student)
-                    <div>{{$student->name}}</div>
+                    <div>
+                        <a href="{{route('student.show',['student'=>$student->id])}}">{{$student->name}}</a>
+                    </div>
                     @endforeach
                 </div>
             </div>

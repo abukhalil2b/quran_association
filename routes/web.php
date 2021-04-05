@@ -261,3 +261,8 @@ Route::prefix('owner')->group(function () {
 	Route::post('{teacher}/update_teacher_owner',[OwnerController::class,'update'])->name('update_teacher_owner');
 
 });
+
+Route::prefix('juz')->group(function () {
+	Route::get('{juz}/edit', [MemorizedJuzController::class,'juzEdit'])->name('juz.edit');
+	Route::post('{juz}/update', [MemorizedJuzController::class,'juzUpdate'])->name('juz.update');
+});

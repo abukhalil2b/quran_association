@@ -5,11 +5,15 @@
 			<div class="py-4">
 			   <h5 class="mt-3">
 			    السور التي يحفظها 
+
+			    @if(auth()->user()->userType=='teacher')
 			    <div class="pull-left">
 			        <a href="{{route('student.memorized_sowar.create',['student'=>$student->id])}}">
 			        + إدارة
 			        </a>
 			    </div>
+			    @endif
+			    
 			   </h5>
 			    <div class="card">
 			        <div class="card-body">
