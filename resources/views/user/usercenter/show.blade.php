@@ -163,5 +163,11 @@
            
         </div>
 
+        <div class="col-md-6">
+            <h4 class="alert alert-info">
+                <a href="{{route('program_report.index')}}">التقارير</a>
+            </h4>
+        </div>
+
     </div>
 </div>

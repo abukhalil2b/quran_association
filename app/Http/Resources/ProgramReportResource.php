@@ -16,6 +16,7 @@ class ProgramReportResource extends JsonResource
     {
         // return parent::toArray($request);
         return [
+            'id'=>$this->id,
             'donedate'=>$this->donedate,
             'tobedonedate'=>$this->tobedonedate,
             'mission'=>$this->mission,

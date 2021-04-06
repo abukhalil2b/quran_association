@@ -36,7 +36,6 @@ Route::middleware('auth:sanctum')->get('/father',[ApiFather::class,'father']);
 
 Route::post('/father/login', [ApiFather::class,'login']);
 
-Route::post('/student/login', [ApiStudent::class,'login']);
 
 Route::post('/trainee/login', [ApiTrainee::class,'login']);
 
@@ -44,5 +43,12 @@ Route::get('/course/index', [ApiCourse::class,'index']);
 
 Route::middleware('auth:sanctum')->get('/usertype', [ApiUser::class,'getUserType']);
 
-Route::middleware('auth:sanctum')->get('/student', [ApiStudent::class,'getStudent']);
+
 // Route::get('/student', [ApiStudent::class,'getStudent']);
+
+
+//student
+Route::post('/student/login', [ApiStudent::class,'login']);
+
+Route::middleware('auth:sanctum')->get('/student', [ApiStudent::class,'getStudent']);
+Route::middleware('auth:sanctum')->get('/program_reports', [ApiStudent::class,'getProgramReports']);

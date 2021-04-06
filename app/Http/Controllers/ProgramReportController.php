@@ -11,17 +11,21 @@ use App\Models\Student;
 use Carbon\Carbon;
 class ProgramReportController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index(Student $student)
+    
+    public function index()
+    {
+        $todaymeeting_program_reports = ProgramReport::where(['meeting'=>'todaymeeting'])
+        ->orderby('id','DESC')
+        ->paginate(50);
+       return view('program_report.index',compact('todaymeeting_program_reports')); 
+    }
+
+    public function studentIndex(Student $student)
     {
         $todaymeeting_program_reports = ProgramReport::where(['student_id'=>$student->id,'meeting'=>'todaymeeting'])
         ->orderby('id','DESC')
         ->get();
-       return view('program_report.index',compact('todaymeeting_program_reports')); 
+       return view('program_report.student.index',compact('todaymeeting_program_reports')); 
     }
 
     /**

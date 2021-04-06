@@ -62,5 +62,26 @@ class ApiStudent extends Controller
 	    return response(['success'=>false,'message'=>"البيانات خاطئة"], 200);
 	}
 
+
+	public function getProgramReports(){
+	   	$student = auth()->user();
+	    if($student)
+	    {
+			$programreports = ProgramReport::where(['student_id'=>$student->id,'meeting'=>'todaymeeting'])
+			->orderby('id','DESC')
+			->limit(10)
+			->get();
+
+			$response = [
+			'success'=>true,
+			'programreports'=> ProgramReportResource::collection($programreports)
+			];
+
+			return response($response, 200);
+	    }
+	    
+	    return response(['success'=>false,'message'=>"البيانات خاطئة"], 200);
+	}
+
 }
 	

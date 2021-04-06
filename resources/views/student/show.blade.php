@@ -18,7 +18,7 @@
     <div class="row">
         <div class="col-lg-12">
             <h5 class="mt-3"> 
-                <a class="text-blue-700" href="{{route('program_report.index',['student'=>$student->id])}}">التقارير السابقة</a>
+                <a class="text-blue-700" href="{{route('program_report.student.index',['student'=>$student->id])}}">التقارير السابقة</a>
             </h5>
         </div>
     </div>

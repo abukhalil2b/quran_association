@@ -20,4 +20,8 @@ class ProgramReport extends Model
 	    'evaluation',
 	    'note'
 	];
+
+	public function student(){
+		return $this->belongsTo(Student::class);
+	}
 }

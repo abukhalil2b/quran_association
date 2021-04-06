@@ -3,11 +3,9 @@
     <div class="row justify-content-center">
         <div class="col-md-12">
 			@foreach($todaymeeting_program_reports as $program_report)
-
-			<div class="mt-3">{{$program_report->student->name}}</div>
+			<div class="mt-3">[ {{$program_report->donedate}} ]</div>
             <div class="card mt-1">
                 <div class="card-body text-xs">
-                    <div>[ {{$program_report->donedate}} ]</div>
                     <div>{!!nl2br($program_report->mission)!!}</div>
                     <div class="text-red-800">{!!nl2br($program_report->note)!!}</div>
                 </div>
@@ -21,9 +19,6 @@
                 </div>
             </div>
             @endforeach
-            <div class="alert alert-secondary mt-3">
-                {{$todaymeeting_program_reports->links()}}
-            </div>
         </div>
     </div>
 </div>
