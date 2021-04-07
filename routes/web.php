@@ -186,11 +186,13 @@ Route::prefix('program_report')->group(function () {
 });
 
 Route::prefix('student/memorized_juz')->group(function () {
+	Route::get('{memorizedjuz}/delete', [MemorizedJuzController::class,'memorizedJuzDelete'])->name('student.memorized_juz.delete');
 	Route::get('{student}/create', [MemorizedJuzController::class,'create'])->name('student.memorized_juz.create');
 	Route::post('store', [MemorizedJuzController::class,'store'])->name('student.memorized_juz.store');
 });
 
 Route::prefix('student/memorized_sowar')->group(function () {
+	Route::get('{memorizedSowar}/delete', [MemorizedSowarController::class,'memorizedSowarDelete'])->name('student.memorized_sowar.delete');
 	Route::get('{student}/create', [MemorizedSowarController::class,'create'])->name('student.memorized_sowar.create');
 	Route::post('store', [MemorizedSowarController::class,'store'])->name('student.memorized_sowar.store');
 });

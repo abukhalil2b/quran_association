@@ -18,9 +18,10 @@
 			    <div class="card">
 			        <div class="card-body">
 			            @foreach($memorizedSowars as $sowar)
-			            <div>
-			                {{$sowar->sowar->title}}
-			            </div>
+			            {{$sowar->sowar->title}}
+			            <a class="pull-left text-red-400" href="{{route('student.memorized_sowar.delete',['memorizedSowar'=>$sowar->id])}}">
+			                	حذف
+			            </a>
 			            @endforeach
 			        </div>
 			    </div>

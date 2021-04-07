@@ -3,7 +3,7 @@
     <div class="row">
     	
         <div class="col-md-6">
-    		<h4 class="alert alert-info">تقارير المالية</h4>
+    		<h4 class="alert alert-secondary">تقارير المالية</h4>
     		@foreach($finance_reports as $finance_report)
     		<div>{{$finance_report->title}}</div>
     		@endforeach
@@ -11,7 +11,7 @@
         </div>
         <div class="col-md-6">
 
-    		<h4 class="alert alert-info">السجلات اليومية</h4>
+    		<h4 class="alert alert-secondary">السجلات اليومية</h4>
     		@foreach($dailyrecords as $dailyrecord)
     		<div class="text-sm">
                 <a href="{{route('attendance.dashboard',['dailyrecord'=>$dailyrecord->id])}}">
@@ -23,8 +23,18 @@
     		@endforeach
 
         </div>
+
         <div class="col-md-6">
-    		<h4 class="alert alert-info">أماكن الدراسة
+
+            <h4 class="alert alert-secondary">
+                <div><a href="{{route('course.index')}}">الدورات</a></div>
+                <div><a href="{{route('course.create')}}">+ الدورات</a></div>
+            </h4>
+
+        </div>
+
+        <div class="col-md-6">
+    		<h4 class="alert alert-secondary">أماكن الدراسة
             | (العدد: {{count($buildings)}}) |
               <a href="{{route('building.create')}}">
                 + إضافة ماكن الدراسة
@@ -40,7 +50,7 @@
 
         </div>
         <div class="col-md-6">
-            <h4 class="alert alert-info">
+            <h4 class="alert alert-secondary">
             المشرفين | (العدد: {{count($supervisors)}}) | <a href="{{route('user.supervisor.create')}}">+ إضافة مشرف</a>
     		</h4>
     		@foreach($supervisors as $key =>  $supervisor)
@@ -57,7 +67,7 @@
 
         <div class="col-md-6">
 
-    		<h4 class="alert alert-info">
+    		<h4 class="alert alert-secondary">
             المدرسين | <a href="{{route('user.teacher.create')}}">+ إضافة مدرس</a>
             </h4>
             <h5>ذكور | (العدد: {{count($maleTeachers)}}) </h5>
@@ -87,14 +97,13 @@
         </div>
 
         <div class="col-md-6">
-            <div class="alert alert-info">
-            
-            <a href="{{route('student.index')}}">
-                الطلاب 
-                <h5>(العدد: {{count($students)}}) </h5>
-            </a>
-
-            | 
+            <div class="alert alert-secondary">
+            <h5>
+                <a href="{{route('student.index')}}">
+                    الطلاب 
+                    (العدد: {{count($students)}}) 
+                </a>
+            </h5>
 
             <a href="{{route('student.create')}}">+ إضافة طلاب</a>
             </div>
@@ -102,7 +111,7 @@
         </div>
 
         <div class="col-md-6">
-    		<h4 class="alert alert-info">
+    		<h4 class="alert alert-secondary">
             المدربين | (العدد: {{count($trainers)}}) | <a href="{{route('user.trainer.create')}}">+ إضافة مدرب</a>
             </h4>
     		@foreach($trainers as $trainer)
@@ -115,7 +124,7 @@
 
         <div class="col-md-6">
 
-    		<h4 class="alert alert-info">المتدربين</h4>
+    		<h4 class="alert alert-secondary">المتدربين</h4>
     		@foreach($trainees as $trainee)
     		<div>{{$trainee->accountOwner->name}} - {{$trainee->title}}</div>
     		@endforeach
@@ -123,7 +132,7 @@
 
         <div class="col-md-6">
 
-            <h4 class="alert alert-info">
+            <h4 class="alert alert-secondary">
                 صلاحيات
                 
             </h4>
@@ -135,7 +144,7 @@
 
 
         <div class="col-md-6">
-            <h4 class="alert alert-info">
+            <h4 class="alert alert-secondary">
                 البرامج
             </h4>
             <div class="card mt-2 mb-2 px-2">
@@ -148,7 +157,7 @@
 
 
         <div class="col-md-6">
-            <h4 class="alert alert-info">
+            <h4 class="alert alert-secondary">
                 الحلقات
             </h4>
             <div class="card mt-2 mb-2 px-2">
@@ -164,7 +173,7 @@
         </div>
 
         <div class="col-md-6">
-            <h4 class="alert alert-info">
+            <h4 class="alert alert-secondary">
                 <a href="{{route('program_report.index')}}">التقارير</a>
             </h4>
         </div>

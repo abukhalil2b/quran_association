@@ -10,9 +10,10 @@
     </div>
 </div>
 
+@include('student._program_report')
 @include('student._memorized_juz')
 @include('student._memorized_sowar')
-@include('student._program_report')
+
 
 <div class="container">
     <div class="row">

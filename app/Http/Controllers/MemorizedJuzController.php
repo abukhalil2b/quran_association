@@ -77,6 +77,13 @@ class MemorizedJuzController extends Controller
         return view('juz.edit',compact('juz'));
     }
 
+    public function memorizedJuzDelete(MemorizedJuz $memorizedjuz)
+    {
+       
+        $memorizedjuz->delete();
+        return redirect()->back()->with(['status'=>'success','message'=>'تم']);
+    }
+
 
     public function juzUpdate(Request $request, Juz $juz)
     {

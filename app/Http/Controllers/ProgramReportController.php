@@ -125,7 +125,7 @@ class ProgramReportController extends Controller
      */
     public function delete(ProgramReport $programReport)
     {
-        $programReport->delete();
-        return redirect()->back()->with(['status'=>'success','message' => 'تم']);
+        // $programReport->delete();
+        return redirect()->back()->with(['status'=>'success','message' => 'لايمكن حذفه الآن']);
     }
 }

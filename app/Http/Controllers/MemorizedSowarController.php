@@ -9,21 +9,13 @@ use App\Models\Student;
 
 class MemorizedSowarController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function index()
     {
         //
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function create(Student $student)
     {
         $loggedUser = auth()->user();
@@ -37,12 +29,7 @@ class MemorizedSowarController extends Controller
         return view('student.memorized_sowar.create',compact('student','sowars'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+
     public function store(Request $request)
     {
          // return $request->all();
@@ -57,48 +44,13 @@ class MemorizedSowarController extends Controller
 
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\MemorizedSowar  $memorizedSowar
-     * @return \Illuminate\Http\Response
-     */
-    public function show(MemorizedSowar $memorizedSowar)
+    public function memorizedSowarDelete(MemorizedSowar $memorizedSowar)
     {
-        //
+       
+        $memorizedSowar->delete();
+        return redirect()->back()->with(['status'=>'success','message'=>'تم']);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\MemorizedSowar  $memorizedSowar
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(MemorizedSowar $memorizedSowar)
-    {
-        //
-    }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\MemorizedSowar  $memorizedSowar
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, MemorizedSowar $memorizedSowar)
-    {
-        //
-    }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\MemorizedSowar  $memorizedSowar
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(MemorizedSowar $memorizedSowar)
-    {
-        //
-    }
 }
