@@ -126,7 +126,7 @@ class CourseController extends Controller {
 				'course_id' => $request->course_id,
 			]);
 
-		return redirect()->route('course.detail.create', ['id' => $course->id]);
+		return redirect()->route('course.detail.create', ['course' => $course->id]);
 	}
 
 }

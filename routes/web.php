@@ -115,6 +115,7 @@ Route::prefix('user')->group(function () {
 		->name('supervisor.dashboard');
 
 	Route::get('trainer/create',[TrainerController::class,'create'] )->name('user.trainer.create');
+	Route::get('trainer/new/create',[TrainerController::class,'newCreate'] )->name('user.trainer.new.create');
 	Route::post('trainer/store', [TrainerController::class,'store'])->name('user.trainer.store');
 	Route::get('trainer/index', [TrainerController::class,'index'])->name('user.trainer.index');
 });

@@ -3,6 +3,7 @@ use App\Http\Controllers\api\ApiUser;
 use App\Http\Controllers\api\ApiTrainee;
 use App\Http\Controllers\api\ApiStudent;
 use App\Http\Controllers\api\ApiCourse;
+use App\Http\Controllers\api\ApiProgram;
 use App\Http\Resources\MemorizedJuzResource;
 use App\Http\Resources\MemorizedSowarResource;
 use App\Http\Resources\ProgramReportResource;
@@ -52,3 +53,11 @@ Route::post('/student/login', [ApiStudent::class,'login']);
 
 Route::middleware('auth:sanctum')->get('/student', [ApiStudent::class,'getStudent']);
 Route::middleware('auth:sanctum')->get('/program_reports', [ApiStudent::class,'getProgramReports']);
+
+Route::get('/programs', [ApiProgram::class,'getPrograms']);
+
+
+
+
+
+

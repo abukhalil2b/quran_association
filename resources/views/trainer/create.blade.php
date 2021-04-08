@@ -2,47 +2,36 @@
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-12">
-            @if($errors->any())
-                @foreach($errors->all() as $error)
-                    <li class="text-danger">{{$error}}</li>
-                @endforeach
-            @endif
-            @if(session('status'))
-                <center class="alert alert-info">
-                    <b>{{session('status')}}</b>
-                </center>
-            @endif
             <div class="card">
                 <div class="card-header">
-                    <h4>اضافة مدرب  جديد  </h4>
+                    <h4>
+                        اضافة حساب لمستخدم موجود 
+                        <span class="pull-left">
+                            <a href="{{route('user.trainer.new.create')}}">
+                                + مستخدم جديد
+                            </a>
+                        </span>
+                    </h4>
                 </div>
                 <div class="card-body">
-
 					<form method="post" action="{{route('user.trainer.store')}}">
-						@csrf
+					@csrf
                     <table class="table">
+                        <tr>
+                            <td>إختر مستخدم</td>
+                            <td>
+                                <select name="user_id" class="form-control mt-1">
+                                    @foreach($users as $user)
+                                    <option value="{{$user->id}}">{{$user->name}}</option>
+                                    @endforeach
+                                </select>
+                            </td>
+                        </tr>
 						<tr>
                     		<td>الإسم</td>
                     		<td>
-                          <input name="name" class="form-control" placeholder="الإسم">
-                          <input name="title" class="form-control mt-1" placeholder="تعريف قصير">
+                                <input name="title" class="form-control mt-1" placeholder="تعريف قصير">
                             </td>
-                    	</tr>
-                    	<tr>
-                    		<td>الإيميل</td>
-                    		<td><input name="email" class="form-control"></td>
-                    	</tr>
-                    	<tr>
-                    		<td>كلمة المرور</td>
-                    		<td><input name="password" class="form-control"></td>
-                    	</tr>
-                    	<tr>
-                    		<td>الهاتف</td>
-                    		<td><input type="number" name="phone" class="form-control"></td>
-                    	</tr>
-                    	<tr>
-                    		<td>الرقم المدني</td>
-                    		<td><input type="number" name="nationalId" class="form-control"></td>
                     	</tr>
                         <tr>
                             <td colspan="2">

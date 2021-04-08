@@ -49,6 +49,8 @@
                     		<td>تنتهي بتاريخ</td>
                     		<td><input value="{{$course->endAt}}" type="date" name="endAt" class="form-control"></td>
                     	</tr>
+
+                         @if($course->weekDays)
                         <tr>
                             <td>اختر الأيام التي تلقى فيها الدورة</td>
                             <td>
@@ -64,6 +66,7 @@
                             	@endforeach
                             </td>
                         </tr>
+                        @endif
 
 						<tr>
                     		<td>يبدأ التسجيل بتاريخ</td>

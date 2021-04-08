@@ -21,37 +21,44 @@ class TrainerController extends Controller {
 		return view('trainer.index', compact('trainers'));
 	}
 
-	/**
-	 * Show the form for creating a new resource.
-	 *
-	 * @return \Illuminate\Http\Response
-	 */
+
 	public function create() {
-		return view('trainer.create');
+		$users = User::where('userType','teacher')->OrWhere('userType','supervisor')->get();
+		return view('trainer.create',compact('users'));
 	}
 
-	/**
-	 * Store a newly created resource in storage.
-	 *
-	 * @param  \Illuminate\Http\Request  $request
-	 * @return \Illuminate\Http\Response
-	 */
+	public function newCreate() {
+		return view('trainer.new.create');
+	}
+	
 	public function store(Request $request) {
-		$this->validate($request, [
-			'password' => 'required',
-			'email' => 'required',
-			'name' => 'required',
-		]);
+
 
 		$loggedUser = auth()->user();
 		if ($loggedUser->userType == 'usercenter') {
-			$user = User::create([
-				'userType' => 'trainer',
-				'name' => $request->name,
-				'email' => $request->email,
-				'password' => Hash::make($request->password),
-			]);
 
+			if(!$request->user_id){
+				$this->validate($request, [
+					'password' => 'required',
+					'email' => 'required',
+					'name' => 'required',
+				]);
+
+				$user = User::create([
+					'userType' => 'trainer',
+					'name' => $request->name,
+					'email' => $request->email,
+					'password' => Hash::make($request->password),
+				]);
+
+			}else{
+				$user = User::find($request->user_id);
+			}
+			
+			$trainer = Trainer::where('owner',$user->id)->first();
+			if($trainer){
+				abort(401,'الحساب موجود سابقا');
+			}
 			$trainer = new Trainer;
 			$trainer->owner = $user->id;
 			$trainer->title = $request->title;
