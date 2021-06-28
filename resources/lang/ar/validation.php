@@ -161,7 +161,7 @@ return [
         'password' => 'كلمة المرور',
         'tobedonedate' => 'التاريخ',
         'donedate' => 'التاريخ',
-        'mission' => 'المهمة',
+        'todaymission' => 'ما تم انجازه اليوم',
     ],
 
 ];

@@ -33,31 +33,23 @@ Route::middleware('auth:sanctum')->post('logout', function (Request $request) {
     return response(['success'=> true], 200);
 });
 
-Route::middleware('auth:sanctum')->get('/father',[ApiFather::class,'father']);
 
-Route::post('/father/login', [ApiFather::class,'login']);
-
-
+//trainee
 Route::post('/trainee/login', [ApiTrainee::class,'login']);
-
-Route::get('/course/index', [ApiCourse::class,'index']);
-
-Route::middleware('auth:sanctum')->get('/usertype', [ApiUser::class,'getUserType']);
-
-
-// Route::get('/student', [ApiStudent::class,'getStudent']);
 
 
 //student
 Route::post('/student/login', [ApiStudent::class,'login']);
-
 Route::middleware('auth:sanctum')->get('/student', [ApiStudent::class,'getStudent']);
-Route::middleware('auth:sanctum')->get('/program_reports', [ApiStudent::class,'getProgramReports']);
 
+//program
 Route::get('/programs', [ApiProgram::class,'getPrograms']);
 
+//course
+Route::get('/course/index', [ApiCourse::class,'index']);
 
 
+Route::middleware('auth:sanctum')->get('/usertype', [ApiUser::class,'getUserType']);
 
 
 

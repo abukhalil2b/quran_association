@@ -19,20 +19,17 @@ class StudentResource extends JsonResource
     public function toArray($request)
     {
              
-        $todaymeeting = ProgramReport::where(['student_id'=>$this->id,'meeting'=>'todaymeeting'])
-        ->whereDate('created_at',Carbon::now()->format('Y-m-d'))
-        ->first();
-        $nextmeeting = ProgramReport::where(['student_id'=>$this->id,'meeting'=>'nextmeeting'])
-        ->whereDate('created_at',Carbon::now()->format('Y-m-d'))
-        ->first();
+        $programReports = ProgramReport::where(['student_id'=>$this->id])
+        // ->whereDate('created_at',Carbon::now()->format('Y-m-d'))
+        ->limit(50)->get();
         return [
             'id'=>$this->id,
             'name'=>$this->name,
             'avatar'=>$this->avatar,
             'memorizedJuzs'=>MemorizedJuzResource::collection($this->memorizedJuzs),
             'memorizedSowars'=>MemorizedSowarResource::collection($this->memorizedSowars),
-            'todaymeeting'=>new ProgramReportResource($todaymeeting),
-            'nextmeeting'=>new ProgramReportResource($nextmeeting)
+            'programReports'=>new ProgramReportResource($programReports),
+            
         ];
     }
 }

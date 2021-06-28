@@ -14,25 +14,12 @@ class ProgramReportController extends Controller
     
     public function index()
     {
-        $todaymeeting_program_reports = ProgramReport::where(['meeting'=>'todaymeeting'])
-        ->orderby('id','DESC')
+        $programReports = ProgramReport::orderby('id','DESC')
         ->paginate(50);
-       return view('program_report.index',compact('todaymeeting_program_reports')); 
+       return view('program_report.index',compact('programReports')); 
     }
 
-    public function studentIndex(Student $student)
-    {
-        $todaymeeting_program_reports = ProgramReport::where(['student_id'=>$student->id,'meeting'=>'todaymeeting'])
-        ->orderby('id','DESC')
-        ->get();
-       return view('program_report.student.index',compact('todaymeeting_program_reports')); 
-    }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create(Program $program,Student $student)
     {
         $loggedUser = auth()->user();
@@ -59,20 +46,16 @@ class ProgramReportController extends Controller
          // return $request->all();
         if(auth()->user()->userType=='teacher'){
 
-            $request['donedate'] = date('Y-m-d',time());
-            
-            if($request->meeting==='nextmeeting'){
-                $this->validate($request,[
-                    'tobedonedate'=>'required'
-                ]);
+            if(!$request->donedate){
+                $request['donedate'] = date('Y-m-d',time());
             }
+            
             $this->validate($request,[
                 'donedate'=>'required',
-                'meeting'=>'required',
+                'todaymission'=>'required',
                 'circle_id'=>'required',
                 'teacher_id'=>'required',
-                'student_id'=>'required',
-                'mission'=>'required'
+                'student_id'=>'required'
             ]);
                 
             ProgramReport::create($request->all());

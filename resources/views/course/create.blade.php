@@ -95,11 +95,11 @@
                     	</tr>
 
 						<tr>
-                    		<td>هل مدفوعة</td>
+                    		<td>هل مجانية</td>
                     		<td>
 								<select name="free" class="form-control">
-									<option value="1">نعم</option>
 									<option value="0">لا</option>
+                                    <option value="1">نعم</option>
 								</select>
 							</td>
                     	</tr>

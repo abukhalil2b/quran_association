@@ -15,8 +15,8 @@ class ProgramReport extends Model
 	    'circle_id',
 	    'donedate',
 	    'tobedonedate',
-	    'meeting',
-	    'mission',
+	    'todaymission',
+	    'nextmission',
 	    'evaluation',
 	    'note'
 	];

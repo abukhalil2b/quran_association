@@ -20,8 +20,8 @@ class CreateProgramReportsTable extends Migration
             $table->integer('circle_id')->unsigned();
             $table->date('donedate')->nullable();//
             $table->date('tobedonedate')->nullable();//
-            $table->string('meeting',12);//today_meeting - next_meeting
-            $table->text('mission');//sora - juz - pages
+            $table->text('todaymission')->nullable();//
+            $table->text('nextmission')->nullable();//
             $table->string('evaluation')->nullable();
             $table->text('note')->nullable();
             $table->text('fathernote')->nullable();

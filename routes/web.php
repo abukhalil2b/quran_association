@@ -177,7 +177,6 @@ Route::prefix('program')->group(function () {
 
 
 Route::prefix('program_report')->group(function () {
-	Route::get('student/{student}/index', [ProgramReportController::class,'studentIndex'])->name('program_report.student.index');
 	Route::get('index', [ProgramReportController::class,'index'])->name('program_report.index');
 	Route::get('{program}/{student}/create', [ProgramReportController::class,'create'])->name('program_report.create');
 	Route::post('store', [ProgramReportController::class,'store'])->name('program_report.store');

@@ -20,68 +20,40 @@ class ApiStudent extends Controller
             'userType'=>'student',
             'token' => $student->createToken('student')->plainTextToken,
         	];
-        return response($response, 200);
+        return response($response, 201);
         }
-	    return response(['success'=>false,'message'=>"البيانات خاطئة"], 200);
+	    return response(['success'=>false,'message'=>"البيانات خاطئة"], 201);
 	}
 
 	public function getStudent(Request $request) {
 	   	$student = auth()->user();
 	    if($student)
 	    {
-			$todaymeeting = ProgramReport::where(['student_id'=>$student->id,'meeting'=>'todaymeeting'])
+			$programReports = ProgramReport::where(['student_id'=>$student->id])
 			->orderby('id','DESC')
-			->first();
-
-			$nextmeeting = ProgramReport::where(['student_id'=>$student->id,'meeting'=>'nextmeeting'])
-			->orderby('id','DESC')
-			->first();
-			
-			$todaymeeting = $todaymeeting? new ProgramReportResource($todaymeeting): null;
-			$nextmeeting = $nextmeeting? new ProgramReportResource($nextmeeting): null;
+			->limit(50)->get();
 
 			$student=[
-			'name' => $student->name,
-			'fathername' => $student->father?$student->father->name:'',
-			'avatar'=>$student->avatar,
-			'memorizedJuzs'=>MemorizedJuzResource::collection($student->memorizedJuzs),
-			'memorizedSowars'=>MemorizedSowarResource::collection($student->memorizedSowars),
-			'todaymeeting'=>$todaymeeting,
-			'nextmeeting'=>$nextmeeting
+				'name' => $student->name,
+				'fathername' => $student->father?$student->father->name:'',
+				'avatar'=>$student->avatar?$student->avatar:'',
+				'memorizedJuzs'=>MemorizedJuzResource::collection($student->memorizedJuzs),
+				'memorizedSowars'=>MemorizedSowarResource::collection($student->memorizedSowars),
+				'programReports'=>$programReports,
 			];
 
 			$response = [
-			'success'=>true,
-			'userType'=>'student',
-			'student'=>$student
+				'success'=>true,
+				'userType'=>'student',
+				'student'=>$student
 			];
 
-			return response($response, 200);
+			return response($response, 201);
 	    }
 	    
-	    return response(['success'=>false,'message'=>"البيانات خاطئة"], 200);
+	    return response(['success'=>false,'message'=>"البيانات خاطئة"], 201);
 	}
 
-
-	public function getProgramReports(){
-	   	$student = auth()->user();
-	    if($student)
-	    {
-			$programreports = ProgramReport::where(['student_id'=>$student->id,'meeting'=>'todaymeeting'])
-			->orderby('id','DESC')
-			->limit(10)
-			->get();
-
-			$response = [
-			'success'=>true,
-			'programreports'=> ProgramReportResource::collection($programreports)
-			];
-
-			return response($response, 200);
-	    }
-	    
-	    return response(['success'=>false,'message'=>"البيانات خاطئة"], 200);
-	}
 
 }
 	

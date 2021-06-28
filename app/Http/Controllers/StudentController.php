@@ -20,14 +20,15 @@ class StudentController extends Controller {
 
 	public function show(Student $student) {
 		$loggedUser = auth()->user();
+		$programReports=ProgramReport::orderby('id','DESC')->where('student_id',$student->id)->paginate(10);
+		$memorizedJuzs=MemorizedJuz::where('student_id',$student->id)->get();
+		$memorizedSowars=MemorizedSowar::where('student_id',$student->id)->get();
+
 		switch ($loggedUser->userType) {
 		case 'usercenter':
 			$usercenter = $loggedUser;
 			$student = $student->checkUserPermission($usercenter);
 			$circles = $student->circles;
-			$programReports=ProgramReport::where('student_id',$student->id)->limit(5)->get();
-			$memorizedJuzs=MemorizedJuz::where('student_id',$student->id)->get();
-			$memorizedSowars=MemorizedSowar::where('student_id',$student->id)->get();
 			return view('student.show', compact('student', 'circles', 'usercenter','programReports','memorizedJuzs','memorizedSowars'));
 			break;
 
@@ -36,9 +37,6 @@ class StudentController extends Controller {
 			$usercenter = $supervisor->usercenter();
 			$student = $student->checkUserPermission($usercenter);
 			$circles = $student->circles;
-			$programReports=ProgramReport::where('student_id',$student->id)->limit(5)->get();
-			$memorizedJuzs=MemorizedJuz::where('student_id',$student->id)->get();
-			$memorizedSowars=MemorizedSowar::where('student_id',$student->id)->get();
 			return view('student.show', compact('student', 'circles', 'usercenter','programReports','memorizedJuzs','memorizedSowars'));
 			break;
 
@@ -46,17 +44,10 @@ class StudentController extends Controller {
 			$teacher = $loggedUser->teacherAccount;
 			$usercenter = $teacher->usercenter();
 			$circle = Circle::where('teacher_id',$teacher->id)->orderby('id','DESC')->first();
-
 			//check if teacher has permission
 			$student = $student->checkUserPermission($usercenter);
-
 			//check if student belongs to this teacher
 			$student = $circle->checkStudentInCircle($student);
-			
-			$programReports=ProgramReport::where('student_id',$student->id)->whereDate('created_at',Carbon::now())->get();
-			$memorizedJuzs=MemorizedJuz::where('student_id',$student->id)->get();
-			$memorizedSowars=MemorizedSowar::where('student_id',$student->id)->get();
-
 			return view('student.show', compact('student', 'circle', 'usercenter','programReports','memorizedJuzs','memorizedSowars'));
 			break;
 		default:
