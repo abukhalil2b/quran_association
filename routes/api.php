@@ -28,9 +28,9 @@ use App\Http\Resources\StudentResource;
 |
 */
 
-Route::middleware('auth:sanctum')->post('logout', function (Request $request) {
+Route::middleware('auth:sanctum')->get('logout', function (Request $request) {
     $success = auth()->user()->tokens()->delete();
-    return response(['success'=> true], 200);
+    return response(['success'=> true,'response'=>$success], 200);
 });
 
 
@@ -40,7 +40,11 @@ Route::post('/trainee/login', [ApiTrainee::class,'login']);
 
 //student
 Route::post('/student/login', [ApiStudent::class,'login']);
-Route::middleware('auth:sanctum')->get('/student', [ApiStudent::class,'getStudent']);
+
+Route::middleware('auth:sanctum')->group(function(){
+	Route::get('/student', [ApiStudent::class,'getStudent']);
+});
+
 
 //program
 Route::get('/programs', [ApiProgram::class,'getPrograms']);
