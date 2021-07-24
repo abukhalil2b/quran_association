@@ -124,6 +124,7 @@ Route::prefix('user')->group(function () {
 Route::prefix('student')->group(function () {
 	Route::get('{student}/show', [StudentController::class,'show'])->name('student.show');
 	Route::get('index', [StudentController::class,'index'])->name('student.index');
+	Route::get('can-wirte-program-report/index', [StudentController::class,'canWriteProgramReportIndex'])->name('student.can-wirte-program-report.index');
 	Route::get('create', [StudentController::class,'create'])->name('student.create');
 	Route::post('store', [StudentController::class,'store'])->name('student.store');
 	Route::get('{student}/circle/{circle}/show', [StudentController::class,'circleShow'])
@@ -133,6 +134,15 @@ Route::prefix('student')->group(function () {
 	Route::get('{student}/edit', [StudentController::class,'edit'])->name('student.edit');
 	Route::post('{student}/update', [StudentController::class,'update'])->name('student.update');
 	Route::get('{student}/active/toggle', [StudentController::class,'activeToggle'])->name('student.active.toggle');
+
+	Route::get('{student}/circle/{circle}/allow-wirte-report', [StudentController::class,'allowWirteReport'])
+		->name('student.circle.allow-wirte-report');
+	Route::get('{student}/circle/{circle}/disallow-wirte-report', [StudentController::class,'disallowWirteReport'])
+		->name('student.circle.disallow-wirte-report');	
+
+	Route::post('{student}/circle/{circle}/update_status', [StudentController::class,'updateStatus'])
+		->name('student.circle.update_status');
+
 });	
 
 
@@ -180,9 +190,10 @@ Route::prefix('program_report')->group(function () {
 	Route::get('index', [ProgramReportController::class,'index'])->name('program_report.index');
 	Route::get('{program}/{student}/create', [ProgramReportController::class,'create'])->name('program_report.create');
 	Route::post('store', [ProgramReportController::class,'store'])->name('program_report.store');
-	Route::get('{programReport}/delete', [ProgramReportController::class,'delete'])->name('program_report.delete');
-	Route::get('{programReport}/edit', [ProgramReportController::class,'edit'])->name('program_report.edit');
-	Route::post('{programReport}/update', [ProgramReportController::class,'update'])->name('program_report.update');
+	Route::get('{programReport}/{student}/confirm_delete', [ProgramReportController::class,'confirmDelete'])->name('program_report.confirm_delete');
+	Route::get('{programReport}/{student}/delete', [ProgramReportController::class,'delete'])->name('program_report.delete');
+	Route::get('{programReport}/{student}/edit', [ProgramReportController::class,'edit'])->name('program_report.edit');
+	Route::post('{programReport}/{student}/update', [ProgramReportController::class,'update'])->name('program_report.update');
 });
 
 Route::prefix('student/memorized_juz')->group(function () {

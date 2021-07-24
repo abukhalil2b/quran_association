@@ -47,15 +47,21 @@ class Teacher extends Model {
 
 
 	public function checkHisStudent($student) {
-		$teacher = $this->whereHas('circles', function ($q) use ($student) {
-			$q->whereHas('students',function($q) use($student){
-				$q->where('student_id',$student->id);
-			});
-		})->first();
-		if (!$teacher) {
+		// $teacher = $this->whereHas('circles', function ($q) use ($student) {
+		// 	$q->whereHas('students',function($q) use($student){
+		// 		$q->where('student_id',$student->id);
+		// 	});
+		// })->first();
+		// if (!$teacher) {
+		// 	abort(401,'لا تملك الصلاحيات');
+		// }
+		// return $teacher;
+
+		$circle = $student->circles()->where('teacher_id',$this->id)->first();
+		if(!$circle){
 			abort(401,'لا تملك الصلاحيات');
 		}
-		return $teacher;
+		return $circle;
 	}
 	
 }

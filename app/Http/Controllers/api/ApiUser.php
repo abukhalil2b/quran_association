@@ -1,24 +1,48 @@
 <?php
 
 namespace App\Http\Controllers\api;
-use App\Http\Controllers\api\ApiCourse;
-use App\Http\Resources\MemorizedJuzResource;
-use App\Http\Resources\MemorizedSowarResource;
-use App\Http\Resources\ProgramReportResource;
-use App\Models\ProgramReport;
+
 use Carbon\Carbon;
-use App\Models\Student;
+use App\Models\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use App\Http\Resources\UserResource;
 class ApiUser extends Controller
 {
-	public function getUserType(Request $request) {
-		$user = auth()->user();
-		$response = [
-            'userType' => $user->model
-        ];
-        return response($response, 200);
-}
+	public function login(Request $request) {
+
+    $user = User::where('email', $request->email)->first();
+
+    if (! $user || ! Hash::check($request->password, $user->password)) {
+        return response(['success'=>false,'message'=>"البيانات خاطئة"], 201);
+    }
+
+    $response = [
+        'success'=>true,
+        'userType'=>$user->userType,
+        'token' => $user->createToken('user')->plainTextToken
+    	];
+    return response($response, 201);
+            
+
+	}
+
+
+    public function getUserInfo(Request $request) {
+        try {
+            $user = auth()->user();
+            $response['user'] = new UserResource($user);
+            $response['success']=true;
+            return response($response, 201);
+        } catch (Exception $e) {
+            $response['success']=false;
+            $response['message']=$e;
+            return response($response, 500);
+        }
+
+    }
+
 
 }
 	

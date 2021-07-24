@@ -1,7 +1,7 @@
 <div class="col-lg-12  mt-1">
 	<h6 class="mt-3">الطلاب المسجلون في الحلقة ({{$incessantProgramCircle->students->count()}})</h6>
 	@if($incessantProgramCircle)
-	@foreach($incessantProgramCircle->students as $student)
+	@foreach($incessantProgramCircle->students()->where('status','studying')->get() as $student)
 	<div class="card p-2">
 		<a href="{{route('student.show',['student'=>$student->id])}}">
 		<div>رقم الطالب: {{$student->id}}</div>

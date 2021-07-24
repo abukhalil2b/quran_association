@@ -136,4 +136,12 @@ class User extends Authenticatable
         return $this->belongsToMany(Permission::class, 'user_permission', 'user_id', 'permission_id');
     }
 
+    public function checkUsercenterHasStudent($student){
+        $student = $this->userStudentPermission()->where('user_student_permission.student_id',$student->id)->first();
+        if($student){
+            return $student;
+        }
+        abort(401);
+    }
+
 }

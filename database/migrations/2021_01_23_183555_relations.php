@@ -25,6 +25,8 @@ class Relations extends Migration {
 			$table->integer('student_id')->unsigned();
 			$table->integer('circle_id')->unsigned();
 			$table->smallInteger('program')->unsigned();
+			$table->bool('can_write_his_report')->default(0);//allow student to wirte his own report
+			$table->string('status')->default('studying');
 			$table->timestamps();
 			$table->foreign('student_id')->references('id')->on('students')->onDelete('cascade');
 			$table->foreign('circle_id')->references('id')->on('circles')->onDelete('cascade');

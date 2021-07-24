@@ -17,12 +17,19 @@ class ProgramReportResource extends JsonResource
         // return parent::toArray($request);
         return [
             'id'=>$this->id,
-            'donedate'=>$this->donedate,
-            'tobedonedate'=>$this->tobedonedate,
-            'mission'=>$this->mission,
-            'evaluation'=>$this->evaluation,
-            'note'=>$this->note,
-            'fathernote'=>$this->fathernote,
+            'studentId'=>$this->student_id,
+            'teacherId'=>$this->teacher_id,
+            'circleTitle'=>$this->circle->title,
+            'studentName'=>$this->student->name,
+            'teacherName'=>$this->teacher->accountOwner->name,
+            
+            'donedate'=>$this->donedate?$this->donedate:'',
+            'tobedonedate'=>$this->tobedonedate?$this->tobedonedate:'',
+            'todaymission'=>$this->todaymission?$this->todaymission:'',
+            'nextmission'=>$this->nextmission?$this->nextmission:'',
+            'evaluation'=>$this->evaluation?$this->evaluation:'',
+            'note'=>$this->note?$this->note:'',
+            'fathernote'=>$this->fathernote?$this->fathernote:'',
         ];
     }
 }

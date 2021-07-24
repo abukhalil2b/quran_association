@@ -12,6 +12,7 @@ use App\Models\Student;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use DB;
 class StudentController extends Controller {
 
 	public function __construct() {
@@ -20,12 +21,13 @@ class StudentController extends Controller {
 
 	public function show(Student $student) {
 		$loggedUser = auth()->user();
-		$programReports=ProgramReport::orderby('id','DESC')->where('student_id',$student->id)->paginate(10);
+		$programReport=ProgramReport::orderby('id','DESC')->where('student_id',$student->id);
 		$memorizedJuzs=MemorizedJuz::where('student_id',$student->id)->get();
 		$memorizedSowars=MemorizedSowar::where('student_id',$student->id)->get();
 
 		switch ($loggedUser->userType) {
 		case 'usercenter':
+			$programReports = $programReport->paginate(10);
 			$usercenter = $loggedUser;
 			$student = $student->checkUserPermission($usercenter);
 			$circles = $student->circles;
@@ -33,6 +35,7 @@ class StudentController extends Controller {
 			break;
 
 		case 'supervisor':
+			$programReports = $programReport->paginate(10);
 			$supervisor = $loggedUser->supervisorAccount;
 			$usercenter = $supervisor->usercenter();
 			$student = $student->checkUserPermission($usercenter);
@@ -41,9 +44,11 @@ class StudentController extends Controller {
 			break;
 
 		case 'teacher':
+
 			$teacher = $loggedUser->teacherAccount;
 			$usercenter = $teacher->usercenter();
 			$circle = Circle::where('teacher_id',$teacher->id)->orderby('id','DESC')->first();
+			$programReports = $programReport->where('circle_id',$circle->id)->paginate(10);
 			//check if teacher has permission
 			$student = $student->checkUserPermission($usercenter);
 			//check if student belongs to this teacher
@@ -54,7 +59,6 @@ class StudentController extends Controller {
 			# code...
 			break;
 		}
-
 	}
 
 	public function index() {
@@ -84,7 +88,8 @@ class StudentController extends Controller {
 			})->where('gender','female')->get();
 			break;
 		default:
-			$students = [];
+			$malestudents = [];
+			$femalestudents = [];
 			break;
 		}
 		return view('student.index', compact('malestudents','femalestudents'));
@@ -131,7 +136,6 @@ class StudentController extends Controller {
 			break;
 		}
 		return redirect(Route('student.index'));
-
 	}
 
 	public function circleShow(Student $student,Circle $circle) {
@@ -168,5 +172,128 @@ class StudentController extends Controller {
 	public function activeToggle(Student $student) {
 		$student->update(['active'=>!$student->active]);
 		return redirect()->route('student.index');
+	}
+
+	public function allowWirteReport(Student $student,Circle $circle) {
+		$loggedUser = auth()->user();
+		if($loggedUser->userType=='teacher'){
+			$teacher = $loggedUser->teacherAccount;
+			$teacher->checkHisStudent($student);
+			$subscription = DB::table('circle_student')->where(['student_id'=>$student->id,'circle_id'=>$circle->id])
+			->update(['can_write_his_report'=>1]);
+			return redirect()->back();
+		}
+
+		if($loggedUser->userType=='supervisor'){
+			$supervisor = $loggedUser->supervisorAccount;
+			$usercenter = $supervisor->usercenter();
+			$usercenter->checkUsercenterHasStudent($student);
+			$subscription = DB::table('circle_student')->where(['student_id'=>$student->id,'circle_id'=>$circle->id])
+			->update(['can_write_his_report'=>1]);
+			return redirect()->back();
+		}
+
+		if($loggedUser->userType=='usercenter'){
+			$loggedUser->checkUsercenterHasStudent($student);
+			$subscription = DB::table('circle_student')->where(['student_id'=>$student->id,'circle_id'=>$circle->id])
+			->update(['can_write_his_report'=>1]);
+			return redirect()->back();
+		}
+
+		die('لاتملك الصلاحية');
+	}
+
+	public function disallowWirteReport(Student $student,Circle $circle) {
+		$loggedUser = auth()->user();
+		if($loggedUser->userType=='teacher'){
+			$teacher = $loggedUser->teacherAccount;
+			$teacher->checkHisStudent($student);
+			$subscription = DB::table('circle_student')->where(['student_id'=>$student->id,'circle_id'=>$circle->id])
+			->update(['can_write_his_report'=>0]);
+			return redirect()->back();
+		}
+
+		if($loggedUser->userType=='supervisor'){
+			$supervisor = $loggedUser->supervisorAccount;
+			$usercenter = $supervisor->usercenter();
+			$usercenter->checkUsercenterHasStudent($student);
+			$subscription = DB::table('circle_student')->where(['student_id'=>$student->id,'circle_id'=>$circle->id])
+			->update(['can_write_his_report'=>0]);
+			return redirect()->back();
+		}
+
+		if($loggedUser->userType=='usercenter'){
+			$loggedUser->checkUsercenterHasStudent($student);
+			$subscription = DB::table('circle_student')->where(['student_id'=>$student->id,'circle_id'=>$circle->id])
+			->update(['can_write_his_report'=>0]);
+			return redirect()->back();
+		}
+
+		die('لاتملك الصلاحية');
+	}
+
+	public function updateStatus(Request $request,Student $student,Circle $circle) {
+		$this->validate($request,['status'=>'required']);
+		$loggedUser = auth()->user();
+		if($loggedUser->userType=='teacher'){
+			$teacher = $loggedUser->teacherAccount;
+			$teacher->checkHisStudent($student);
+			DB::table('circle_student')->where(['student_id'=>$student->id,'circle_id'=>$circle->id])
+			->update(['status'=>$request->status]);
+			return redirect()->back();
+		}
+
+		if($loggedUser->userType=='supervisor'){
+			$supervisor = $loggedUser->supervisorAccount;
+			$usercenter = $supervisor->usercenter();
+			$usercenter->checkUsercenterHasStudent($student);
+			DB::table('circle_student')->where(['student_id'=>$student->id,'circle_id'=>$circle->id])
+			->update(['status'=>$request->status]);
+			return redirect()->back();
+		}
+
+		if($loggedUser->userType=='usercenter'){
+			$loggedUser->checkUsercenterHasStudent($student);
+			DB::table('circle_student')->where(['student_id'=>$student->id,'circle_id'=>$circle->id])
+			->update(['status'=>$request->status]);
+			return redirect()->back();
+		}
+
+		die('لاتملك الصلاحية');
+	}
+
+
+	 
+	public function canWriteProgramReportIndex() {
+
+		$loggedUser = auth()->user();
+		switch ($loggedUser->userType) {
+		case 'superadmin':
+			$malestudents = Student::where('gender','male')->whereHas('circles',function($q){
+				$q->where('circle_student.can_write_his_report',1);
+			})->get();
+			$femalestudents = Student::where('gender','female')->whereHas('circles',function($q){
+				$q->where('circle_student.can_write_his_report',1);
+			})->get();
+			break;
+		case 'usercenter':
+			$malestudents = Student::whereHas('userStudentPermission', function ($q) use ($loggedUser) {
+				$q->where('user_student_permission.user_id', $loggedUser->id);
+			})->where('gender','male')->whereHas('circles',function($q){
+				$q->where('circle_student.can_write_his_report',1);
+			})->get();
+			$femalestudents = Student::whereHas('userStudentPermission', function ($q) use ($loggedUser) {
+				$q->where('user_student_permission.user_id', $loggedUser->id);
+			})->where('gender','female')->whereHas('circles',function($q){
+				$q->where('circle_student.can_write_his_report',1);
+			})->get();
+			break;
+		
+		default:
+			$malestudents = [];
+			$femalestudents = [];
+			break;
+		}
+		return view('student.can_write_program_report_index', compact('malestudents','femalestudents'));
 	}
 }

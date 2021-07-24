@@ -11,6 +11,9 @@ use App\Models\Student;
 use Carbon\Carbon;
 class ProgramReportController extends Controller
 {
+    public function __construct() {
+        $this->middleware('auth');
+    }
     
     public function index()
     {
@@ -18,7 +21,6 @@ class ProgramReportController extends Controller
         ->paginate(50);
        return view('program_report.index',compact('programReports')); 
     }
-
 
     public function create(Program $program,Student $student)
     {
@@ -35,21 +37,12 @@ class ProgramReportController extends Controller
         abort(401);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
+    public function store(Request $request){
          // return $request->all();
         if(auth()->user()->userType=='teacher'){
-
             if(!$request->donedate){
                 $request['donedate'] = date('Y-m-d',time());
             }
-            
             $this->validate($request,[
                 'donedate'=>'required',
                 'todaymission'=>'required',
@@ -62,53 +55,55 @@ class ProgramReportController extends Controller
             return redirect()->route('student.show',['student'=>$request->student_id]);
         }
         abort(401);
-
     }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\ProgramReport  $programReport
-     * @return \Illuminate\Http\Response
-     */
+ 
     public function show(ProgramReport $programReport)
     {
         //
     }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\ProgramReport  $programReport
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(ProgramReport $programReport)
+ 
+    public function edit(ProgramReport $programReport,Student $student)
     {
-        return view('program_report.edit',compact('programReport'));
+        return view('program_report.edit',compact('programReport','student'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\ProgramReport  $programReport
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, ProgramReport $programReport)
+    public function update(Request $request, ProgramReport $programReport,Student $student)
     {
-        $programReport->update($request->all());
-        return redirect()->back()->with(['status'=>'success','message' => 'تم']);
+        
+        //data to be update
+        $data=[
+            'todaymission'=>$request->todaymission,
+            'note'=>$request->note,
+            'evaluation'=>$request->evaluation,
+            'nextmission'=>$request->nextmission
+        ];
+
+        $loggedUser = auth()->user();
+        if($loggedUser->userType=='teacher'){
+            $teacher = $loggedUser->teacherAccount;
+            $teacher->checkHisStudent($student);
+            ProgramReport::where(['student_id'=>$student->id,'id'=>$programReport->id])->update($data);
+            return redirect()->route('student.show',['student'=>$student->id])
+            ->with(['status'=>'success','message' => 'تم التعديل']);
+         }
+         abort(401);
+    }
+    
+    public function confirmDelete(ProgramReport $programReport,Student $student)
+    {
+        return view('program_report._confirm_delete',compact('programReport','student'));
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\ProgramReport  $programReport
-     * @return \Illuminate\Http\Response
-     */
-    public function delete(ProgramReport $programReport)
+    public function delete(ProgramReport $programReport,Student $student)
     {
-        // $programReport->delete();
-        return redirect()->back()->with(['status'=>'success','message' => 'لايمكن حذفه الآن']);
+        $loggedUser = auth()->user();
+        if($loggedUser->userType=='teacher'){
+            $teacher = $loggedUser->teacherAccount;
+            $teacher->checkHisStudent($student);
+            ProgramReport::where(['student_id'=>$student->id,'id'=>$programReport->id])->delete();
+            return redirect()->route('student.show',['student'=>$student->id])
+            ->with(['status'=>'success','message' => 'تم الحذف']);
+        }
+        abort(401);
     }
 }

@@ -178,5 +178,11 @@
             </h4>
         </div>
 
+        <div class="col-md-6">
+            <h4 class="alert alert-secondary">
+                <a href="{{route('student.can-wirte-program-report.index')}}">الطلاب القادرين على كتابة التقرير بأنفسهم</a>
+            </h4>
+        </div>
+
     </div>
 </div>

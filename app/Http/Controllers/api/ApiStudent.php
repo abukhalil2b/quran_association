@@ -5,6 +5,7 @@ use App\Http\Controllers\api\ApiCourse;
 use App\Http\Resources\MemorizedJuzResource;
 use App\Http\Resources\MemorizedSowarResource;
 use App\Http\Resources\ProgramReportResource;
+use App\Http\Resources\CircleStudentResource;
 use App\Models\ProgramReport;
 use Carbon\Carbon;
 use App\Models\Student;
@@ -34,12 +35,15 @@ class ApiStudent extends Controller
 			->limit(50)->get();
 
 			$student=[
+				'id' => $student->id,
 				'name' => $student->name,
+				'usercenter' => $student->usercenter()->name,
 				'fathername' => $student->father?$student->father->name:'',
 				'avatar'=>$student->avatar?$student->avatar:'',
 				'memorizedJuzs'=>MemorizedJuzResource::collection($student->memorizedJuzs),
 				'memorizedSowars'=>MemorizedSowarResource::collection($student->memorizedSowars),
-				'programReports'=>$programReports,
+				'programReports'=>ProgramReportResource::collection($programReports),
+				'circles'=>CircleStudentResource::collection($student->circles()->get()),
 			];
 
 			$response = [

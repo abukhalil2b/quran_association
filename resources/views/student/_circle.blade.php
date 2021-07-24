@@ -7,21 +7,7 @@
      {{$circle->title}} 
     </a>
     <div class="text-info px-3">
-        <small>
-            <div>
-                <span class="text-primary">المدرس: </span>
-                @if($circle->teacher)
-                {{$circle->teacher->accountOwner->name}}
-                @endif
-            </div>
-            <div><span class="text-primary">البرنامج: </span>{{$circle->program->title}}</div>
-            @if($circle->program->semester)
-            {{$circle->program->semester->year->title}} -
-            {{$circle->program->semester->title}}
-            @else
-            برنامج مستمر
-            @endif
-        </small>
+        @include('student._leftside_links')
     </div>
     @if($circle->teacher)
         @include('program_report._create')

@@ -24,6 +24,10 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class DashboardController extends Controller {
+		public function __construct() {
+			$this->middleware('auth');
+		}
+	
 		public function dashboard() {
 
 		$loggedUser = auth()->user();
@@ -131,7 +135,7 @@ class DashboardController extends Controller {
 					$q->where(['dailyrecord_id' => $incessantProgramLastDailyrecord->id]);
 				})->with('student')->get();
 			}
-			
+			// return$incessantProgramCircle->activeStudents;
 
 			return view('dashboard', compact(
 				'loggedUser',

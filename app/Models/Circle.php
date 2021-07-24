@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-
+use DB;
 class Circle extends Model {
 	protected $fillable = ['title', 'program_id', 'supervisor_id', 'teacher_id'];
 	public function students() {
@@ -52,5 +52,23 @@ class Circle extends Model {
 		 abort(401);
 		 
 	}
+
+	public function canWriteReport(Student $student){
+		$subscription = DB::table('circle_student')
+		->where(['student_id'=>$student->id,'circle_id'=>$this->id])
+		->first();
+		return$subscription->can_write_his_report==1?true:false;
+			
+	}
+
+
+	public function studentStudyStatus(Student $student){
+		$status = DB::table('circle_student')
+		->where(['student_id'=>$student->id,'circle_id'=>$this->id])
+		->first()->status;
+		return$status;
+	}
+
+	
 
 }

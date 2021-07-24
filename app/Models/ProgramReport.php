@@ -24,4 +24,10 @@ class ProgramReport extends Model
 	public function student(){
 		return $this->belongsTo(Student::class);
 	}
+	public function teacher(){
+		return $this->belongsTo(Teacher::class);
+	}
+	public function circle(){
+		return $this->belongsTo(Circle::class);
+	}
 }

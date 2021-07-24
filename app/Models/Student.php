@@ -42,7 +42,7 @@ class Student extends Model {
 
 	public function circles() {
 		return $this->belongsToMany(Circle::class, 'circle_student', 'student_id', 'circle_id')
-			->withPivot('program')
+			->withPivot('program','can_write_his_report')
 			->withTimestamps();
 	}
 
