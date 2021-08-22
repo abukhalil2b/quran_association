@@ -5,7 +5,8 @@ use App\Models\Building;
 use App\Models\Course;
 use App\Models\Coursedetail;
 use App\Http\Controllers\Controller;
-use App\Models\Trainer;
+use App\Models\Teacher;
+use App\Models\Student;
 use Illuminate\Http\Request;
 
 class CourseController extends Controller {
@@ -13,19 +14,71 @@ class CourseController extends Controller {
 		$this->middleware('auth');
 	}
 
+	public function studentIndex(Course $course) {
+		$loggedUser = auth()->user();
+		$students=[];
+		if($loggedUser->userType=='usercenter')
+		{
+			$students = Student::whereHas('userStudentPermission',function($q)use($loggedUser){
+				$q->where(['user_student_permission.user_id'=>$loggedUser->id]);
+			})->whereHas('courses',function($q)use($course){
+				$q->where('course_student.course_id',$course->id);
+			})->get();
+
+		}
+		return view('course.student.index', compact('course','students'));
+	}
+
+	public function studentCreate(Course $course) {
+		$loggedUser = auth()->user();
+		$students=[];
+		if($loggedUser->userType=='usercenter')
+		{
+			$students = Student::whereHas('userStudentPermission',function($q)use($loggedUser){
+				$q->where('user_student_permission.user_id',$loggedUser->id);
+			})->whereDoesntHave('courses',function($q)use($course){
+				$q->where('course_student.course_id',$course->id);
+			})->get();
+
+		}
+		return view('course.student.create', compact('course','students'));
+	}
+	
+	public function studentStore(Request $request,Course $course) {
+		$loggedUser = auth()->user();
+		if($loggedUser->userType=='usercenter')
+		{
+			$loggedUser->checkUsercenterHasCourse($course);
+			$students = Student::whereHas('userStudentPermission',function($q) use ($loggedUser){
+				$q->where('user_student_permission.user_id',$loggedUser->id);
+			})->get();
+			$ids = $request->studentIds;
+			$filteredIds = $students->whereIn('id',$ids)->pluck('id');
+			
+			$course->students()->attach($filteredIds);
+			return redirect()->route('course.student.index',['course'=>$course->id])
+			->with(['status'=>'success','message'=>'تم']);
+		}
+	}
+
 	public function index() {
-		$courses = Course::all();
+		$courses=[];
+		$loggedUser = auth()->user();
+		switch ($loggedUser->userType) {
+			case 'usercenter':
+			$courses = Course::where('user_id',$loggedUser->id)->get();
+			break;
+		}
+		
 		return view('course.index', compact('courses'));
 	}
 	public function show(Course $course) {
-
-		// $course = Course::find($id);
 		return view('course.show', compact('course'));
 	}
 	public function create() {
 		$buildings = Building::whereUserId(auth()->user()->id)->get();
-		$trainers = Trainer::all();
-		return view('course.create', compact('trainers', 'buildings'));
+		$teachers = Teacher::all();
+		return view('course.create', compact('teachers', 'buildings'));
 	}
 
 	public function store(Request $request) {
@@ -55,8 +108,8 @@ class CourseController extends Controller {
 		$buildings = Building::whereUserId(auth()->user()->id)->get();
 		// $course = Course::find($id);
 
-		$trainers = Trainer::all();
-		return view('course.edit', compact('course', 'trainers', 'buildings'));
+		$teachers = Teacher::all();
+		return view('course.edit', compact('course', 'teachers', 'buildings'));
 	}
 
 	public function update(Request $request) {

@@ -4,7 +4,7 @@
         <div class="col-md-12">
             <div class="card">
                 <div class="card-header">
-                    <h4>اضافة مكان للتعليم  جديد  </h4>
+                    <h4>اضافة مكان للتعليم  (جديد)  </h4>
                 </div>
                 <div class="card-body">
 					<form method="post" action="{{route('building.store')}}">

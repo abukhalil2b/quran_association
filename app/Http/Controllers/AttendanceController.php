@@ -21,11 +21,8 @@ class AttendanceController extends Controller {
 			$teacher = $loggedUser->teacherAccount;
 			$user = $teacher->usercenter();
 
-			//check circle
-			$circle = $circle->checkUserPermission($user);
-			if (!$circle) {
-				die('أنت لاتملك الصلاحيات');
-			}
+			//check circle Permission
+			$circle->checkUserPermission($user);
 
 			$lastDailyrecord = Dailyrecord::latest()->where('circle_id', $circle->id)->whereDate('created_at', Carbon::today())->first();
 			if (!$lastDailyrecord) {
@@ -35,7 +32,7 @@ class AttendanceController extends Controller {
 			$attendances = Attendance::where('dailyrecord_id', $lastDailyrecord->id)->get();
 
 			$students = Student::whereHas('circles', function ($q) use ($circle) {
-				$q->where('circle_student.circle_id', $circle->id);
+				$q->where(['circle_student.circle_id'=> $circle->id,'circle_student.status'=>'studying']);
 			})->get();
 
 			if (count($attendances) === 0) {

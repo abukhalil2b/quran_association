@@ -29,7 +29,7 @@ class User extends Authenticatable
         'password',
         'userType',
         'nationalId', 
-        'phone'
+        'phone',
     ];
 
     /**
@@ -61,13 +61,6 @@ class User extends Authenticatable
     protected $appends = [
         'profile_photo_url',
     ];
-    
-    public function traineeAccount() {
-        return $this->hasOne(Trainee::class, 'owner');
-    }
-    public function trainerAccount() {
-        return $this->hasOne(Trainer::class, 'owner');
-    }
 
     public function supervisorAccount() {
         return $this->hasOne(Supervisor::class, 'owner');
@@ -124,9 +117,7 @@ class User extends Authenticatable
     public function userStudentPermission() {
         return $this->belongsToMany(Student::class, 'user_student_permission', 'user_id', 'student_id');
     }
-    public function userTrainerPermission() {
-        return $this->belongsToMany(Trainer::class, 'user_trainer_permission', 'user_id', 'trainer_id');
-    }
+
 
     public function roles() {
         return $this->belongsToMany(Role::class, 'user_role', 'user_id', 'role_id');
@@ -143,5 +134,39 @@ class User extends Authenticatable
         }
         abort(401);
     }
+
+    public function checkUsercenterHasTeacher($teacher){
+        $teacher = $this->userTeacherPermission()->where('user_teacher_permission.teacher_id',$teacher->id)->first();
+        if($teacher){
+            return $teacher;
+        }
+        abort(401);
+    }
+
+    public function checkUsercenterHasSupervisor($supervisor){
+        $supervisor = $this->userSupervisorPermission()->where('user_supervisor_permission.supervisor_id',$supervisor->id)->first();
+        if($supervisor){
+            return $supervisor;
+        }
+        abort(401);
+    }
+
+
+    public function checkUsercenterHasCourse($course){
+        $course = Course::where(['user_id'=>$this->id,'id'=>$course->id])->first();
+        if($course){
+            return $course;
+        }
+        abort(401);
+    }
+
+    public function accounts(){
+        $accounts=[];
+        $this->supervisorAccount==null?null:array_push($accounts,'supervisor');
+        $this->teacherAccount==null?null:array_push($accounts,'teacher');
+        return $accounts;
+    }
+
+
 
 }

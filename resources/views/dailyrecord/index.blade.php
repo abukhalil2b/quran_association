@@ -10,10 +10,11 @@
             <div class="card">
                 <div class="card-body">
                 	@foreach($dailyrecords as $dailyrecord)
-                	<h6>
-                    <b>عنوان السجل: </b>{{$dailyrecord->title}}
-                    <b> ||الحلقة: </b>{{$dailyrecord->circle->title}}
-                    <b> ||البرنامج: </b>{{$dailyrecord->circle->program->title}}</h6>
+                    <span class="text-gray-500">{{$dailyrecord->title}}</span>
+                    <span class="text-gray-800">{{$dailyrecord->circle->title}}</span>
+                    <span class="text-blue-800">{{$dailyrecord->circle->program->title}}</span>
+                    <span class="text-gray-300 pull-left">{{$dailyrecord->created_at->diffForHumans()}}</span>
+                    <hr>
                 	@endforeach
                 </div>
             </div>

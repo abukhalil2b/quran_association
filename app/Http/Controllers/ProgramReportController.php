@@ -17,8 +17,17 @@ class ProgramReportController extends Controller
     
     public function index()
     {
-        $programReports = ProgramReport::orderby('id','DESC')
-        ->paginate(50);
+        $programReports=[];
+
+        $loggedUser = auth()->user();
+        if($loggedUser->userType==='usercenter'){
+            $programReports = ProgramReport::orderby('id','DESC')
+            ->where('owned_by_usercenter_id',$loggedUser->id)
+            ->paginate(50);
+        }else{
+            abort(401);
+        }
+        
        return view('program_report.index',compact('programReports')); 
     }
 
@@ -39,7 +48,8 @@ class ProgramReportController extends Controller
 
     public function store(Request $request){
          // return $request->all();
-        if(auth()->user()->userType=='teacher'){
+        $loggedUser = auth()->user();
+        if($loggedUser->userType=='teacher'){
             if(!$request->donedate){
                 $request['donedate'] = date('Y-m-d',time());
             }
@@ -50,7 +60,10 @@ class ProgramReportController extends Controller
                 'teacher_id'=>'required',
                 'student_id'=>'required'
             ]);
-                
+             $teacher=$loggedUser->teacherAccount; 
+             $usercenter = $teacher->usercenter();
+             $request['owned_by_usercenter_id']=$usercenter->id;
+
             ProgramReport::create($request->all());
             return redirect()->route('student.show',['student'=>$request->student_id]);
         }

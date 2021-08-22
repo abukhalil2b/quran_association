@@ -9,19 +9,12 @@
 
     <x-slot name="form">
 
-    </x-slot>
-
-    <x-slot name="actions">
-    	@if(auth()->user()->supervisorAccount && auth()->user()->userType==='teacher')
-	    	<a href="{{route('user.shiftaccount.tosupervisor')}}" class="btn btn-secondary text-white">
-	    	التبديل إلى حساب {{__('supervisor')}}
-	    	</a>
-    	@endif
-
-    	@if(auth()->user()->teacherAccount && auth()->user()->userType==='supervisor')
-	    	<a href="{{route('user.shiftaccount.toteacher')}}" class="btn btn-secondary text-white">
-	    	التبديل إلى حساب {{__('teacher')}}
-	    	</a>
-    	@endif
+        @foreach(auth()->user()->accounts() as $account)
+        @if(auth()->user()->userType==$account)
+        <span class="btn btn-success">{{__($account)}}</span>
+        @else
+        <a href="{{Route('user.shift_to_account',['account'=>$account])}}" class="btn btn-secondary">{{__($account)}}</a>
+        @endif
+        @endforeach
     </x-slot>
 </x-jet-form-section>

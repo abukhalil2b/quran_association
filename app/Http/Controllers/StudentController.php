@@ -61,7 +61,7 @@ class StudentController extends Controller {
 		}
 	}
 
-	public function index() {
+	public function maleIndex() {
 
 		$loggedUser = auth()->user();
 		switch ($loggedUser->userType) {
@@ -92,8 +92,45 @@ class StudentController extends Controller {
 			$femalestudents = [];
 			break;
 		}
-		return view('student.index', compact('malestudents','femalestudents'));
+		$gender='male';
+		return view('student.index', compact('malestudents','femalestudents','gender'));
 	}
+
+	public function femaleIndex() {
+
+		$loggedUser = auth()->user();
+		switch ($loggedUser->userType) {
+		case 'superadmin':
+			$malestudents = Student::where('gender','male')->get();
+			$femalestudents = Student::where('gender','female')->get();
+			break;
+		case 'usercenter':
+			$malestudents = Student::whereHas('userStudentPermission', function ($q) use ($loggedUser) {
+				$q->where('user_student_permission.user_id', $loggedUser->id);
+			})->where('gender','male')->get();
+			$femalestudents = Student::whereHas('userStudentPermission', function ($q) use ($loggedUser) {
+				$q->where('user_student_permission.user_id', $loggedUser->id);
+			})->where('gender','female')->get();
+			break;
+		case 'supervisor':
+			$supervisor = $loggedUser->supervisorAccount;
+			$usercenter = $supervisor->usercenter();
+			$malestudents = Student::whereHas('userStudentPermission', function ($q) use ($usercenter) {
+				$q->where('user_student_permission.user_id', $usercenter->id);
+			})->where('gender','male')->get();
+			$femalestudents = Student::whereHas('userStudentPermission', function ($q) use ($usercenter) {
+				$q->where('user_student_permission.user_id', $usercenter->id);
+			})->where('gender','female')->get();
+			break;
+		default:
+			$malestudents = [];
+			$femalestudents = [];
+			break;
+		}
+		$gender='female';
+		return view('student.index', compact('malestudents','femalestudents','gender'));
+	}
+
 	public function create() {
 		return view('student.create');
 	}
@@ -135,7 +172,12 @@ class StudentController extends Controller {
 			# code...
 			break;
 		}
-		return redirect(Route('student.index'));
+		
+		if($student->gender=='male')
+			return redirect()->route('student.male_index');
+		if($student->gender=='female')
+			return redirect()->route('student.female_index');
+
 	}
 
 	public function circleShow(Student $student,Circle $circle) {
@@ -166,12 +208,18 @@ class StudentController extends Controller {
 
 	public function update(Request $request,Student $student) {
 		$student->update($request->all());
-		return redirect()->route('student.index');
+		if($student->gender=='male')
+			return redirect()->route('student.male_index');
+		if($student->gender=='female')
+			return redirect()->route('student.female_index');
 	}
 
 	public function activeToggle(Student $student) {
 		$student->update(['active'=>!$student->active]);
-		return redirect()->route('student.index');
+		if($student->gender=='male')
+			return redirect()->route('student.male_index');
+		if($student->gender=='female')
+			return redirect()->route('student.female_index');
 	}
 
 	public function allowWirteReport(Student $student,Circle $circle) {

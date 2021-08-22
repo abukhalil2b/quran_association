@@ -13,8 +13,6 @@ use App\Models\Student;
 use App\Models\Supervisor;
 use App\Models\Teacher;
 use App\Models\Program;
-use App\Models\Trainee;
-use App\Models\Trainer;
 use App\Models\User;
 use App\Models\MemorizeProgram;
 use App\Models\Year;
@@ -32,7 +30,7 @@ class DashboardController extends Controller {
 
 		$loggedUser = auth()->user();
 		$thisyear = Year::orderby('id', 'desc')->first();
-
+		
 		switch ($loggedUser->userType) {
 		case 'usercenter':
 			$finance_reports = FinanceReport::whereHas('userFinanceReportPermission', function ($query) use ($loggedUser) {
@@ -63,19 +61,23 @@ class DashboardController extends Controller {
 				$q->where('users.gender','female');
 			})->get();
 			
-			$trainers = Trainer::whereHas('userTrainerPermission', function ($query) use ($loggedUser) {
-				$query->where('user_trainer_permission.user_id', $loggedUser->id);
+	
+
+			
+			$malestudents = Student::where('gender','male')->whereHas('userStudentPermission', function ($query) use ($loggedUser) {
+				$query->where('user_student_permission.user_id', $loggedUser->id);
 			})->get();
-			
-			$trainees = Trainee::all();
-			
-			$students = Student::whereHas('userStudentPermission', function ($query) use ($loggedUser) {
+			$femalestudents = Student::where('gender','female')->whereHas('userStudentPermission', function ($query) use ($loggedUser) {
 				$query->where('user_student_permission.user_id', $loggedUser->id);
 			})->get();
 			
-			
-			$programs = Program::all();
-			$circles = Circle::all();
+			$programs = Program::whereHas('userProgramPermission',function($query)use($loggedUser){
+				$query->where('user_program_permission.user_id',$loggedUser->id);
+			});
+			$circles = Circle::whereHas('userCirclePermission',function($query)use($loggedUser){
+				$query->where('user_circle_permission.user_id',$loggedUser->id);
+			});
+
 			return view('dashboard', compact(
 				'loggedUser',
 				'finance_reports',
@@ -84,9 +86,8 @@ class DashboardController extends Controller {
 				'supervisors',
 				'maleTeachers',
 				'femaleTeachers',
-				'trainers',
-				'trainees',
-				'students',
+				'malestudents',
+				'femalestudents',
 				'programs',
 				'circles',
 			));
@@ -94,12 +95,16 @@ class DashboardController extends Controller {
 
 		case 'teacher':
 			//inital values
+			$courses=[];
 			$quarterlyProgramPresentStudents =[];
 			$incessantProgramPresentStudents =[];
 			$quarterlyProgramLastDailyrecord =null;
 			$incessantProgramLastDailyrecord =null;
 
 			$teacher = $loggedUser->teacherAccount;
+			if(!$teacher){
+				abort(404,'لايوجد لديك حساب مدرس');
+			}
 			$usercenter = $teacher->usercenter();
 			
 			// teacher's circles in this semester.
@@ -138,6 +143,7 @@ class DashboardController extends Controller {
 			// return$incessantProgramCircle->activeStudents;
 
 			return view('dashboard', compact(
+				'courses',
 				'loggedUser',
 				'usercenter',
 				'teacher',
@@ -152,8 +158,6 @@ class DashboardController extends Controller {
 		case 'supervisor':
 			$supervisor = $loggedUser->supervisorAccount;
 			$usercenter = $supervisor->usercenter();
-			
-			
 
 			//supervisor's circles in this year.
 			$quarterlyProgramCircles = Circle::whereHas('program.semester', function ($q) use ($thisyear) {
@@ -164,17 +168,7 @@ class DashboardController extends Controller {
 				$q->where('circles.supervisor_id', $supervisor->id);
 			})->where('quarterly',0)->get(); 
 			return view('dashboard', compact('usercenter',  'quarterlyProgramCircles','programs', 'supervisor', 'loggedUser'));
-			break;
-		case 'trainer':
-			$trainer = $loggedUser->trainerAccount;
 
-			return view('dashboard', compact('loggedUser', 'trainer'));
-			break;
-		case 'trainee':
-
-			$trainee = $loggedUser->traineeAccount;
-			
-			return view('dashboard', compact('loggedUser', 'trainee'));
 			break;
 		default:
 

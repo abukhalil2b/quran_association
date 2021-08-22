@@ -33,10 +33,12 @@ class CreateCoursesTable extends Migration {
 			$table->string('deliveryMeans')->nullable();
 			$table->string('forgender')->default('both');
 			$table->boolean('active')->default(0);
-			$table->integer('trainer_id')->unsigned();
+			$table->integer('teacher_id')->unsigned();
 			$table->integer('cate_id')->nullable()->unsigned();
 			$table->integer('building_id')->nullable()->unsigned();
 			$table->integer('user_id')->unsigned();
+			$table->string('male_certificate_url',200)->nullable();
+            $table->string('female_certificate_url',200)->nullable();
 			$table->timestamps();
 		});
 	}

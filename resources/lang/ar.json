@@ -1,15 +1,22 @@
 {
+    "delete":"حذف",
+
     "studying":"يدرس",
     "withdraw":"منسحب",
     "completed":"أنهى",
     "supervisor": "مشرف",
     "teacher": "مدرس",
-    "trainee":"متدرب",
+    "teachers": "مدرسين",
+    "student":"طالب",
+    "students":"طلاب",
+
     "usercenter":"مدير المركز",
     "Email": "البريد الإلكتروني",
     "Password": "كلمة المرور",
     "male": "ذكر",
     "female": "أنثى",
+    "males": "ذكور",
+    "females": "اناث",
     "Not Found": "الصفحة غير متوفرة",
     "todaymeeting": "لقاء اليوم",
     "nextmeeting": "اللقاء القادم",

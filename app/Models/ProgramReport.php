@@ -13,6 +13,7 @@ class ProgramReport extends Model
     	'student_id',
 	    'teacher_id',
 	    'circle_id',
+	    'owned_by_usercenter_id',
 	    'donedate',
 	    'tobedonedate',
 	    'todaymission',

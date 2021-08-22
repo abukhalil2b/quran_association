@@ -11,10 +11,13 @@ class ApiProgramReport extends Controller
 {
 	public function store(Request $request) {
 		$teacher_id = Circle::find($request->circle_id)->teacher_id;
+		$teacher = Teacher::find($teacher_id);
+		$usercenter = $teacher->usercenter();
 		$data=[
 	    	 	'student_id'=>$request->student_id,
 	    	 	'teacher_id'=>$teacher_id ,
 	    	 	'circle_id'=>$request->circle_id,
+	    	 	'owned_by_usercenter_id'=>$usercenter->id,
 	    	 	'donedate'=>$request->donedate,
 	    	 	'tobedonedate'=>$request->tobedonedate,
 	    	 	'todaymission'=>$request->todaymission,

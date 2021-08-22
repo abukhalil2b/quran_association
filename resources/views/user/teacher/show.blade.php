@@ -7,7 +7,7 @@
     	</div>
     </div>
 
-    <div class="row mt-3">
+    <div class="row mt-3 border bg-white rounded py-1">
         <h4 class="py-2 px-3">برامج فصلية</h4>
         @if($quarterlyProgramCircle)
         @include('user.teacher.quarterly_program._circle')
@@ -16,12 +16,17 @@
         @endif
     </div>
 
-    <div class="row mt-3">
+    <div class="row mt-3 border bg-white rounded py-1">
         <h4 class="py-2 px-3">برامج مستمرة</h4>
         @if($incessantProgramCircle)
         @include('user.teacher.incessant_program._circles')
         @include('user.teacher.incessant_program._dailyrecord')
         @include('user.teacher.incessant_program._students')
         @endif
+    </div>
+
+    <div class="row mt-3 border bg-white rounded py-1">
+        <h4 class="py-2 px-3">الدورات العلمية</h4>
+        @include('user.teacher.course._index')
     </div>
 </div>

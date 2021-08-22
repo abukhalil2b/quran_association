@@ -7,11 +7,12 @@
     		@foreach($finance_reports as $finance_report)
     		<div>{{$finance_report->title}}</div>
     		@endforeach
-
         </div>
+        
         <div class="col-md-6">
-
-    		<h4 class="alert alert-secondary">السجلات اليومية</h4>
+    		<h4 class="alert alert-secondary">
+                <a href="{{route('dailyrecord.index')}}">السجلات اليومية</a>
+            </h4>
     		@foreach($dailyrecords as $dailyrecord)
     		<div class="text-sm">
                 <a href="{{route('attendance.dashboard',['dailyrecord'=>$dailyrecord->id])}}">
@@ -21,113 +22,68 @@
                 </a>
             </div>
     		@endforeach
-
         </div>
 
         <div class="col-md-6">
+            <a href="{{route('certificate.index')}}">
+            <h4 class="alert alert-secondary">الشهادات</h4>
+            </a>
+        </div>
 
+        <div class="col-md-6">
             <h4 class="alert alert-secondary">
-                <div><a href="{{route('course.index')}}">الدورات</a></div>
-                <div><a href="{{route('course.create')}}">+ الدورات</a></div>
+                <a href="{{route('course.index')}}">الدورات</a>
+                <a class="pull-left" href="{{route('course.create')}}">+ دورة جديدة</a>
             </h4>
-
         </div>
 
         <div class="col-md-6">
-    		<h4 class="alert alert-secondary">أماكن الدراسة
+    		<h4 class="alert alert-secondary">
+                <a href="{{route('building.index')}}">أماكن الدراسة</a>
+                
             | (العدد: {{count($buildings)}}) |
               <a href="{{route('building.create')}}">
                 + إضافة ماكن الدراسة
               </a>
             </h4>
-    		@foreach($buildings as $building)
-    		<div class="card mt-2 mb-2 px-2">
-                <a href="{{route('building.dashboard',['building'=>$building->id])}}">
-                     {{$building->title}}
-                </a>
-            </div>
-    		@endforeach
-
         </div>
         <div class="col-md-6">
             <h4 class="alert alert-secondary">
-            المشرفين | (العدد: {{count($supervisors)}}) | <a href="{{route('user.supervisor.create')}}">+ إضافة مشرف</a>
+            <a href="{{route('user.supervisor.index')}}">المشرفين</a> 
+            | (العدد: {{count($supervisors)}}) | <a href="{{route('user.supervisor.create')}}">+ إضافة مشرف</a>
     		</h4>
-    		@foreach($supervisors as $key =>  $supervisor)
-            <div class="card mt-2 mb-2 px-2">
-                 <a href="{{route('supervisor.dashboard',['supervisor'=>$supervisor->id])}}">
-                   <div>الاسم: {{$supervisor->accountOwner->name}}</div>
-                   <div><small class="text-info">{{$supervisor->title}}</small></div>
-                   <div>الهاتف:  <small>{{$supervisor->accountOwner->phone}}</small></div>
-                </a>
-                <div>البريد الالكتروني:  <small>{{$supervisor->accountOwner->email}}</small></div>
-            </div>
-    		@endforeach
+
         </div>
 
         <div class="col-md-6">
 
-    		<h4 class="alert alert-secondary">
-            المدرسين | <a href="{{route('user.teacher.create')}}">+ إضافة مدرس</a>
-            </h4>
-            <h5>ذكور | (العدد: {{count($maleTeachers)}}) </h5>
-            @foreach($maleTeachers as $key =>  $teacher)
-            <div class="card mt-2 mb-2 px-2">
-                <a href="{{route('user.teacher.show',['teacher'=>$teacher->id])}}">
-                    <div>الاسم: {{$teacher->accountOwner->name}}</div>
-                     <div><small class="text-info">{{$teacher->title}}</small></div>
-                     <div>الهاتف:  <small>{{$teacher->accountOwner->phone}}</small></div>
-                </a>
-                <div>البريد الالكتروني:  <small>{{$teacher->accountOwner->email}}</small></div>
-            </div>
-            @endforeach
-
-            <h5>إناث | (العدد: {{count($femaleTeachers)}}) </h5>
-    		@foreach($femaleTeachers as $key =>  $teacher)
-    		<div class="card mt-2 mb-2 px-2">
-                <a href="{{route('user.teacher.show',['teacher'=>$teacher->id])}}">
-                    <div>الاسم: {{$teacher->accountOwner->name}}</div>
-                     <div><small class="text-info">{{$teacher->title}}</small></div>
-                     <div>الهاتف:  <small>{{$teacher->accountOwner->phone}}</small></div>
-                </a>
-                <div>البريد الالكتروني:  <small>{{$teacher->accountOwner->email}}</small></div>
-            </div>
-    		@endforeach
+    		<h6 class="alert alert-secondary">
+                <a href="{{route('user.teacher.male_index')}}">المدرسين ({{__('males')}} : {{count($maleTeachers)}})</a>
+                |
+                <a href="{{route('user.teacher.female_index')}}">المدرسين ({{__('females')}} : {{count($femaleTeachers)}})</a>
+                | 
+                <a href="{{route('user.teacher.create')}}">+ إضافة مدرس</a>
+            </h6>
 
         </div>
 
         <div class="col-md-6">
             <div class="alert alert-secondary">
             <h5>
-                <a href="{{route('student.index')}}">
-                    الطلاب 
-                    (العدد: {{count($students)}}) 
+                <a href="{{route('student.male_index')}}">
+                    الطلاب {{__('males')}}
+                    (العدد: {{count($malestudents)}}) 
+                </a>
+
+                <a href="{{route('student.female_index')}}">
+                    الطلاب {{__('females')}}
+                    (العدد: {{count($femalestudents)}}) 
                 </a>
             </h5>
 
             <a href="{{route('student.create')}}">+ إضافة طلاب</a>
             </div>
 
-        </div>
-
-        <div class="col-md-6">
-    		<h4 class="alert alert-secondary">
-            المدربين | (العدد: {{count($trainers)}}) | <a href="{{route('user.trainer.create')}}">+ إضافة مدرب</a>
-            </h4>
-    		@foreach($trainers as $trainer)
-    		<div class="card mt-2 mb-2 px-2">
-                {{$trainer->accountOwner->name}} - {{$trainer->title}}
-                <small>{{$trainer->accountOwner->email}}</small>
-            </div>
-    		@endforeach
-        </div>
-
-        <div class="col-md-6">
-
-    		<h4 class="alert alert-secondary">المتدربين</h4>
-    		@foreach($trainees as $trainee)
-    		<div>{{$trainee->accountOwner->name}} - {{$trainee->title}}</div>
-    		@endforeach
         </div>
 
         <div class="col-md-6">

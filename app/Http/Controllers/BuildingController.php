@@ -13,6 +13,8 @@ class BuildingController extends Controller {
 		$this->middleware('auth');
 	}
 
+
+
 	public function index() {
 		$loggedUser = auth()->user();
 		if ($loggedUser->userType === 'usercenter' || $loggedUser->userType === 'superadmin') {
@@ -71,5 +73,33 @@ class BuildingController extends Controller {
 		$quarterlyPrograms = Program::where(['building_id' => $building->id, 'semester_id' => $thisyear->lastSemester()->id])->get();
 		$semester = Semester::latest()->first();
 		return view('building.dashboard', compact('building', 'semester', 'programs', 'quarterlyPrograms'));
+	}
+
+	public function showDeleteForm(Building $building) {
+		$loggedUser = auth()->user();
+		$building = Building::whereHas('userBuildingPermission', function ($q) use ($loggedUser, $building) {
+			$q->where('user_building_permission.user_id', $loggedUser->id)
+				->where('user_building_permission.building_id', $building->id);
+		})->first();
+		if (!$building) {
+			die('أنت لاتملك الصلاحية');
+		}
+		
+		$programs = Program::where(['building_id' => $building->id])->get();
+		
+		return view('building.delete_form', compact('building', 'programs'));
+	}
+
+	
+	public function confirmDeleteForm(Building $building) {
+		$loggedUser = auth()->user();
+		$building = Building::whereHas('userBuildingPermission', function ($q) use ($loggedUser, $building) {
+			$q->where('user_building_permission.user_id', $loggedUser->id)
+				->where('user_building_permission.building_id', $building->id);
+		})->first();
+		if (!$building) {
+			die('أنت لاتملك الصلاحية');
+		}
+		return 'coming soon';
 	}
 }

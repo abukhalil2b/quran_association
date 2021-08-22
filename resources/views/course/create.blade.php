@@ -98,7 +98,7 @@
                     		<td>هل مجانية</td>
                     		<td>
 								<select name="free" class="form-control">
-									<option value="0">لا</option>
+                                    <option value="0">لا</option>
                                     <option value="1">نعم</option>
 								</select>
 							</td>
@@ -106,15 +106,6 @@
 						<tr>
                     		<td>السعر</td>
                     		<td><input type="number" step="0.1" name="price" class="form-control"></td>
-                    	</tr>
-						<tr>
-                    		<td>اللغة</td>
-                    		<td>
-								<select name="language" class="form-control">
-									<option value="ar">عربي</option>
-									<option value="en">انجلزي</option>
-								</select>
-							</td>
                     	</tr>
 						<tr>
                     		<td>المستوى</td>
@@ -162,9 +153,9 @@
 						<tr>
                     		<td>اسم المعلم أو المحاضر</td>
                     		<td>
-								<select name="trainer_id" class="form-control">
-									@foreach($trainers as $trainer)
-									<option value="{{$trainer->id}}">{{$trainer->accountOwner->name}}</option>
+								<select name="teacher_id" class="form-control">
+									@foreach($teachers as $teacher)
+									<option value="{{$teacher->id}}">{{$teacher->accountOwner->name}}</option>
 									@endforeach
 								</select>
 							</td>

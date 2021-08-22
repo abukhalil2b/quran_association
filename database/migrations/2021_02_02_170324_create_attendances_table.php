@@ -15,8 +15,6 @@ class CreateAttendancesTable extends Migration {
 			$table->id();
 			$table->integer('student_id')->nullable();
 			$table->integer('teacher_id')->nullable();
-			$table->integer('trainer_id')->nullable();
-			$table->integer('trainee_id')->nullable();
 			$table->integer('supervisor_id')->nullable();
 			$table->boolean('present')->default(0);
 			$table->time('present_time')->nullable();

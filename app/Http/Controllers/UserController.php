@@ -59,25 +59,39 @@ class UserController extends Controller {
 		return redirect()->back();
 	}
 
-	public function shiftaccountToTeacher() {
+	public function shiftToAccount($account) {
 		$loggedUser = Auth::user();
-		$teacher = Teacher::where('owner', $loggedUser->id)->first();
-		if (!$teacher) {
-			return redirect()->back()->with(['status'=>'danger','message' => 'الحساب غير موجود']);
+		switch ($account) {
+			case 'teacher':
+				$teacher = Teacher::where('owner', $loggedUser->id)->first();
+				if (!$teacher) {
+					abort(404,'الحساب غير موجود');
+				}
+				$loggedUser->update(['userType' => 'teacher']);
+				break;
+			case 'supervisor':
+				$supervisor = Supervisor::where('owner', $loggedUser->id)->first();
+				if (!$supervisor) {
+					abort(404,'الحساب غير موجود');
+				}
+				$loggedUser->update(['userType' => 'supervisor']);
+				break;
+			case 'trainer':
+			$trainer = Trainer::where('owner', $loggedUser->id)->first();
+			if (!$trainer) {
+				abort(404,'الحساب غير موجود');
+			}
+			$loggedUser->update(['userType' => 'trainer']);
+			break;
+			default:
+				abort(404,'الحساب غير موجود');
+				break;
 		}
-		$loggedUser->update(['userType' => 'teacher']);
+		
 		return redirect()->back()->with(['status'=>'success','message' => 'تم']);
 	}
 
-	public function shiftaccountToSupervisor() {
-		$loggedUser = Auth::user();
-		$supervisor = Supervisor::where('owner', $loggedUser->id)->first();
-		if (!$supervisor) {
-			return redirect()->back()->with(['status'=>'danger','message' => 'الحساب غير موجود']);
-		}
-		$loggedUser->update(['userType' => 'supervisor']);
-		return redirect()->back()->with(['status'=>'success','message' => 'تم']);
-	}
+
 
 	public function addSupervisorAccountForUserCreate(Teacher $teacher) {
 		return view('user.add_supervisor_account_for_user', compact('teacher'));

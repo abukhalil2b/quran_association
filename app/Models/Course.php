@@ -21,25 +21,24 @@ class Course extends Model {
 		'status',
 		'free',
 		'price',
-		'language',
 		'level',
 		'deliveryMeans',
 		'active',
-		'trainer_id',
+		'teacher_id',
 		'cate_id',
 		'building_id',
 		'user_id',
+		'male_certificate_url',
+		'female_certificate_url'
 	];
 
-	public function trainees() {
-		return $this->belongsToMany(Trainee::class, 'trainee_course', 'course_id', 'trainee_id')->withTimestamps();
-	}
 
-	public function trainer() {
-		return $this->belongsTo(Trainer::class);
-	}
 	public function user() {
 		return $this->belongsTo(User::class);
+	}
+
+	public function teacher() {
+		return $this->belongsTo(Teacher::class);
 	}
 
 	public function marks() {
@@ -51,9 +50,15 @@ class Course extends Model {
 	}
 
 	public function subscribers() {
-		return $this->belongsToMany(Trainee::class, 'trainee_course', 'course_id', 'trainee_id')
-			->withPivot(['ispaid', 'free', 'fee'])->withTimestamps();
+		return $this->belongsToMany(Student::class, 'course_student', 'course_id', 'student_id')
+			->withPivot(['paid','join_date']);
 	}
+
+	public function certificates(){
+    	return $this->belongsToMany(Student::class, 'course_student', 'course_id', 'student_id')
+			->as('certificate')
+			->withPivot(['paid','join_date']);
+    }
 
 	public function getWeekDaysAttribute($value) {
 		if ($value) {

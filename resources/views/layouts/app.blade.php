@@ -25,6 +25,7 @@
         <link href="{{ asset('css/btns.css') }}" rel="stylesheet">
         <link href="{{ asset('css/teacher-show.css') }}" rel="stylesheet">
         <link href="{{ asset('css/student-dashboard.css') }}" rel="stylesheet">
+        <link href="{{ asset('css/box-style.css') }}" rel="stylesheet">
         <link href="{{ asset('css/style.css') }}" rel="stylesheet">
 
         <!-- Scripts -->
@@ -57,7 +58,7 @@
                  @endif
                  
                 @if(session('status'))
-                <center class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8 alert alert-{{session('type','info')}}">
+                <center class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8 alert alert-{{session('status','info')}}">
                    {{session('message')}}
                 </center>
                 @endif

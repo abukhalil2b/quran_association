@@ -14,7 +14,6 @@ class CreateOpinionsTable extends Migration {
 		Schema::create('opinions', function (Blueprint $table) {
 			$table->id();
 			$table->integer('student_id')->nullable()->unsigned();
-			$table->integer('trainee_id')->nullable()->unsigned();
 			$table->integer('course_id')->nullable()->unsigned();
 			$table->integer('program_id')->nullable()->unsigned();
 			$table->integer('point')->unsigned();

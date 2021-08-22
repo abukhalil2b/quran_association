@@ -37,8 +37,11 @@ class CircleController extends Controller {
 		$supervisors = Supervisor::whereHas('userSupervisorPermission', function ($query) use ($user) {
 			$query->where('user_supervisor_permission.user_id', $user->id);
 		})->get();
+		$teachers = Teacher::whereHas('userTeacherPermission', function ($query) use ($user) {
+			$query->where('user_teacher_permission.user_id', $user->id);
+		})->get();
 		if(count($supervisors))
-		return view('circle.create', compact('program', 'supervisors'));
+		return view('circle.create', compact('program', 'supervisors', 'teachers'));
 		abort(404,'لا يوجد مشرفين');
 	}
 
@@ -56,6 +59,7 @@ class CircleController extends Controller {
 
 		switch ($loggedUser->userType) {
 		case 'supervisor':
+			abort(404,'لاتملك الصلاحية');
 			$supervisor = $loggedUser->supervisorAccount;
 			$usercenter = $supervisor->usercenter();
 			$user = User::whereHas('userSupervisorPermission', function ($q) use ($supervisor_id, $usercenter) {
@@ -86,6 +90,7 @@ class CircleController extends Controller {
 			break;
 		case 'usercenter':
 			$supervisor_id = $request->supervisor_id;
+			$teacher_id = $request->teacher_id;
 			//check supervisor
 			$supervisor = Supervisor::whereHas('userSupervisorPermission', function ($q) use ($supervisor_id, $loggedUser) {
 				$q->where([
@@ -106,7 +111,12 @@ class CircleController extends Controller {
 				abort(404);
 			}
 
-			if ($circle = Circle::create(['title' => $request->title, 'program_id' => $program->id, 'supervisor_id' => $supervisor->id])) {
+			if ($circle = Circle::create([
+					'title' => $request->title,
+				 	'program_id' => $program->id,
+				 	'supervisor_id' => $supervisor_id,
+				 	'teacher_id' => $teacher_id
+				])) {
 				$circle->userCirclePermission()->attach($loggedUser->id);
 				return redirect()->route('program.dashboard', ['program' => $request->program_id])->with(['status' => 'تم']);
 			} else {
@@ -259,6 +269,7 @@ class CircleController extends Controller {
 	}
 
 	public function supervisorStore(Request $request) {
+
 		$loggedUser = auth()->user();
 		if ($loggedUser->userType === 'usercenter') {
 
@@ -415,8 +426,9 @@ class CircleController extends Controller {
 	}
 
 	public function studentStore(Request $request) {
+
 		if (!$request->student_ids) {
-			abort(400,'لايوجد طلاب');
+			abort(404,'لايوجد طلاب');
 		}
 
 		$Circle = Circle::find($request->circle_id);

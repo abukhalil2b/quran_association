@@ -15,18 +15,34 @@
                         </div>
                         <div class="form-group">
                             <input type="hidden" name="program_id" value="{{$program->id}}">
-                            @if(auth()->user()->userType!='supervisor')
-                            مشرف الحلقة
-                            <select name="supervisor_id" class="form-control" >
-                                @foreach($supervisors as $supervisor)
-                                <option value="{{$supervisor->id}}">
-                                    {{$supervisor->accountOwner->name}} -
-                                    {{$supervisor->title}} -
-                                    {{$supervisor->usercenter()->name}}
-                                </option>
-                                @endforeach
-                            </select>
-                            @endif
+                            <div class="row">
+                                <div class="col-md-6">
+                                    @if(auth()->user()->userType!='supervisor')
+                                    {{__('supervisor')}} الحلقة
+                                    <select name="supervisor_id" class="form-control" >
+                                        @foreach($supervisors as $supervisor)
+                                        <option value="{{$supervisor->id}}">
+                                            {{$supervisor->accountOwner->name}} -
+                                            {{$supervisor->title}} -
+                                            {{$supervisor->usercenter()->name}}
+                                        </option>
+                                        @endforeach
+                                    </select>
+                                    @endif
+                                </div>
+                                <div class="col-md-6">
+                                    {{__('teacher')}} الحلقة
+                                    <select name="teacher_id" class="form-control" >
+                                        @foreach($teachers as $teacher)
+                                        <option value="{{$teacher->id}}">
+                                            {{$teacher->accountOwner->name}} -
+                                            {{$teacher->title}} -
+                                            {{$teacher->usercenter()->name}}
+                                        </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
                             <button class="btn btn-info btn-block  mt-3">حفظ</button>
                         </div>
                     </form>

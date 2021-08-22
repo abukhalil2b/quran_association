@@ -21,10 +21,12 @@
                         @if($course->status=='now') جارية @endif
                         @if($course->status=='past') ماضية @endif
                     </td>
+                    
                     <td>
                         <a class="btn btn2 color1" href="{{route('course.status.edit',['course'=>$course->id])}}">تعديل حالة الدورة</a>
                         <a class="btn btn2 color1" href="{{route('course.edit',['course'=>$course->id])}}">تعديل</a>
                         <a class="btn btn2 color1" href="{{route('course.detail.create',['course'=>$course->id])}}">التوصيف</a>
+                        <a class="btn btn2 color1" href="{{route('course.student.index',['course'=>$course->id])}}">المتدربين</a>
                     </td>
                 </tr>
                 @endforeach

@@ -13,7 +13,7 @@ class DailyrecordController extends Controller {
 	}
 
 	public function index() {
-		$dailyrecords = Dailyrecord::all();
+		$dailyrecords = Dailyrecord::orderby('id','desc')->get();
 		return view('dailyrecord.index', compact('dailyrecords'));
 	}
 

@@ -3,10 +3,14 @@
     <div class="row justify-content-center">
         <div class="col-md-12">
             @foreach($buildings as $building)
-            <a href="{{route('building.dashboard',['building'=>$building->id])}}">
-                <span class="btn-block">{{$building->title}}</span>
-                <small>{{$building->user->name}}</small>
-            </a>
+            <div class="card mt-2 mb-2 px-2">
+                <a href="{{route('building.dashboard',['building'=>$building->id])}}">
+                     {{$building->title}}
+                     <small class="text-gray-400">{{$building->user->name}}</small>
+                </a>
+                <hr>
+                <a href="{{route('building.show_delete_form',['building'=>$building->id])}}">حذف</a>
+            </div>
             @endforeach
         </div>
     </div>

@@ -11,15 +11,7 @@ class Relations extends Migration {
 	 * @return void
 	 */
 	public function up() {
-		Schema::create('trainee_course', function (Blueprint $table) {
-			$table->id();
-			$table->integer('trainee_id')->unsigned();
-			$table->integer('course_id')->unsigned();
-			$table->boolean('ispaid')->default(0);
-			$table->boolean('free')->default(0);
-			$table->double('fee')->default(0.0);
-			$table->timestamps();
-		});
+		
 		Schema::create('circle_student', function (Blueprint $table) {
 			$table->id();
 			$table->integer('student_id')->unsigned();
@@ -78,10 +70,7 @@ class Relations extends Migration {
 			$table->integer('user_id')->unsigned();
 			$table->integer('circle_id')->unsigned();
 		});
-		Schema::create('user_trainer_permission', function (Blueprint $table) {
-			$table->integer('user_id')->unsigned();
-			$table->integer('trainer_id')->unsigned();
-		});
+		
 		Schema::create('user_student_permission', function (Blueprint $table) {
 			$table->integer('user_id')->unsigned();
 			$table->integer('student_id')->unsigned();
@@ -119,6 +108,7 @@ class Relations extends Migration {
 			'user_building_permission',
 			'user_teacher_permission',
 			'user_student_permission',
+			'user_trainee_permission',
 			'user_supervisor_permission',
 			'user_program_permission',
 			'user_circle_permission',

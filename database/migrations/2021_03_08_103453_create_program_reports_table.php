@@ -18,6 +18,7 @@ class CreateProgramReportsTable extends Migration
             $table->integer('student_id')->unsigned();
             $table->integer('teacher_id')->unsigned();
             $table->integer('circle_id')->unsigned();
+            $table->integer('owned_by_usercenter_id')->unsigned();
             $table->date('donedate')->nullable();//
             $table->date('tobedonedate')->nullable();//
             $table->text('todaymission')->nullable();//

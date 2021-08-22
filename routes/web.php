@@ -19,11 +19,10 @@ use App\Http\Controllers\StatementController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\SupervisorController;
 use App\Http\Controllers\TeacherController;
-use App\Http\Controllers\TraineeController;
-use App\Http\Controllers\TrainerController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\YearController;
 use App\Http\Controllers\OwnerController;
+use App\Http\Controllers\CertificateController;
 use Illuminate\Support\Facades\Route;
 /*
 |--------------------------------------------------------------------------
@@ -54,6 +53,8 @@ Route::get('/',function(){
 
 /** building */
 Route::prefix('building')->group(function () {
+	Route::get('show_delete_form/{building}',[BuildingController::class,'showDeleteForm'])->name('building.show_delete_form');
+	Route::get('confirm_delete/{building}',[BuildingController::class,'confirmDeleteForm'])->name('building.confirm_delete');
 	Route::post('store',[BuildingController::class,'store'])->name('building.store');
 	Route::get('index', [BuildingController::class,'index'])->name('building.index');
 	Route::get('create',[BuildingController::class,'create'])->name('building.create');
@@ -70,6 +71,7 @@ Route::prefix('circle')->group(function () {
 
 	Route::get('{circle}/supervisor/create',[CircleController::class,'supervisorCreate'])->name('circle.supervisor.create');
 	Route::post('supervisor/store',[CircleController::class,'supervisorStore'])->name('circle.supervisor.store');
+
 	Route::get('{circle}/supervisor/remove/{program}',[CircleController::class,'supervisorRemove'])->name('circle.supervisor.remove');
 
 	Route::get('{circle}/teacher/create',[CircleController::class,'teacherCreate'])->name('circle.teacher.create');
@@ -101,30 +103,33 @@ Route::prefix('report')->group(function () {
 });
 
 Route::prefix('user')->group(function () {
-	Route::get('teacher/index', [TeacherController::class,'index'])->name('user.teacher.index');
+	Route::get('teacher/male_index', [TeacherController::class,'maleIndex'])->name('user.teacher.male_index');
+	Route::get('teacher/female_index', [TeacherController::class,'femaleIndex'])->name('user.teacher.female_index');
 	Route::get('teacher/create', [TeacherController::class,'create'])->name('user.teacher.create');
-	Route::get('teacher/{teacher}/show', [TeacherController::class,'show'])->name('user.teacher.show');
+	Route::get('teacher/new/create', [TeacherController::class,'newCreate'])->name('user.teacher.new.create');
 	Route::post('teacher/store', [TeacherController::class,'store'])->name('user.teacher.store');
+	Route::post('teacher/new/store', [TeacherController::class,'newStore'])->name('user.teacher.new.store');
+	Route::get('teacher/{teacher}/show', [TeacherController::class,'show'])->name('user.teacher.show');
 	Route::get('teacher/{teacher}/edit', [TeacherController::class,'edit'])->name('user.teacher.edit');
 	Route::post('teacher/{teacher}/update', [TeacherController::class,'update'])->name('user.teacher.update');
-
+	
 	Route::get('supervisor/create', [SupervisorController::class,'create'])->name('user.supervisor.create');
 	Route::post('supervisor/store', [SupervisorController::class,'store'])->name('user.supervisor.store');
+	Route::get('supervisor/new/create', [SupervisorController::class,'newCreate'])->name('user.supervisor.new.create');
+	Route::post('supervisor/new/store', [SupervisorController::class,'newStore'])->name('user.supervisor.new.store');
 	Route::get('supervisor/index', [SupervisorController::class,'index'])->name('user.supervisor.index');
 	Route::get('supervisor/{supervisor}/dashboard', [SupervisorController::class,'supervisorDashboard'])
 		->name('supervisor.dashboard');
 
-	Route::get('trainer/create',[TrainerController::class,'create'] )->name('user.trainer.create');
-	Route::get('trainer/new/create',[TrainerController::class,'newCreate'] )->name('user.trainer.new.create');
-	Route::post('trainer/store', [TrainerController::class,'store'])->name('user.trainer.store');
-	Route::get('trainer/index', [TrainerController::class,'index'])->name('user.trainer.index');
-});
 
+});
 
 Route::prefix('student')->group(function () {
 	Route::get('{student}/show', [StudentController::class,'show'])->name('student.show');
-	Route::get('index', [StudentController::class,'index'])->name('student.index');
-	Route::get('can-wirte-program-report/index', [StudentController::class,'canWriteProgramReportIndex'])->name('student.can-wirte-program-report.index');
+	Route::get('male_index', [StudentController::class,'maleIndex'])->name('student.male_index');
+	Route::get('female_index', [StudentController::class,'femaleIndex'])->name('student.female_index');
+	Route::get('can-wirte-program-report/index', [StudentController::class,'canWriteProgramReportIndex'])
+	->name('student.can-wirte-program-report.index');
 	Route::get('create', [StudentController::class,'create'])->name('student.create');
 	Route::post('store', [StudentController::class,'store'])->name('student.store');
 	Route::get('{student}/circle/{circle}/show', [StudentController::class,'circleShow'])
@@ -147,8 +152,21 @@ Route::prefix('student')->group(function () {
 
 
 
-Route::prefix('trainee')->group(function () {
-	Route::get('index', [TraineeController::class,'index'])->name('trainee.index');
+
+Route::prefix('certificate')->group(function () {
+	Route::get('index',[CertificateController::class,'index'])
+	->name('certificate.index');
+	Route::get('student/{course}/index',[CertificateController::class,'studentWithCertificateIndex'])
+	->name('certificate.student_with_certificate_index');
+
+	Route::get('create/{course}/{gender}',[CertificateController::class,'create'])->name('certificate.create');
+	Route::post('store/{course}/{gender}',[CertificateController::class,'store'])->name('certificate.store');
+	Route::get('destroy/{course}/{gender}',[CertificateController::class,'destroy'])->name('certificate.destroy');
+
+	
+	Route::get('show/{student}/{course}',[CertificateController::class,'certificateShow'])
+	->name('certificate.show');
+
 });
 
 Route::prefix('contractor')->group(function () {
@@ -159,6 +177,9 @@ Route::prefix('contractor')->group(function () {
 });
 
 Route::prefix('course')->group(function () {
+	Route::get('student/{course}/index', [CourseController::class,'studentIndex'])->name('course.student.index');
+	Route::get('student/{course}/create', [CourseController::class,'studentCreate'])->name('course.student.create');
+	Route::post('student/{course}/store', [CourseController::class,'studentStore'])->name('course.student.store');
 	Route::get('index', [CourseController::class,'index'])->name('course.index');
 	Route::get('create', [CourseController::class,'create'])->name('course.create');
 	Route::post('store', [CourseController::class,'store'])->name('course.store');
@@ -241,10 +262,9 @@ Route::get('course/{courseId}/teacher/{teacherId}/student/{studentId}/show', [Te
 
 Route::get('user/shiftaccount/tostudent', [UserController::class,'shiftaccountToStudent'])
 	->name('user.shiftaccount.tostudent');
-Route::get('user/shiftaccount/toteacher', [UserController::class,'shiftaccountToTeacher'])
-	->name('user.shiftaccount.toteacher');
-Route::get('user/shiftaccount/tosupervisor', [UserController::class,'shiftaccountToSupervisor'])
-	->name('user.shiftaccount.tosupervisor');
+Route::get('user/shiftaccount/{account}', [UserController::class,'shiftToAccount'])
+	->name('user.shift_to_account');
+
 
 //add supervisor account
 Route::get('add_supervisor_account_for_user/{teacher}/create', [UserController::class,'addSupervisorAccountForUserCreate'])

@@ -85,7 +85,7 @@
                     	</tr>
 
 						<tr>
-                    		<td>هل مدفوعة</td>
+                    		<td>هل مجانية</td>
                     		<td>
 								<select name="free" class="form-control">
 									<option @if($course->free=='1')selected @endif value="1">نعم</option>
@@ -96,15 +96,6 @@
 						<tr>
                     		<td>السعر</td>
                     		<td><input value="{{$course->price}}" type="number" step="0.1" name="price" class="form-control"></td>
-                    	</tr>
-						<tr>
-                    		<td>اللغة</td>
-                    		<td>
-								<select name="language" class="form-control">
-									<option @if($course->language=='ar')selected @endif value="ar">عربي</option>
-									<option @if($course->language=='en')selected @endif value="en">انجلزي</option>
-								</select>
-							</td>
                     	</tr>
 						<tr>
                     		<td>المستوى</td>
@@ -151,10 +142,10 @@
 						<tr>
                     		<td>اسم المعلم أو المحاضر</td>
                     		<td>
-								<select name="trainer_id" class="form-control">
-									@foreach($trainers as $trainer)
-									<option @if($trainer->id == $course->trainer_id) selected @endif value="{{$trainer->id}}">
-										{{$trainer->accountOwner->name}}
+								<select name="teacher_id" class="form-control">
+									@foreach($teachers as $teacher)
+									<option @if($teacher->id == $course->teacher_id) selected @endif value="{{$teacher->id}}">
+										{{$teacher->accountOwner->name}}
 									</option>
 									@endforeach
 								</select>

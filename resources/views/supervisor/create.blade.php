@@ -4,45 +4,37 @@
         <div class="col-md-12">
             <div class="card">
                 <div class="card-header">
-                    <h4>اضافة مشرف  جديد  </h4>
+                    <h4>
+                         اضافة حساب {{__('supervisor')}}  لـ {{__('teacher')}} 
+                        <span class="pull-left">
+                            <a href="{{route('user.supervisor.new.create')}}">
+                                + مستخدم جديد
+                            </a>
+                        </span>
+                    </h4>
                 </div>
                 <div class="card-body">
-
-					<form method="post" action="{{route('user.supervisor.store')}}">
-						@csrf
+                    <form method="post" action="{{route('user.supervisor.store')}}">
+                    @csrf
                     <table class="table">
-						<tr>
-                    		<td>الإسم</td>
-                    		<td>
-                          <input name="name" class="form-control" placeholder="الإسم">
-                          <input name="title" class="form-control mt-1" placeholder="تعريف قصير">
-                            </td>
-                    	</tr>
                         <tr>
-                            <td>الجنس</td>
-                                <td>
-                                  <select name="gender" class="form-control">
-                                    <option value="male">{{__('male')}}</option>
-                                    <option value="female">{{__('female')}}</option>
-                                  </select>
-                                </td>
-                            </tr>
-                    	<tr>
-                    		<td>الإيميل</td>
-                    		<td><input name="email" class="form-control"></td>
-                    	</tr>
-                    	<tr>
-                    		<td>كلمة المرور</td>
-                    		<td><input name="password" class="form-control"></td>
-                    	</tr>
-                    	<tr>
-                    		<td>الهاتف</td>
-                    		<td><input type="number" name="phone" class="form-control"></td>
-                    	</tr>
-                    	<tr>
-                    		<td>الرقم المدني</td>
-                    		<td><input type="number" name="nationalId" class="form-control"></td>
-                    	</tr>
+                            <td>إختر {{__('teacher')}} </td>
+                            <td>
+                                <select name="user_id" class="form-control mt-1">
+                                    @foreach($teachers as $teacher)
+                                    <option value="{{$teacher->accountOwner->id}}">
+                                        {{$teacher->accountOwner->name}} (@foreach($teacher->accountOwner->accounts() as $account) {{__($account)}}. @endforeach)
+                                    </option>
+                                    @endforeach
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>تعريف قصير</td>
+                            <td>
+                                <input name="title" class="form-control mt-1" placeholder="تعريف قصير">
+                            </td>
+                        </tr>
                         <tr>
                             <td colspan="2">
                                 <button class="btn btn-info btn-block">حفظ</button>
