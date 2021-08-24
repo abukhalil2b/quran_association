@@ -5,7 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use DB;
 class Circle extends Model {
-	protected $fillable = ['title', 'program_id', 'supervisor_id', 'teacher_id'];
+	protected $fillable = ['title', 'program_id', 'supervisor_id', 'teacher_id','timestart','duration'];
+	
 	public function students() {
 		return $this->belongsToMany(Student::class, 'circle_student', 'circle_id', 'student_id')
 			->withPivot('program')

@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Dailyrecord extends Model {
 	protected $fillable = ['title', 'circle_id'];
+	
 	public function userDailyrecordPermission() {
 		return $this->belongsToMany(User::class, 'user_dailyrecord_permission', 'dailyrecord_id', 'user_id');
 	}

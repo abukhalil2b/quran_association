@@ -1,5 +1,16 @@
 {
     "delete":"حذف",
+    "confirm_delete":"تأكيد الحذف",
+
+    
+    "programs":"البرامج",
+    "program":"برنامج",
+    "circles":"الحلقات",
+    "circle":"حلقة",
+
+    "title":"العنوان أو الاسم",
+    "duration":"المدة الزمنية",
+    "timestart":"توقيت البدء",
 
     "studying":"يدرس",
     "withdraw":"منسحب",
@@ -22,6 +33,7 @@
     "nextmeeting": "اللقاء القادم",
     "Done.": "تم",
     "Save": "حفظ",
+    "save": "حفظ",
     "Disable": "تعطيل",
     "Enable": "تفعيل",
     "Saved.": "تم الحفظ",

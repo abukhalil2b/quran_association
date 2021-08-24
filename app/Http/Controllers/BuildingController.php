@@ -93,13 +93,15 @@ class BuildingController extends Controller {
 	
 	public function confirmDeleteForm(Building $building) {
 		$loggedUser = auth()->user();
-		$building = Building::whereHas('userBuildingPermission', function ($q) use ($loggedUser, $building) {
-			$q->where('user_building_permission.user_id', $loggedUser->id)
-				->where('user_building_permission.building_id', $building->id);
-		})->first();
-		if (!$building) {
-			die('أنت لاتملك الصلاحية');
+		if ($loggedUser->userType == 'usercenter') {
+			$loggedUser->checkUsercenterHasBuilding($building);
+			if($building->programs()->count()){
+				abort(401,'لايمكن الحذف');
+			}
+			$building->userBuildingPermission()->detach();
+			$building->delete();
+			return redirect()->route('dashboard')->with(['message' => 'تم', 'status' => 'success']);
 		}
-		return 'coming soon';
+		
 	}
 }

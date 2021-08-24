@@ -23,10 +23,6 @@
                 <a href="{{route('circle.dashboard',['circle'=>$circle->id])}}">
                 ({{$key+1}}) {{$circle->title}}
                 </a>
-                <form action="{{route('circle.destroy',['circle'=>$circle->id])}}" method="POST">
-                  @csrf
-                  <button class="pull-left btn-sm btn btn-danger" type="submit">حذف الحلقة</button>
-                </form>
               </h4>
             </div>
             <div class="card-body">

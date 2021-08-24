@@ -18,6 +18,7 @@ class CreateCirclesTable extends Migration {
 			$table->integer('supervisor_id')->nullable();
 			$table->integer('program_id');
 			$table->timestamps();
+			$table->time('timestart')->currentTime();
 		});
 	}
 

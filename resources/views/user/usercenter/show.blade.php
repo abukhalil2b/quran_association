@@ -14,6 +14,7 @@
                 <a href="{{route('dailyrecord.index')}}">السجلات اليومية</a>
             </h4>
     		@foreach($dailyrecords as $dailyrecord)
+            @if($dailyrecord->circle)
     		<div class="text-sm">
                 <a href="{{route('attendance.dashboard',['dailyrecord'=>$dailyrecord->id])}}">
                 <div class="">{{$dailyrecord->title}} -
@@ -21,6 +22,7 @@
                     {{$dailyrecord->created_at->diffForHumans()}}</div>
                 </a>
             </div>
+            @endif
     		@endforeach
         </div>
 
@@ -90,7 +92,6 @@
 
             <h4 class="alert alert-secondary">
                 صلاحيات
-                
             </h4>
             <div class="card mt-2 mb-2 px-2">
                  <a href="{{route('permission.about.student')}}">قدرة المدرسين على فتح سجل الحضور والغياب للطلاب</a>
@@ -101,31 +102,15 @@
 
         <div class="col-md-6">
             <h4 class="alert alert-secondary">
-                البرامج
+                <a href="{{route('program.index')}}">{{__('programs')}}</a>
             </h4>
-            <div class="card mt-2 mb-2 px-2">
-                @foreach($programs as $program)
-                <div>{{$program->title}} <span class="pull-left"><a href="{{route('program.edit',['program'=>$program->id])}}">تعديل</a></span></div>
-                @endforeach
-            </div>
-           
         </div>
 
 
         <div class="col-md-6">
             <h4 class="alert alert-secondary">
-                الحلقات
+                <a href="{{route('circle.index')}}">{{__('circles')}}</a>
             </h4>
-            <div class="card mt-2 mb-2 px-2">
-                @foreach($circles as $circle)
-                <div>{{$circle->title}} 
-                    <span class="pull-left">
-                        <a href="{{route('circle.edit',['circle'=>$circle->id])}}">تعديل</a>
-                    </span>
-                </div>
-                @endforeach
-            </div>
-           
         </div>
 
         <div class="col-md-6">

@@ -4,30 +4,27 @@
         <div class="col-md-12">
             <div class="card">
             	<div class="card-header">
-            		{{$building->title}}
+            		خطوات حذف ( {{$building->title}} )
             	</div>
+                @if($building->programs()->count())
                 <div class="card-body">
-                	<h5>سيتم حذف البرامج</h5>
-                	<h5>سيتم حذف الحلقة</h5>
-                	<h5>سيتم حذف التقارير</h5>
-					<a class="text-red-600" href="{{route('building.confirm_delete',['building'=>$building->id])}}">
-						تأكيد
-					</a>
+                    <h6>يجب عليك أولا حذف البرامج التالية</h6>
+                    @foreach($building->programs()->get() as $program)
+                    <h5>
+                        <a href="{{route('program.prepare_for_delete',['program'=>$program->id])}}">
+                            <span class="text-danger font-bold">{{__('delete')}}</span> {{$program->title}}
+                        </a>
+                    </h5>
+                    @endforeach
                 </div>
+                @else
                 <div class="card-body">
-                	@foreach($programs as $program)
-                	<h5>
-                		{{$program->title}}
-                		<small>
-                			<div class="text-gray-200">
-                				@foreach($program->circles as $circle)
-                				<div>{{$circle->title}}</div>
-                				@endforeach
-                			</div>
-                		</small>
-                	</h5>
-                	@endforeach
+                    <a class="text-red-600" href="{{route('building.confirm_building_delete',['building'=>$building->id])}}">
+                        تأكيد
+                    </a>
                 </div>
+                
+                @endif
             </div>
         </div>
 

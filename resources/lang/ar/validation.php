@@ -163,6 +163,8 @@ return [
         'tobedonedate' => 'التاريخ',
         'donedate' => 'التاريخ',
         'todaymission' => 'ما تم انجازه اليوم',
+        'teacher_id' => 'المدرس',
+        'supervisor_id' => 'المشرف',
     ],
 
 ];

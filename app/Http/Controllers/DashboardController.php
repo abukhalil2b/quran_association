@@ -61,9 +61,6 @@ class DashboardController extends Controller {
 				$q->where('users.gender','female');
 			})->get();
 			
-	
-
-			
 			$malestudents = Student::where('gender','male')->whereHas('userStudentPermission', function ($query) use ($loggedUser) {
 				$query->where('user_student_permission.user_id', $loggedUser->id);
 			})->get();
@@ -94,32 +91,43 @@ class DashboardController extends Controller {
 			break;
 
 		case 'teacher':
+
 			//inital values
 			$courses=[];
 			$quarterlyProgramPresentStudents =[];
 			$incessantProgramPresentStudents =[];
 			$quarterlyProgramLastDailyrecord =null;
 			$incessantProgramLastDailyrecord =null;
-
+			$quarterlyProgramCircles=[];
+			$incessantProgramCircles=[];
+			
 			$teacher = $loggedUser->teacherAccount;
 			if(!$teacher){
 				abort(404,'لايوجد لديك حساب مدرس');
 			}
 			$usercenter = $teacher->usercenter();
 			
-			// teacher's circles in this semester.
+			// teacher's circle in this semester. which circle belongs to quarterly program
 			$quarterlyProgramCircle = Circle::whereHas('program.semester', function ($q) use ($thisyear) {
 				$q->where('semesters.id', $thisyear->lastSemester()->id);
 			})->where('teacher_id', $teacher->id)->orderby('id', 'desc')->first();
 
+			// teacher's circles.
 			$incessantProgramCircle = Circle::whereHas('program',function($q){
 				$q->where('programs.quarterly',0);
 			})->where('teacher_id',$teacher->id)
 			->orderby('id', 'desc')->first();
 
 			if($quarterlyProgramCircle){
+				//circle
 				$quarterlyProgramLastDailyrecord = Dailyrecord::where('circle_id', $quarterlyProgramCircle->id)
 				->whereDate('created_at', Carbon::today())->orderby('id', 'desc')->first();
+				//circles
+				$quarterlyProgramCircles = Circle::where('teacher_id',$teacher->id)
+				->where('id','<>',$quarterlyProgramCircle->id)
+				->whereHas('program',function($q) use ($thisyear) {
+					$q->where(['programs.quarterly'=>1,'semester_id'=>$thisyear->lastSemester()->id]);
+				})->get();
 			}
 			
 				
@@ -127,11 +135,19 @@ class DashboardController extends Controller {
 				$quarterlyProgramPresentStudents = Attendance::whereHas('student', function ($q) use ($quarterlyProgramLastDailyrecord) {
 					$q->where(['dailyrecord_id' => $quarterlyProgramLastDailyrecord->id]);
 				})->with('student')->get();
+
+
 			}
 
 			if($incessantProgramCircle){
 				$incessantProgramLastDailyrecord = Dailyrecord::where('circle_id', $incessantProgramCircle->id)
 				->whereDate('created_at', Carbon::today())->orderby('id', 'desc')->first();
+
+				$incessantProgramCircles = Circle::where('teacher_id',$teacher->id)
+				->where('id','<>',$incessantProgramCircle->id)
+				->whereHas('program',function($q) use ($thisyear) {
+					$q->where(['programs.quarterly'=>0]);
+				})->get();
 			}
 			
 				
@@ -142,7 +158,10 @@ class DashboardController extends Controller {
 			}
 			// return$incessantProgramCircle->activeStudents;
 
+			
 			return view('dashboard', compact(
+				'quarterlyProgramCircles',
+				'incessantProgramCircles',
 				'courses',
 				'loggedUser',
 				'usercenter',

@@ -13,8 +13,15 @@ class DailyrecordController extends Controller {
 	}
 
 	public function index() {
-		$dailyrecords = Dailyrecord::orderby('id','desc')->get();
-		return view('dailyrecord.index', compact('dailyrecords'));
+		$loggedUser = auth()->user();
+		if ($loggedUser->userType=='usercenter') {
+
+			$dailyrecords = Dailyrecord::whereHas('userDailyrecordPermission',function($q)use($loggedUser){
+				$q->where('user_dailyrecord_permission.user_id',$loggedUser->id);
+			})->orderby('id','desc')->get();
+			return view('dailyrecord.index', compact('dailyrecords'));	
+		}
+		abort(401);
 	}
 
 	public function store(Request $request) {
@@ -39,7 +46,7 @@ class DailyrecordController extends Controller {
 			if ($loggedUser->hasAboutPermission($request->about)) {
 				$record = Dailyrecord::create($request->all());
 				$record->userDailyrecordPermission()->attach($user->id);
-				return redirect()->route('dashboard')->with(['status' => 'success', 'message' => 'تم حفظ السجل']);
+				return redirect()->back()->with(['status' => 'success', 'message' => 'تم حفظ السجل']);
 			} else {
 				die('أنت لاتملك الصلاحيات');
 			}

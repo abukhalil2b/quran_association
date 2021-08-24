@@ -16,8 +16,15 @@ class ProgramController extends Controller {
 		return view('program.dashboard', compact('program'));
 	}
 	public function index() {
-		$programs = Program::all();
-		return view('program.index', compact('programs'));
+		$loggedUser = auth()->user();
+		if ($loggedUser->userType === 'usercenter') {
+			$programs = Program::whereHas('userProgramPermission',function($q)use($loggedUser){
+				$q->where('user_program_permission.user_id',$loggedUser->id);
+			})->get();
+			return view('program.index', compact('programs'));
+		}
+		abort(401);
+		
 	}
 	public function quarterlyStore(Request $request) {
 		$loggedUser = auth()->user();
@@ -73,8 +80,40 @@ class ProgramController extends Controller {
 	}
 
 	public function update(Request $request,Program $program) {
-		$program->update(['title'=>$request->title]);
-		return redirect()->route('dashboard')->with(['message' => 'تم', 'status' => 'success']);
+		$loggedUser = auth()->user();
+		if($loggedUser->userType=='usercenter'){
+			$loggedUser->checkUsercenterHasProgram($program);
+			$program->update(['title'=>$request->title]);
+			return redirect()->route('dashboard')->with(['message' => 'تم', 'status' => 'success']);		
+		}
+		abort(401);
+		
+	}
+
+
+	
+
+	public function prepareForDelete(Program $program) {
+		$loggedUser = auth()->user();
+		if ($loggedUser->userType === 'usercenter') {
+			$circles = $program->circles()->get();
+			return view('program.prepare_for_delete', compact('circles','program'));			
+		}
+	}
+
+	public function destroy(Program $program) {
+		$loggedUser = auth()->user();
+		if ($loggedUser->userType === 'usercenter') {
+			$loggedUser->checkUsercenterHasProgram($program);
+			$circles = $program->circles()->get();
+			if(count($circles)){
+				abort(401,'لايمكن الحذف');
+			}
+			$program->userProgramPermission()->detach();
+			$program->delete();
+			return redirect()->route('dashboard')->with(['message' => 'تم', 'status' => 'success']);		
+		}
+
 	}
 	
 

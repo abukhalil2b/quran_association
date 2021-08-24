@@ -8,26 +8,28 @@ use App\Models\Program;
 use App\Models\Student;
 use App\Models\Supervisor;
 use App\Models\Teacher;
+use App\Models\Mark;
+use App\Models\Dailyrecord;
+use App\Models\ProgramReport;
 use Illuminate\Http\Request;
 
 class CircleController extends Controller {
 	public function __construct() {
 		$this->middleware('auth');
 	}
-	/**
-	 * Display a listing of the resource.
-	 *
-	 * @return \Illuminate\Http\Response
-	 */
+
 	public function index() {
-		//
+		$loggedUser = auth()->user();
+		if ($loggedUser->userType === 'usercenter') {
+			$circles = Circle::whereHas('userCirclePermission',function($q)use($loggedUser){
+				$q->where('user_circle_permission.user_id',$loggedUser->id);
+			})->get();
+			return view('circle.index', compact('circles'));
+		}
+		abort(401);
 	}
 
-	/**
-	 * Show the form for creating a new resource.
-	 *
-	 * @return \Illuminate\Http\Response
-	 */
+
 	public function create(Program $program) {
 		$user = auth()->user();
 		$program = Program::whereHas('userProgramPermission', function ($query) use ($user, $program) {
@@ -45,14 +47,14 @@ class CircleController extends Controller {
 		abort(404,'لا يوجد مشرفين');
 	}
 
-	/**
-	 * user_id - supervisor_id
-	 *
-	 * @param  \Illuminate\Http\Request  $request
-	 * @return \Illuminate\Http\Response
-	 */
+
 	public function store(Request $request) {
-		$this->validate($request, ['title' => 'required', 'program_id' => 'required']);
+		$this->validate($request, [
+			'title' => 'required',
+			'program_id' => 'required' ,
+			'teacher_id' => 'required',
+			'supervisor_id' => 'required'
+		]);
 
 		$loggedUser = auth()->user();
 		$program_id = $request->program_id;
@@ -79,8 +81,14 @@ class CircleController extends Controller {
 				abort(404);
 			}
 			$program->checkUserPermission($user);
-
-			if ($circle = Circle::create(['title' => $request->title, 'program_id' => $program->id, 'supervisor_id' => $supervisor->id])) {
+			$circle = Circle::create([
+				'timestart' => $request->timestart,
+				'duration' => $request->duration,
+				'title' => $request->title,
+				'program_id' => $program->id,
+				'supervisor_id' => $supervisor->id
+			]);
+			if ($circle) {
 				$circle->userCirclePermission()->attach($user->id);
 				return redirect()->route('program.dashboard', ['program' => $request->program_id])->with(['status' => 'تم']);
 			} else {
@@ -111,12 +119,15 @@ class CircleController extends Controller {
 				abort(404);
 			}
 
-			if ($circle = Circle::create([
-					'title' => $request->title,
-				 	'program_id' => $program->id,
-				 	'supervisor_id' => $supervisor_id,
-				 	'teacher_id' => $teacher_id
-				])) {
+			$circle = Circle::create([
+				'timestart' => $request->timestart,
+				'duration' => $request->duration,
+				'title' => $request->title,
+				'program_id' => $program->id,
+				'supervisor_id' => $supervisor_id,
+				'teacher_id' => $teacher_id
+				]);
+			if ($circle) {
 				$circle->userCirclePermission()->attach($loggedUser->id);
 				return redirect()->route('program.dashboard', ['program' => $request->program_id])->with(['status' => 'تم']);
 			} else {
@@ -133,47 +144,67 @@ class CircleController extends Controller {
 
 	}
 
-	/**die
-	 * Display the specified resource.
-	 *
-	 * @param  \App\Circle  $circle
-	 * @return \Illuminate\Http\Response
-	 */
+
 	public function show(Circle $circle) {
 		//
 	}
 
-	/**
-	 * Show the form for editing the specified resource.
-	 *
-	 * @param  \App\Circle  $circle
-	 * @return \Illuminate\Http\Response
-	 */
+
 	public function edit(Circle $circle) {
 		return view('circle.edit',compact('circle'));
 	}
 
-	/**
-	 * Update the specified resource in storage.
-	 *
-	 * @param  \Illuminate\Http\Request  $request
-	 * @param  \App\Circle  $circle
-	 * @return \Illuminate\Http\Response
-	 */
+
 	public function update(Request $request, Circle $circle) {
-		$circle->update(['title'=>$request->title]);
-		return redirect()->route('dashboard')->with(['message' => 'تم', 'status' => 'success']);
+
+		$loggedUser = auth()->user();
+		if($loggedUser->userType=='usercenter'){
+			$loggedUser->checkUsercenterHasCircle($circle);
+			$circle->update([
+					'title'=>$request->title,
+					'timestart' => $request->timestart,
+					'duration' => $request->duration
+				]);	
+				return redirect()->route('dashboard')->with(['message' => 'تم', 'status' => 'success']);		
+		}
+		abort(401);
 	}
 
-	/**
-	 * Remove the specified resource from storage.
-	 *
-	 * @param  \App\Circle  $circle
-	 * @return \Illuminate\Http\Response
-	 */
+	public function confirmCircleDelete(Circle $circle) {
+		$loggedUser = auth()->user();
+		if($loggedUser->userType=='usercenter'){
+			$studentsCount= $circle->students()->count();
+			$programReportsCount = ProgramReport::where('circle_id',$circle->id)->count();
+			$dailyrecordsCount = Dailyrecord::where('circle_id',$circle->id)->count();
+			$marksCount = Mark::where('circle_id',$circle->id)->count();
+			
+			return view('circle.confirm_circle_delete',compact(
+				'circle',
+				'studentsCount',
+				'programReportsCount',
+				'marksCount',
+				'dailyrecordsCount'
+			));
+		}
+		abort(401);
+	}
+
 	public function destroy(Circle $circle) {
-		$circle->delete();
-		return redirect()->back()->with(['status' => 'success', 'message' => 'تم الحذف']);
+		$loggedUser = auth()->user();
+		if($loggedUser->userType=='usercenter'){
+			$loggedUser->checkUsercenterHasCircle($circle);
+			ProgramReport::where('circle_id',$circle->id)->delete();
+			$dailyrecordIds = $circle->dailyrecords()->pluck('id');
+			$loggedUser->userDailyrecordPermission()->detach($dailyrecordIds);
+			Attendance::whereIn('dailyrecord_id',$dailyrecordIds)->delete();
+			Dailyrecord::where('circle_id',$circle->id)->delete();
+			Mark::where('circle_id',$circle->id)->delete();
+			$circle->students()->detach();
+			$circle->userCirclePermission()->detach();
+			$circle->delete();
+			return redirect()->route('dashboard')->with(['status' => 'success', 'message' => 'تم الحذف']);
+		}
+		abort(401);
 	}
 
 	public function dashboard(Circle $circle) {

@@ -54,7 +54,7 @@ Route::get('/',function(){
 /** building */
 Route::prefix('building')->group(function () {
 	Route::get('show_delete_form/{building}',[BuildingController::class,'showDeleteForm'])->name('building.show_delete_form');
-	Route::get('confirm_delete/{building}',[BuildingController::class,'confirmDeleteForm'])->name('building.confirm_delete');
+	Route::get('confirm_building_delete/{building}',[BuildingController::class,'confirmDeleteForm'])->name('building.confirm_building_delete');
 	Route::post('store',[BuildingController::class,'store'])->name('building.store');
 	Route::get('index', [BuildingController::class,'index'])->name('building.index');
 	Route::get('create',[BuildingController::class,'create'])->name('building.create');
@@ -63,11 +63,13 @@ Route::prefix('building')->group(function () {
 /** circle */
 Route::prefix('circle')->group(function () {
 	Route::get('{circle}/edit',[CircleController::class,'edit'])->name('circle.edit');
+	Route::get('index',[CircleController::class,'index'])->name('circle.index');
 	Route::post('{circle}/update',[CircleController::class,'update'])->name('circle.update');
 	Route::post('store', [CircleController::class,'store'])->name('circle.store');
 	Route::get('create/{program}', [CircleController::class,'create'])->name('circle.create');
 	Route::get('dashboard/{circle}',[CircleController::class,'dashboard'] )->name('circle.dashboard');
-	Route::post('destroy/{circle}', [CircleController::class,'destroy'])->name('circle.destroy');
+	Route::get('confirm_circle_delete/{circle}',[CircleController::class,'confirmCircleDelete'])->name('confirm_circle_delete');
+	Route::get('destroy/{circle}', [CircleController::class,'destroy'])->name('circle.destroy');
 
 	Route::get('{circle}/supervisor/create',[CircleController::class,'supervisorCreate'])->name('circle.supervisor.create');
 	Route::post('supervisor/store',[CircleController::class,'supervisorStore'])->name('circle.supervisor.store');
@@ -121,6 +123,8 @@ Route::prefix('user')->group(function () {
 	Route::get('supervisor/{supervisor}/dashboard', [SupervisorController::class,'supervisorDashboard'])
 		->name('supervisor.dashboard');
 
+	Route::get('teacher/quarterly_program/{circle}/show', [TeacherController::class,'quarterlyProgramShow'])->name('teacher.quarterly_program.show');
+	Route::get('teacher/incessant_program/{circle}/show', [TeacherController::class,'incessantProgramShow'])->name('teacher.incessant_program.show');
 
 });
 
@@ -202,7 +206,8 @@ Route::prefix('program')->group(function () {
 	Route::get('{building}/quarterly/create', [ProgramController::class,'quarterlyCreate'])->name('program.quarterly.create');
 	Route::post('store', [ProgramController::class,'store'])->name('program.store');
 	Route::post('quarterly/store', [ProgramController::class,'quarterlyStore'])->name('program.quarterly.store');
-
+	Route::get('{program}/prepare_for_delete',[ProgramController::class,'prepareForDelete'])->name('program.prepare_for_delete');
+	Route::get('{program}/destroy',[ProgramController::class,'destroy'])->name('program.destroy');
 });
 
 

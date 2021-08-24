@@ -10,8 +10,16 @@
 					<form method="post" action="{{route('circle.store')}}">
 						@csrf
                         <div class="form-group">
-                            اسم الحلقة
-                            <input name="title" class="form-control" placeholder="اسم الحلقة">
+                            {{__('title')}}
+                            <input name="title" class="form-control" >
+                        </div>
+                        <div class="form-group">
+                            {{__('timestart')}}
+                            <input name="timestart" class="form-control" type="time" >
+                        </div>
+                        <div class="form-group">
+                            {{__('duration')}}
+                            <input name="duration" class="form-control" value="1"> 
                         </div>
                         <div class="form-group">
                             <input type="hidden" name="program_id" value="{{$program->id}}">
@@ -43,7 +51,7 @@
                                     </select>
                                 </div>
                             </div>
-                            <button class="btn btn-info btn-block  mt-3">حفظ</button>
+                            <button class="btn btn-info btn-block  mt-3">{{__('save')}}</button>
                         </div>
                     </form>
                 </div>

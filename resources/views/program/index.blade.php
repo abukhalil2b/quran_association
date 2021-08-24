@@ -13,12 +13,18 @@
                         <div class="namecontainer">
                             <span class="name"></span>
                             <span class="name">{{$program->title}} - {{$program->building->title}}</span>
-                            <span class="name">{{$program->semester->title}} - {{$program->semester->year->title}}</span>
+                            <span class="name">
+                                @if($program->semester)
+                                {{$program->semester->title}} - {{$program->semester->year->title}}
+                                @else
+                                برنامج مستمر
+                                @endif
+                            </span>
                         </div>
                     </td>
                     <td>
-                        <a class="btn" href="">تعديل</a>
-                        <a class="btn" href="">حذف</a>
+                        <a class="btn" href="{{route('program.edit',['program'=>$program->id])}}">تعديل</a>
+                        <a class="btn" href="{{route('program.prepare_for_delete',['program'=>$program->id])}}">حذف</a>
                     </td>
                 </tr>
                 @endforeach

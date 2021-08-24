@@ -151,6 +151,29 @@ class User extends Authenticatable
         abort(401);
     }
 
+    public function checkUsercenterHasBuilding($building){
+        $building = $this->userBuildingPermission()->where('user_building_permission.building_id',$building->id)->first();
+        if($building){
+            return $building;
+        }
+        abort(401);
+    }
+
+    public function checkUsercenterHasProgram($program){
+        $program = $this->userProgramPermission()->where('user_program_permission.program_id',$program->id)->first();
+        if($program){
+            return $program;
+        }
+        abort(401);
+    }
+
+    public function checkUsercenterHasCircle($circle){
+        $circle = $this->userCirclePermission()->where('user_circle_permission.circle_id',$circle->id)->first();
+        if($circle){
+            return $circle;
+        }
+        abort(401);
+    }
 
     public function checkUsercenterHasCourse($course){
         $course = Course::where(['user_id'=>$this->id,'id'=>$course->id])->first();

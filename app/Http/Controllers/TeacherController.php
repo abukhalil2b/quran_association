@@ -3,13 +3,16 @@
 namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Models\Supervisor;
+use App\Models\Dailyrecord;
+use App\Models\Attendance;
 use App\Models\MemorizeProgram;
 use App\Models\Teacher;
 use App\Models\Circle;
 use App\Models\User;
+use App\Models\Year;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-
+use Carbon\Carbon;
 class TeacherController extends Controller {
 	public function __construct() {
 		$this->middleware('auth');
@@ -234,6 +237,108 @@ class TeacherController extends Controller {
 	}
 
 	
+	public function quarterlyProgramShow(Circle $circle) {
+		$loggedUser = auth()->user();
+		$thisyear = Year::orderby('id', 'desc')->first();
+		switch ($loggedUser->userType) {
+		case 'teacher':
 
+			//inital values
+			$quarterlyProgramPresentStudents =[];
+			$quarterlyProgramLastDailyrecord =null;
+			$quarterlyProgramCircles=[];
+
+			$teacher = $loggedUser->teacherAccount;
+			if(!$teacher){
+				abort(404,'لايوجد لديك حساب مدرس');
+			}
+			$usercenter = $teacher->usercenter();
+			
+			// teacher's circle in this semester. which circle belongs to quarterly program
+			$quarterlyProgramCircle = $circle;
+
+			if($quarterlyProgramCircle){
+				//circle
+				$quarterlyProgramLastDailyrecord = Dailyrecord::where('circle_id', $quarterlyProgramCircle->id)
+				->whereDate('created_at', Carbon::today())->orderby('id', 'desc')->first();
+	
+			}
+				
+			if ($quarterlyProgramLastDailyrecord) {
+				$quarterlyProgramPresentStudents = Attendance::whereHas('student', function ($q) use ($quarterlyProgramLastDailyrecord) {
+					$q->where(['dailyrecord_id' => $quarterlyProgramLastDailyrecord->id]);
+				})->with('student')->get();
+
+
+			}
+
+			return view('user.teacher.quarterly_program.show', compact(
+				'loggedUser',
+				'usercenter',
+				'teacher',
+				'quarterlyProgramCircle',
+				'quarterlyProgramLastDailyrecord',
+				'quarterlyProgramPresentStudents',
+			));
+			break;
+		default:
+			# code...
+			break;
+		}
+		die('أنت لاتملك الصلاحية');
+
+	}
+
+
+	
+	public function incessantProgramShow(Circle $circle) {
+		$loggedUser = auth()->user();
+		$thisyear = Year::orderby('id', 'desc')->first();
+		switch ($loggedUser->userType) {
+		case 'teacher':
+
+			//inital values
+			$incessantProgramPresentStudents =[];
+			$incessantProgramLastDailyrecord =null;
+			$incessantProgramCircles=[];
+			
+			$teacher = $loggedUser->teacherAccount;
+			if(!$teacher){
+				abort(404,'لايوجد لديك حساب مدرس');
+			}
+			$usercenter = $teacher->usercenter();
+			
+			// teacher's circle in this semester. which circle belongs to incessant program
+			$incessantProgramCircle = $circle;
+
+			if($incessantProgramCircle){
+				//circle
+				$incessantProgramLastDailyrecord = Dailyrecord::where('circle_id', $incessantProgramCircle->id)
+				->whereDate('created_at', Carbon::today())->orderby('id', 'desc')->first();
+	
+			}
+				
+			if ($incessantProgramLastDailyrecord) {
+				$incessantProgramPresentStudents = Attendance::whereHas('student', function ($q) use ($incessantProgramLastDailyrecord) {
+					$q->where(['dailyrecord_id' => $incessantProgramLastDailyrecord->id]);
+				})->with('student')->get();
+			}
+
+			return view('user.teacher.incessant_program.show', compact(
+				'loggedUser',
+				'usercenter',
+				'teacher',
+				'incessantProgramCircle',
+				'incessantProgramLastDailyrecord',
+				'incessantProgramPresentStudents',
+			));
+			break;
+		default:
+			# code...
+			break;
+		}
+		die('أنت لاتملك الصلاحية');
+
+	}
 
 }

@@ -20,5 +20,5 @@
     @if(auth()->user()->userType=='teacher')
     @include('user.teacher.show')
     @endif
-
+<br>
 </x-app-layout>
