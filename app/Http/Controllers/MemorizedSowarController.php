@@ -12,48 +12,41 @@ class MemorizedSowarController extends Controller
     public function __construct() {
         $this->middleware('auth');
     }
-    
-    public function index()
-    {
-        //
-    }
-
 
     public function create(Student $student)
     {
         $loggedUser = auth()->user();
         if($loggedUser->userType==='teacher'){
             $teacher = $loggedUser->teacherAccount;
-            // $student = $teacher->checkHisStudent($student);
-            $sowars = Sowar::all();
-        }else{
-            abort(401);
+            $studentMemorizedSowars = $student->memorizedSowars()->get();
+            if(count($studentMemorizedSowars)==0){
+                for($id=1;$id<=114;$id++){
+                    MemorizedSowar::create([
+                        'student_id'=>$student->id,
+                        'sowar_id'=>$id
+                    ]);
+                }
+                return redirect()->back()->with(['status'=>'success','message'=>'تم']);
+            }
+            return view('student.memorized_sowar.create',compact('student','studentMemorizedSowars'));
         }
-        return view('student.memorized_sowar.create',compact('student','sowars'));
+        abort(401);
+        
     }
 
 
-    public function store(Request $request)
+    public function update(Request $request, Student $student)
     {
-         // return $request->all();
-        $student = Student::find($request->student_id);
         $loggedUser = auth()->user();
         if($loggedUser->userType==='teacher'){
             $teacher = $loggedUser->teacherAccount;
             $teacher->checkHisStudent($student); 
-            MemorizedSowar::create(['student_id'=>$student->id,'sowar_id'=>$request->sowar_id]);
+            MemorizedSowar::where('student_id',$student->id)->update(['done'=>0]);
+            if($request->sowarIds){
+              MemorizedSowar::whereIn('id',$request->sowarIds)->where('student_id',$student->id)->update(['done'=>1]);  
+            }
             return redirect()->route('student.show',['student'=>$student->id]);
         }
-
+       return redirect()->route('student.show',['student'=>$student->id]);
     }
-
-    public function memorizedSowarDelete(MemorizedSowar $memorizedSowar)
-    {
-       
-        $memorizedSowar->delete();
-        return redirect()->back()->with(['status'=>'success','message'=>'تم']);
-    }
-
-
-
 }

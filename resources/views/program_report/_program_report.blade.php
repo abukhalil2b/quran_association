@@ -24,6 +24,7 @@
                     <div>{!!nl2br($programReport->nextmission)!!}</div>
                 </div>
                 <div class="text-left">
+                    <span class="text-blue-300 text-xs mx-2">المدرس {{$programReport->teacher->accountOwner->name}}</span>
                     <span class="text-blue-300 text-xs">تم إنشاء التقرير {{$programReport->created_at->format('Y-m-d')}}</span>
                     <a class="text-red-400 mx-2" href="{{route('program_report.confirm_delete',['programReport'=>$programReport->id,'student'=>$programReport->student->id])}}">
                         حذف

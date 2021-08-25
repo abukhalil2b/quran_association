@@ -10,6 +10,7 @@ use App\Models\Teacher;
 use App\Models\Circle;
 use App\Models\User;
 use App\Models\Year;
+use App\Models\Student;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Carbon\Carbon;
@@ -340,5 +341,9 @@ class TeacherController extends Controller {
 		die('أنت لاتملك الصلاحية');
 
 	}
+
+
+
+
 
 }

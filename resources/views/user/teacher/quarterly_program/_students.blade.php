@@ -2,7 +2,7 @@
 	<h6 class="mt-3">الطلاب المسجلون في الحلقة ({{$quarterlyProgramCircle->students->count()}})</h6>
 	@if($quarterlyProgramCircle)
 	@foreach($quarterlyProgramCircle->students as $student)
-	<div class="card p-2">
+	<div class="card p-2 mt-1">
 		<a href="{{route('student.show',['student'=>$student->id])}}">
 		<div>رقم الطالب: {{$student->id}}</div>
 		<div> اسم الطالب: {{$student->name}}</div>

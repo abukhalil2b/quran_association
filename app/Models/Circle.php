@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use DB;
 class Circle extends Model {
+
 	protected $fillable = ['title', 'program_id', 'supervisor_id', 'teacher_id','timestart','duration'];
 	
 	public function students() {
@@ -68,6 +69,10 @@ class Circle extends Model {
 		->where(['student_id'=>$student->id,'circle_id'=>$this->id])
 		->first()->status;
 		return$status;
+	}
+
+	public function getTimestartAttribute($value){
+        return $value==null?'': \Carbon\Carbon::parse($value)->format('H:i');
 	}
 
 	

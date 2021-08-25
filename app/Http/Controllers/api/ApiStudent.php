@@ -40,8 +40,8 @@ class ApiStudent extends Controller
 				'usercenter' => $student->usercenter()->name,
 				'fathername' => $student->father?$student->father->name:'',
 				'avatar'=>$student->avatar?$student->avatar:'',
-				'memorizedJuzs'=>MemorizedJuzResource::collection($student->memorizedJuzs),
-				'memorizedSowars'=>MemorizedSowarResource::collection($student->memorizedSowars),
+				'memorizedJuzs'=>MemorizedJuzResource::collection($student->memorizedJuzs->where('done',1)->get()),
+				'memorizedSowars'=>MemorizedSowarResource::collection($student->memorizedSowars->where('done',1)->get()),
 				'programReports'=>ProgramReportResource::collection($programReports),
 				'circles'=>CircleStudentResource::collection($student->circles()->get()),
 			];

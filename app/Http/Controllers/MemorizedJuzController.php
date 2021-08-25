@@ -12,91 +12,43 @@ class MemorizedJuzController extends Controller
     public function __construct() {
         $this->middleware('auth');
     }
-    public function index()
-    {
-        //
-    }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create(Student $student)
     {
         $loggedUser = auth()->user();
         if($loggedUser->userType==='teacher'){
             $teacher = $loggedUser->teacherAccount;
-             // ->circles()->where('teacher_id',$teacher->id)->get();
-            
-            $juzs = Juz::all();
-        }else{
-            abort(401);
+            $studentMemorizedJuzs = $student->memorizedJuzs()->get();
+            if(count($studentMemorizedJuzs)==0){
+                for($id=1;$id<=30;$id++){
+                    MemorizedJuz::create([
+                        'student_id'=>$student->id,
+                        'juz_id'=>$id
+                    ]);
+                }
+                return redirect()->back()->with(['status'=>'success','message'=>'تم']);
+            }
+            return view('student.memorized_juz.create',compact('student','studentMemorizedJuzs'));
         }
-        return view('student.memorized_juz.create',compact('student','juzs'));
+        abort(401);
+        
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
+
+    public function update(Request $request, Student $student)
     {
-        
-         // return $request->all();
-        $student = Student::find($request->student_id);
         $loggedUser = auth()->user();
         if($loggedUser->userType==='teacher'){
             $teacher = $loggedUser->teacherAccount;
             $teacher->checkHisStudent($student); 
-            MemorizedJuz::create(['student_id'=>$student->id,'juz_id'=>$request->juz_id]);
+            MemorizedJuz::where('student_id',$student->id)->update(['done'=>0]);
+            if($request->juzIds){
+              MemorizedJuz::whereIn('id',$request->juzIds)->where('student_id',$student->id)->update(['done'=>1]);  
+            }
             return redirect()->route('student.show',['student'=>$student->id]);
         }
-       
-        
+       return redirect()->route('student.show',['student'=>$student->id]);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\MemorizedJuz  $memorizedJuz
-     * @return \Illuminate\Http\Response
-     */
-    public function show(MemorizedJuz $memorizedJuz)
-    {
-        //
-    }
-
-
-    public function juzEdit(Juz $juz)
-    {
-        return view('juz.edit',compact('juz'));
-    }
-
-    public function memorizedJuzDelete(MemorizedJuz $memorizedjuz)
-    {
-       
-        $memorizedjuz->delete();
-        return redirect()->back()->with(['status'=>'success','message'=>'تم']);
-    }
-
-
-    public function juzUpdate(Request $request, Juz $juz)
-    {
-        $juz->update(['title'=>$request->title]);
-        return redirect()->route('dashboard')->with(['status'=>'success','message'=>'تم']);
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\MemorizedJuz  $memorizedJuz
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(MemorizedJuz $memorizedJuz)
-    {
-        //
-    }
+   
 }

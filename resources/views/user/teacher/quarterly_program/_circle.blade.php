@@ -5,6 +5,7 @@
             </small>{{$quarterlyProgramCircle->program->title}} 
              - 
 			<small class="text-primary">الحلقة: </small>{{$quarterlyProgramCircle->title}}
+            
         </div>
         <div>
             <small class="text-primary">المشرف على الحلقة: </small>{{$quarterlyProgramCircle->supervisor->accountOwner->name}}

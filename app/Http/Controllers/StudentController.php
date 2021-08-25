@@ -27,20 +27,20 @@ class StudentController extends Controller {
 
 		switch ($loggedUser->userType) {
 		case 'usercenter':
-			$programReports = $programReport->paginate(10);
+			$programReport = $programReport->first();
 			$usercenter = $loggedUser;
 			$student = $student->checkUserPermission($usercenter);
 			$circles = $student->circles;
-			return view('student.show', compact('student', 'circles', 'usercenter','programReports','memorizedJuzs','memorizedSowars'));
+			return view('student.show', compact('student', 'circles', 'usercenter','programReport','memorizedJuzs','memorizedSowars'));
 			break;
 
 		case 'supervisor':
-			$programReports = $programReport->paginate(10);
+			$programReport = $programReport->first();
 			$supervisor = $loggedUser->supervisorAccount;
 			$usercenter = $supervisor->usercenter();
 			$student = $student->checkUserPermission($usercenter);
 			$circles = $student->circles;
-			return view('student.show', compact('student', 'circles', 'usercenter','programReports','memorizedJuzs','memorizedSowars'));
+			return view('student.show', compact('student', 'circles', 'usercenter','programReport','memorizedJuzs','memorizedSowars'));
 			break;
 
 		case 'teacher':
@@ -48,12 +48,12 @@ class StudentController extends Controller {
 			$teacher = $loggedUser->teacherAccount;
 			$usercenter = $teacher->usercenter();
 			$circle = Circle::where('teacher_id',$teacher->id)->orderby('id','DESC')->first();
-			$programReports = $programReport->where('circle_id',$circle->id)->paginate(10);
+			$programReport = $programReport->where('circle_id',$circle->id)->first();
 			//check if teacher has permission
 			$student = $student->checkUserPermission($usercenter);
 			//check if student belongs to this teacher
 			$student = $circle->checkStudentInCircle($student);
-			return view('student.show', compact('student', 'circle', 'usercenter','programReports','memorizedJuzs','memorizedSowars'));
+			return view('student.show', compact('student', 'circle', 'usercenter','programReport','memorizedJuzs','memorizedSowars'));
 			break;
 		default:
 			# code...
@@ -344,4 +344,33 @@ class StudentController extends Controller {
 		}
 		return view('student.can_write_program_report_index', compact('malestudents','femalestudents'));
 	}
+
+
+	public function programReportIndex(Student $student)
+    {
+        $programReports=[];
+
+        $loggedUser = auth()->user();
+        if($loggedUser->userType==='teacher'){
+        	$teacher = $loggedUser->teacherAccount;
+            $teacher->checkHisStudent($student);
+            $programReports = ProgramReport::where('student_id',$student->id)->orderby('id','DESC')
+            ->paginate(50);
+        }elseif($loggedUser->userType==='usercenter'){
+            $loggedUser->checkUsercenterHasStudent($student);
+            $programReports = ProgramReport::where('student_id',$student->id)->orderby('id','DESC')
+            ->paginate(50);
+        }elseif($loggedUser->userType==='supervisor'){
+            $supervisor = $loggedUser->supervisorAccount;
+            $supervisor->checkSupervisorHasStudent($student);
+            $programReports = ProgramReport::where('student_id',$student->id)->orderby('id','DESC')
+            ->paginate(50);
+        }else{
+            abort(401);
+        }
+        
+       return view('program_report.index',compact('programReports')); 
+    }
+
+
 }

@@ -126,6 +126,7 @@ Route::prefix('user')->group(function () {
 	Route::get('teacher/quarterly_program/{circle}/show', [TeacherController::class,'quarterlyProgramShow'])->name('teacher.quarterly_program.show');
 	Route::get('teacher/incessant_program/{circle}/show', [TeacherController::class,'incessantProgramShow'])->name('teacher.incessant_program.show');
 
+
 });
 
 Route::prefix('student')->group(function () {
@@ -152,6 +153,7 @@ Route::prefix('student')->group(function () {
 	Route::post('{student}/circle/{circle}/update_status', [StudentController::class,'updateStatus'])
 		->name('student.circle.update_status');
 
+	Route::get('{student}/program_report/index', [StudentController::class,'programReportIndex'])->name('student.program_report.index');
 });	
 
 
@@ -223,15 +225,17 @@ Route::prefix('program_report')->group(function () {
 });
 
 Route::prefix('student/memorized_juz')->group(function () {
-	Route::get('{memorizedjuz}/delete', [MemorizedJuzController::class,'memorizedJuzDelete'])->name('student.memorized_juz.delete');
-	Route::get('{student}/create', [MemorizedJuzController::class,'create'])->name('student.memorized_juz.create');
-	Route::post('store', [MemorizedJuzController::class,'store'])->name('student.memorized_juz.store');
+	Route::get('{student}/create', [MemorizedJuzController::class,'create'])
+	->name('student.memorized_juz.create');
+	Route::post('{student}/update', [MemorizedJuzController::class,'update'])
+	->name('student.memorized_juz.update');
 });
 
 Route::prefix('student/memorized_sowar')->group(function () {
-	Route::get('{memorizedSowar}/delete', [MemorizedSowarController::class,'memorizedSowarDelete'])->name('student.memorized_sowar.delete');
-	Route::get('{student}/create', [MemorizedSowarController::class,'create'])->name('student.memorized_sowar.create');
-	Route::post('store', [MemorizedSowarController::class,'store'])->name('student.memorized_sowar.store');
+	Route::get('{student}/create', [MemorizedSowarController::class,'create'])
+	->name('student.memorized_sowar.create');
+	Route::post('{student}/update', [MemorizedSowarController::class,'update'])
+	->name('student.memorized_sowar.update');
 });
 
 Route::prefix('dailyrecord')->group(function () {
@@ -301,7 +305,3 @@ Route::prefix('owner')->group(function () {
 
 });
 
-Route::prefix('juz')->group(function () {
-	Route::get('{juz}/edit', [MemorizedJuzController::class,'juzEdit'])->name('juz.edit');
-	Route::post('{juz}/update', [MemorizedJuzController::class,'juzUpdate'])->name('juz.update');
-});

@@ -17,6 +17,7 @@ class CreateMemorizedSowarsTable extends Migration
             $table->id();
             $table->string('sowar_id');
             $table->integer('student_id')->unsigned();
+            $table->boolean('done')->default(0);
             $table->timestamps();
         });
     }

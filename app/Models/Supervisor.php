@@ -40,4 +40,19 @@ class Supervisor extends Model {
 		return $supervisor;
 	}
 
+	
+	public function checkSupervisorHasStudent($student){
+		$loggedUser = auth()->user();
+		if($loggedUser->userType!='supervisor'){
+			abort(401);
+		}
+		$usercenter = $this->usercenter();
+
+        $student = $usercenter->userStudentPermission()->where('user_student_permission.student_id',$student->id)->first();
+        if($student){
+            return $student;
+        }
+        abort(401);
+    }
+
 }
