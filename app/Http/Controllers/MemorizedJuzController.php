@@ -15,10 +15,20 @@ class MemorizedJuzController extends Controller
 
     public function create(Student $student)
     {
+
+
         $loggedUser = auth()->user();
+
         if($loggedUser->userType==='teacher'){
             $teacher = $loggedUser->teacherAccount;
-            $studentMemorizedJuzs = $student->memorizedJuzs()->get();
+            $teacher->checkHisStudent($student); 
+        }elseif($loggedUser->userType==='usercenter'){
+            $loggedUser->checkUsercenterHasStudent($student);
+        }else{
+            abort(401);
+        }
+
+        $studentMemorizedJuzs = $student->memorizedJuzs()->get();
             if(count($studentMemorizedJuzs)==0){
                 for($id=1;$id<=30;$id++){
                     MemorizedJuz::create([
@@ -29,7 +39,6 @@ class MemorizedJuzController extends Controller
                 return redirect()->back()->with(['status'=>'success','message'=>'تم']);
             }
             return view('student.memorized_juz.create',compact('student','studentMemorizedJuzs'));
-        }
         abort(401);
         
     }
@@ -41,13 +50,17 @@ class MemorizedJuzController extends Controller
         if($loggedUser->userType==='teacher'){
             $teacher = $loggedUser->teacherAccount;
             $teacher->checkHisStudent($student); 
-            MemorizedJuz::where('student_id',$student->id)->update(['done'=>0]);
-            if($request->juzIds){
-              MemorizedJuz::whereIn('id',$request->juzIds)->where('student_id',$student->id)->update(['done'=>1]);  
-            }
-            return redirect()->route('student.show',['student'=>$student->id]);
+        }elseif($loggedUser->userType==='usercenter'){
+            $loggedUser->checkUsercenterHasStudent($student);
+        }else{
+            abort(401);
         }
-       return redirect()->route('student.show',['student'=>$student->id]);
+        
+        MemorizedJuz::where('student_id',$student->id)->update(['done'=>0]);
+        if($request->juzIds){
+          MemorizedJuz::whereIn('id',$request->juzIds)->where('student_id',$student->id)->update(['done'=>1]);  
+        }
+        return redirect()->route('student.show',['student'=>$student->id]);
     }
 
    

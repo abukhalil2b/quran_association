@@ -4,7 +4,7 @@
 			<div class="py-4">
 			    <h5 class="mt-3">
 			        السور التي يحفظها
-			        @if(auth()->user()->userType=='teacher')
+			        @if(auth()->user()->userType=='teacher' || auth()->user()->userType=='usercenter')
 			        <div class="pull-left">
 			            <a href="{{route('student.memorized_sowar.create',['student'=>$student->id])}}">
 			            	@if(count($memorizedSowars))

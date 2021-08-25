@@ -234,7 +234,7 @@ class TeacherController extends Controller {
 		$teacher->update($request->all());
 		$user = $teacher->accountOwner;
 		$user->update($request->all());
-		return redirect()->route('user.teacher.index');
+		return redirect()->route('dashboard')->with(['status'=>'success','message'=>'تم']);
 	}
 
 	
