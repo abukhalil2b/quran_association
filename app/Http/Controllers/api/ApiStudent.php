@@ -9,6 +9,8 @@ use App\Http\Resources\CircleStudentResource;
 use App\Models\ProgramReport;
 use Carbon\Carbon;
 use App\Models\Student;
+use App\Models\MemorizedJuz;
+use App\Models\MemorizedSowar;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 class ApiStudent extends Controller
@@ -33,15 +35,16 @@ class ApiStudent extends Controller
 			$programReports = ProgramReport::where(['student_id'=>$student->id])
 			->orderby('id','DESC')
 			->limit(50)->get();
-
+			$memorizedJuzs = MemorizedJuz::where(['done'=>1,'student_id'=>$student->id])->get();
+			$memorizedSowars = MemorizedSowar::where(['done'=>1,'student_id'=>$student->id])->get();
 			$student=[
 				'id' => $student->id,
 				'name' => $student->name,
 				'usercenter' => $student->usercenter()->name,
 				'fathername' => $student->father?$student->father->name:'',
 				'avatar'=>$student->avatar?$student->avatar:'',
-				'memorizedJuzs'=>MemorizedJuzResource::collection($student->memorizedJuzs->where('done',1)->get()),
-				'memorizedSowars'=>MemorizedSowarResource::collection($student->memorizedSowars->where('done',1)->get()),
+				'memorizedJuzs'=>MemorizedJuzResource::collection($memorizedJuzs),
+				'memorizedSowars'=>MemorizedSowarResource::collection($memorizedSowars),
 				'programReports'=>ProgramReportResource::collection($programReports),
 				'circles'=>CircleStudentResource::collection($student->circles()->get()),
 			];
