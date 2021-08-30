@@ -145,7 +145,7 @@
 								<select name="teacher_id" class="form-control">
 									@foreach($teachers as $teacher)
 									<option @if($teacher->id == $course->teacher_id) selected @endif value="{{$teacher->id}}">
-										{{$teacher->accountOwner->name}}
+										{{$teacher->accountOwner->name}} - {{$teacher->usercenter()->name}}
 									</option>
 									@endforeach
 								</select>

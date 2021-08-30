@@ -5,6 +5,10 @@
             </small>{{$quarterlyProgramCircle->program->title}} 
              - 
 			<small class="text-primary">الحلقة: </small>{{$quarterlyProgramCircle->title}}
+            <div>
+                <small class="text-info">{{__('timestart')}}: {{$quarterlyProgramCircle->timestart}}</small>    
+                <small class=" mr-3 text-info">{{__('duration')}}: {{$quarterlyProgramCircle->duration}}</small>
+            </div>
             
         </div>
         <div>

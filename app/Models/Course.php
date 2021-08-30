@@ -29,6 +29,7 @@ class Course extends Model {
 		'building_id',
 		'user_id',
 		'male_certificate_url',
+		'path',
 		'female_certificate_url'
 	];
 
@@ -51,7 +52,7 @@ class Course extends Model {
 
 	public function subscribers() {
 		return $this->belongsToMany(Student::class, 'course_student', 'course_id', 'student_id')
-			->withPivot(['paid','join_date']);
+			->withPivot(['paid','join_date','certificate_url']);
 	}
 
 	public function certificates(){

@@ -19,7 +19,7 @@ class StudentController extends Controller {
 		$this->middleware('auth');
 	}
 
-	public function show(Student $student) {
+	public function show(Student $student,Circle $circle) {
 		$loggedUser = auth()->user();
 		$programReport=ProgramReport::orderby('id','DESC')->where('student_id',$student->id);
 		$memorizedJuzs=MemorizedJuz::where('student_id',$student->id)->get();
@@ -27,11 +27,11 @@ class StudentController extends Controller {
 
 		switch ($loggedUser->userType) {
 		case 'usercenter':
-			$programReport = $programReport->first();
+			$programReport = $programReport->where('circle_id',$circle->id)->first();
 			$usercenter = $loggedUser;
 			$student = $student->checkUserPermission($usercenter);
-			$circles = $student->circles;
-			return view('student.show', compact('student', 'circles', 'usercenter','programReport','memorizedJuzs','memorizedSowars'));
+			$circle = Circle::where(['id'=>$circle->id])->orderby('id','DESC')->first();
+			return view('student.show', compact('student', 'circle', 'usercenter','programReport','memorizedJuzs','memorizedSowars'));
 			break;
 
 		case 'supervisor':
@@ -39,15 +39,15 @@ class StudentController extends Controller {
 			$supervisor = $loggedUser->supervisorAccount;
 			$usercenter = $supervisor->usercenter();
 			$student = $student->checkUserPermission($usercenter);
-			$circles = $student->circles;
-			return view('student.show', compact('student', 'circles', 'usercenter','programReport','memorizedJuzs','memorizedSowars'));
+			$circle = Circle::where(['id'=>$circle->id])->orderby('id','DESC')->first();
+			return view('student.show', compact('student', 'circle', 'usercenter','programReport','memorizedJuzs','memorizedSowars'));
 			break;
 
 		case 'teacher':
 
 			$teacher = $loggedUser->teacherAccount;
 			$usercenter = $teacher->usercenter();
-			$circle = Circle::where('teacher_id',$teacher->id)->orderby('id','DESC')->first();
+			$circle = Circle::where(['teacher_id'=>$teacher->id,'id'=>$circle->id])->orderby('id','DESC')->first();
 			$programReport = $programReport->where('circle_id',$circle->id)->first();
 			//check if teacher has permission
 			$student = $student->checkUserPermission($usercenter);
@@ -346,7 +346,7 @@ class StudentController extends Controller {
 	}
 
 
-	public function programReportIndex(Student $student)
+	public function programReportIndex(Student $student,Circle $circle)
     {
         $programReports=[];
 
@@ -354,23 +354,64 @@ class StudentController extends Controller {
         if($loggedUser->userType==='teacher'){
         	$teacher = $loggedUser->teacherAccount;
             $teacher->checkHisStudent($student);
-            $programReports = ProgramReport::where('student_id',$student->id)->orderby('id','DESC')
+            $programReports = ProgramReport::where(['circle_id'=>$circle->id,'student_id'=>$student->id])
+            ->orderby('id','DESC')
             ->paginate(50);
         }elseif($loggedUser->userType==='usercenter'){
             $loggedUser->checkUsercenterHasStudent($student);
-            $programReports = ProgramReport::where('student_id',$student->id)->orderby('id','DESC')
+            $programReports = ProgramReport::where(['circle_id'=>$circle->id,'student_id'=>$student->id])
+            ->orderby('id','DESC')
             ->paginate(50);
         }elseif($loggedUser->userType==='supervisor'){
             $supervisor = $loggedUser->supervisorAccount;
             $supervisor->checkSupervisorHasStudent($student);
-            $programReports = ProgramReport::where('student_id',$student->id)->orderby('id','DESC')
+            $programReports = ProgramReport::where(['circle_id'=>$circle->id,'student_id'=>$student->id])
+            ->orderby('id','DESC')
             ->paginate(50);
         }else{
             abort(401);
         }
         
-       return view('program_report.index',compact('programReports')); 
+       return view('program_report.index',compact('programReports','circle','student')); 
     }
+
+    public function studentTransferCreate(Student $student,Circle $circle)
+    {
+        $circles=[];
+
+        $loggedUser = auth()->user();
+        if($loggedUser->userType==='usercenter'){
+            $loggedUser->checkUsercenterHasStudent($student);
+            $availableCircles = Circle::whereHas('userCirclePermission',function($q) use($loggedUser){
+            	$q->where('user_circle_permission.user_id',$loggedUser->id);
+            })->get();
+        }else{
+            abort(401);
+        }
+        
+       return view('student.transfer.create',compact('circle','availableCircles','student')); 
+    }
+
+    public function studentTransferStore(Request $request,Student $student,Circle $circle)
+    {
+    	$newCircle = Circle::find($request->circle_id);
+    	$loggedUser = auth()->user();
+    	if($loggedUser->userType==='usercenter'){
+			$loggedUser->checkUsercenterHasStudent($student);
+			if($newCircle->id != $circle->id){
+				$student->circles()->detach($circle->id);
+				$student->circles()->attach($newCircle->id,['program'=>$newCircle->program_id]);
+				return redirect()->route('dashboard')->with(['status'=>'success','message'=>'تم']);
+			}else{
+				return redirect()->back();
+			}
+        }else{
+            abort(401);
+        }
+       
+       
+    }
+
 
 
 }

@@ -40,19 +40,8 @@
                         </tr>
                         <tr>
                             <td>البيان</td>
-                            <td><input name="detials" class="form-control"></td>
+                            <td><input name="details" class="form-control"></td>
                         </tr>
-                    	<tr>
-                    		<td>الدورة (اتركه فارغ في حالة المصروفات)</td>
-                    		<td>
-                    			<select name="course_id" class="form-control">
-                    				<option></option>
-                    				@foreach($courses as $course)
-                    				<option value="{{$course->id}}">{{$course->title}} - {{$course->startAt}}</option>
-                    				@endforeach
-                    			</select>
-                    		</td>
-                    	</tr>
                         <tr>
                             <td colspan="2">
                                 <button class="btn btn-info btn-block">حفظ</button>

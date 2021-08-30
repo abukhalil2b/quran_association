@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class CircleStudentResource extends JsonResource
+class CourseStudentResource extends JsonResource
 {
 
     public function toArray($request)
@@ -15,7 +15,8 @@ class CircleStudentResource extends JsonResource
             'title'=>$this->title,
             'teacherId'=>$this->teacher->id,
             'teacherName'=>$this->teacher->accountOwner->name,
-            'canWriteHisReport'=>$this->pivot->can_write_his_report,
+            'startAt'=>$this->startAt,
+            'endAt'=>$this->endAt,
         ];
     }
 }

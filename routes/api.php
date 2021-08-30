@@ -20,9 +20,6 @@ use App\Models\Trainee;
 use App\Http\Resources\StudentCollection;
 use App\Http\Resources\StudentResource;
 
-
-
-
 Route::middleware('auth:sanctum')->get('logout', function (Request $request) {
     $success = auth()->user()->tokens()->delete();
     if($success>0)
@@ -30,7 +27,6 @@ Route::middleware('auth:sanctum')->get('logout', function (Request $request) {
 	else
 	return response(500);
 });
-
 
 // //trainee
 // Route::post('/trainee/login', [ApiTrainee::class,'login']);
@@ -44,6 +40,7 @@ Route::get('/app_version',function(){
 Route::post('/student/login', [ApiStudent::class,'login']);
 Route::middleware('auth:sanctum')->group(function(){
 	Route::get('/get_student', [ApiStudent::class,'getStudent']);
+	Route::get('/{course}/get_student_certificate', [ApiStudent::class,'certificateShow']);
 });
 
 
@@ -55,7 +52,6 @@ Route::middleware('auth:sanctum')->group(function(){
 	Route::get('/delete_last_program_report/{student}/{circle}',[ApiProgramReport::class,'deleteLastProgramReport']);
 });
 
-
 //circle
 Route::middleware('auth:sanctum')->group(function(){
 	Route::get('/{student}/circles', [ApiCircle::class,'circles']);
@@ -66,7 +62,6 @@ Route::get('/programs', [ApiProgram::class,'getPrograms']);
 
 //course
 Route::get('/course/index', [ApiCourse::class,'index']);
-	
 
 
 //user => teacher - supervisor

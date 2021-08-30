@@ -1,12 +1,7 @@
 <x-app-layout>
 <div class="container">
     <div class="row">
-        @if(auth()->user()->userType=='teacher')
-            @include('student._circle')
-        @endif
-        @if(auth()->user()->userType=='usercenter')
-            @include('student._circles')
-        @endif
+       @include('student._circle')
     </div>
 </div>
 
@@ -15,7 +10,9 @@
 	<div class="row">
 		<div class="col-md-12">
 			<h5 class="mt-3">آخر التقارير المرسلة
-				<a class="pull-left" href="{{route('student.program_report.index',['student'=>$student->id])}}">عرض كل التقارير المرسلة</a>
+				<a class="pull-left" href="{{route('student.program_report.index',['student'=>$student->id,'circle'=>$circle->id])}}">
+				عرض كل التقارير المرسلة
+				</a>
 			</h5>
 			<div class="card mt-1">
 			    <div class="card-body text-xs">

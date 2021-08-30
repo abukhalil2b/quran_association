@@ -37,8 +37,8 @@ class Student extends Model {
 	}
 
 	public function courses() {
-		return $this->belongsToMany(Student::class, 'course_student', 'course_id', 'student_id')
-			->withPivot(['paid','join_date']);
+		return $this->belongsToMany(Course::class, 'course_student', 'student_id', 'course_id')
+			->withPivot('paid','join_date','certificate_url');
 	}
 
 	public function semester() {

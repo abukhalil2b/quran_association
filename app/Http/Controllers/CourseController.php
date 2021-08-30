@@ -19,43 +19,124 @@ class CourseController extends Controller {
 		$students=[];
 		if($loggedUser->userType=='usercenter')
 		{
-			$students = Student::whereHas('userStudentPermission',function($q)use($loggedUser){
-				$q->where(['user_student_permission.user_id'=>$loggedUser->id]);
-			})->whereHas('courses',function($q)use($course){
-				$q->where('course_student.course_id',$course->id);
-			})->get();
-
+			$students = $course->subscribers()->get();
 		}
 		return view('course.student.index', compact('course','students'));
 	}
-
-	public function studentCreate(Course $course) {
+	
+	public function studentMaleSearch(Request $request,Course $course) {
+		// return $request->all();
 		$loggedUser = auth()->user();
 		$students=[];
 		if($loggedUser->userType=='usercenter')
 		{
-			$students = Student::whereHas('userStudentPermission',function($q)use($loggedUser){
-				$q->where('user_student_permission.user_id',$loggedUser->id);
-			})->whereDoesntHave('courses',function($q)use($course){
+			$search = Student::whereDoesntHave('courses',function($q)use($course){
+				$q->where('course_student.course_id',$course->id);
+			});
+
+			if($request->search){
+				$search->where('name','LIKE','%'.$request->search.'%');
+				$search->orWhere('id','LIKE','%'.$request->search.'%');
+			}
+
+			if($request->created_at){
+				$search->whereDate('created_at',$request->created_at);
+			}
+
+			$students = $search->where('gender','male')->get();
+
+		}
+		$genderSearch = 'male';
+		return view('course.student.create', compact('course','students','genderSearch'));
+	}
+
+	public function studentFemaleSearch(Request $request,Course $course) {
+		// return $request->all();
+		$loggedUser = auth()->user();
+		$students=[];
+		if($loggedUser->userType=='usercenter')
+		{
+			$search = Student::whereDoesntHave('courses',function($q)use($course){
+				$q->where('course_student.course_id',$course->id);
+			});
+
+			if($request->search){
+				$search->where('name','LIKE','%'.$request->search.'%');
+				$search->orWhere('id','LIKE','%'.$request->search.'%');
+			}
+
+			if($request->created_at){
+				$search->whereDate('created_at',$request->created_at);
+			}
+
+			$students = $search->where('gender','female')->get();
+
+		}
+		$genderSearch = 'female';
+		return view('course.student.create', compact('course','students','genderSearch'));
+	}
+
+	public function studentMaleCreate(Course $course) {
+		$loggedUser = auth()->user();
+		$students=[];
+		if($loggedUser->userType=='usercenter')
+		{
+			$students = Student::where('gender','male')->whereDoesntHave('courses',function($q)use($course){
 				$q->where('course_student.course_id',$course->id);
 			})->get();
 
 		}
-		return view('course.student.create', compact('course','students'));
+		$genderSearch = 'male';
+		return view('course.student.create', compact('course','students','genderSearch'));
+	}
+
+	public function studentFemaleCreate(Course $course) {
+		$loggedUser = auth()->user();
+		$students=[];
+		if($loggedUser->userType=='usercenter')
+		{
+			$students = Student::where('gender','female')->whereDoesntHave('courses',function($q)use($course){
+				$q->where('course_student.course_id',$course->id);
+			})->get();
+
+		}
+		$genderSearch = 'female';
+		return view('course.student.create', compact('course','students','genderSearch'));
 	}
 	
 	public function studentStore(Request $request,Course $course) {
 		$loggedUser = auth()->user();
+		$ids = $request->studentIds;
+		if(!$ids){
+			abort(404);
+		}
+
 		if($loggedUser->userType=='usercenter')
 		{
 			$loggedUser->checkUsercenterHasCourse($course);
-			$students = Student::whereHas('userStudentPermission',function($q) use ($loggedUser){
-				$q->where('user_student_permission.user_id',$loggedUser->id);
-			})->get();
-			$ids = $request->studentIds;
-			$filteredIds = $students->whereIn('id',$ids)->pluck('id');
+			// $students = Student::whereHas('userStudentPermission',function($q) use ($loggedUser){
+			// 	$q->where('user_student_permission.user_id',$loggedUser->id);
+			// })->get();
 			
-			$course->students()->attach($filteredIds);
+			// $filteredIds = $students->whereIn('id',$ids)->pluck('id');
+			
+			$course->subscribers()->syncWithPivotValues($ids,['join_date'=>date('Y-m-d',time())],false);
+			return redirect()->route('course.student.index',['course'=>$course->id])
+			->with(['status'=>'success','message'=>'تم']);
+		}
+	}
+
+	public function studentDelete(Student $student,Course $course) {
+		$loggedUser = auth()->user();
+	
+		if($loggedUser->userType=='usercenter')
+		{
+			$loggedUser->checkUsercenterHasCourse($course);
+			$subscription = $course->subscribers()->first();
+			if($subscription->pivot->paid){
+				abort(403,'لايمكن الحذف، لقد تم دفع مبلغ للدورة');
+			}
+			$course->subscribers()->detach($student);
 			return redirect()->route('course.student.index',['course'=>$course->id])
 			->with(['status'=>'success','message'=>'تم']);
 		}
@@ -72,9 +153,11 @@ class CourseController extends Controller {
 		
 		return view('course.index', compact('courses'));
 	}
+
 	public function show(Course $course) {
 		return view('course.show', compact('course'));
 	}
+
 	public function create() {
 		$buildings = Building::whereUserId(auth()->user()->id)->get();
 		$teachers = Teacher::all();

@@ -16,7 +16,7 @@
                     <div>البريد الالكتروني:  <small>{{$teacher->accountOwner->email}}</small></div>
                 </div>
                 <a href="{{route('user.teacher.show',['teacher'=>$teacher->id])}}">
-                الحلقات
+                الحلقات {{$teacher->circles->count()}}
                 </a>
                 <a class="btn" href="{{route('user.teacher.edit',['teacher'=>$teacher->id])}}">تعديل</a>
                 <a class="btn" href="">حذف</a>

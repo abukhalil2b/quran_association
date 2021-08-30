@@ -4,7 +4,7 @@
         <div class="col-md-12">
             <div class="card">
                 <div class="card-header">
-                    {{$teacher->accountOwner->name}}
+                    <span class="text-green-600">{{__('teacher')}}</span> {{$teacher->accountOwner->name}}
                 </div>
                 <div class="card-body">
                     <a class="btn btn-sm btn-info" href="{{route('user.teacher.edit',['teacher'=>$teacher->id])}}">تعديل</a>
@@ -28,7 +28,9 @@
                 <div class="card-body">
                     @foreach($circle->students as $key => $student)
                     <div>
-                        <a href="{{route('student.show',['student'=>$student->id])}}">{{$student->name}}</a>
+                        <a href="{{route('student.show',['student'=>$student->id,'circle'=>$circle->id])}}">
+                            {{$student->name}}
+                        </a>
                     </div>
                     @endforeach
                 </div>

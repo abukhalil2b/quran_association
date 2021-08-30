@@ -11,23 +11,33 @@ class StatementController extends Controller {
 	}
 
 	public function store(Request $request) {
-		$this->validate($request, [
-			'amount' => 'required',
-		]);
+		$loggedUser = auth()->user();
+		if($loggedUser->userType=='usercenter'){
+			$this->validate($request, [
+				'amount' => 'required',
+			]);
 
-		$date = $request->date;
-		$state = $request->state;
-		$course_id = $request->course_id;
-		$amount = $state == 'income' ? $request->amount : -($request->amount);
-		Statement::create(['date' => $date, 'state' => $state, 'amount' => $amount, 'course_id' => $course_id]);
-		return redirect()->back();
+			$details = $request->details;
+			$date = $request->date;
+			$state = $request->state;
+			$course_id = $request->course_id;
+			$amount = $state == 'income' ? $request->amount : -($request->amount);
+			Statement::create([
+				'date' => $date,
+				'state' => $state,
+				'amount' => $amount,
+				'user_id'=>$loggedUser->id,
+				'details'=>$details
+			]);
+			return redirect()->back();			
+		}
+		abort(401);
+
 	}
 
 	public function create() {
-		$courses = Course::limit(20)->get();
 		$months = Statement::selectRaw("MONTH(date) as month , date")->distinct()->get();
-
-		return view('statement.create', compact('courses', 'months'));
+		return view('statement.create', compact('months'));
 	}
 
 	public function details($date) {

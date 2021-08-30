@@ -17,6 +17,7 @@ class CreateStatementsTable extends Migration {
 			$table->string('state');
 			$table->integer('amount');
 			$table->string('file')->nullable();
+			$table->string('details')->nullable();
 			$table->integer('user_id')->nullable();
 			$table->timestamps();
 		});

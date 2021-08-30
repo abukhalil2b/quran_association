@@ -1,4 +1,13 @@
 {
+    "download":"تنزيل",
+    "join_date":"تاريخ الإنضمام",
+    "date":"تاريخ",
+    "transfer":"نقل",
+    "incessant_program":"برنامج مستمر",
+    "edit":"تعديل",
+    "name":"الاسم",
+    "admin":"إدارة",
+
     "delete":"حذف",
     "confirm_delete":"تأكيد الحذف",
 
@@ -9,7 +18,7 @@
     "circle":"حلقة",
 
     "title":"العنوان أو الاسم",
-    "duration":"المدة الزمنية",
+    "duration":"المدة الزمنية بالدقائق",
     "timestart":"توقيت البدء",
 
     "studying":"يدرس",

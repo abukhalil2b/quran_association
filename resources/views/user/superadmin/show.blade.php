@@ -4,20 +4,6 @@
     <div class="row">
 
 
-    	<div class="col-md-12">
-	    	<div class="box box-blue mt-2">
-	    		<center class="box-top box-top-blue">
-	    			الأجزاء
-	    		</center>
-
-	    		@foreach($juzs as $juz)
-	    		<div class="px-2 divider">
-	    			{{$juz->title}} <a class="pull-left" href="{{route('juz.edit',['juz'=>$juz->id])}}">تعديل</a>
-	    		</div>
-	    		@endforeach
-	    		
-    		</div>
-    	</div>
 
     	<div class="col-md-12">
 			<div class="box box-blue mt-2">

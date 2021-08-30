@@ -2,7 +2,7 @@
 	<div>
 		<span class="text-primary">برامج فصلية</span>
 		@foreach($quarterlyProgramCircles as $circle)
-			<div class="card ">
+			<div class="card mt-1">
 
 				<a href="{{route('circle.dashboard',['circle'=>$circle->id])}}">
 				<div class="alert alert-secondary">

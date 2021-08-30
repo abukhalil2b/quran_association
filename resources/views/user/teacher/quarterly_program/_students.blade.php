@@ -3,7 +3,7 @@
 	@if($quarterlyProgramCircle)
 	@foreach($quarterlyProgramCircle->students as $student)
 	<div class="card p-2 mt-1">
-		<a href="{{route('student.show',['student'=>$student->id])}}">
+		<a href="{{route('student.show',['student'=>$student->id,'circle'=>$quarterlyProgramCircle->id])}}">
 		<div>رقم الطالب: {{$student->id}}</div>
 		<div> اسم الطالب: {{$student->name}}</div>
 		</a>

@@ -15,7 +15,7 @@ class CreateCourseStudentTable extends Migration
             $table->integer('student_id')->unsigned();
             $table->boolean('paid')->default(0);
             $table->date('join_date')->currentTime();
-           
+            $table->string('certificate_url',200)->nullable();
         });
     }
 

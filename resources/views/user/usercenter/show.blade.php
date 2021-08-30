@@ -3,10 +3,10 @@
     <div class="row">
     	
         <div class="col-md-6">
-    		<h4 class="alert alert-secondary">تقارير المالية</h4>
-    		@foreach($finance_reports as $finance_report)
-    		<div>{{$finance_report->title}}</div>
-    		@endforeach
+    		<h4 class="alert alert-secondary">
+                <a href="{{route('finance_report.index')}}">تقارير المالية</a> |
+                <a href="{{route('statement.create')}}">+اضافة بيان</a>     
+            </h4>
         </div>
         
         <div class="col-md-6">

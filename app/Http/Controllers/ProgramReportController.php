@@ -65,7 +65,7 @@ class ProgramReportController extends Controller
              $request['owned_by_usercenter_id']=$usercenter->id;
 
             ProgramReport::create($request->all());
-            return redirect()->route('student.show',['student'=>$request->student_id]);
+            return redirect()->route('student.show',['student'=>$request->student_id,'circle'=>$request->circle_id]);
         }
         abort(401);
     }

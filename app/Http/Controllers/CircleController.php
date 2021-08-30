@@ -31,16 +31,16 @@ class CircleController extends Controller {
 
 
 	public function create(Program $program) {
-		$user = auth()->user();
-		$program = Program::whereHas('userProgramPermission', function ($query) use ($user, $program) {
-			$query->where(['user_program_permission.user_id' => $user->id, 'user_program_permission.program_id' => $program->id]);
+		$loggedUser = auth()->user();
+		$program = Program::whereHas('userProgramPermission', function ($query) use ($loggedUser, $program) {
+			$query->where(['user_program_permission.user_id' => $loggedUser->id, 'user_program_permission.program_id' => $program->id]);
 		})->first();
 		if(!$program)abort(404,'لايوجد برنامج');
-		$supervisors = Supervisor::whereHas('userSupervisorPermission', function ($query) use ($user) {
-			$query->where('user_supervisor_permission.user_id', $user->id);
+		$supervisors = Supervisor::whereHas('userSupervisorPermission', function ($query) use ($loggedUser) {
+			$query->where('user_supervisor_permission.user_id', $loggedUser->id);
 		})->get();
-		$teachers = Teacher::whereHas('userTeacherPermission', function ($query) use ($user) {
-			$query->where('user_teacher_permission.user_id', $user->id);
+		$teachers = Teacher::whereHas('userTeacherPermission', function ($query) use ($loggedUser) {
+			$query->where('user_teacher_permission.user_id', $loggedUser->id);
 		})->get();
 		if(count($supervisors))
 		return view('circle.create', compact('program', 'supervisors', 'teachers'));
@@ -215,7 +215,7 @@ class CircleController extends Controller {
 			$supervisor = $loggedUser->supervisorAccount;
 			$usercenter = $supervisor->usercenter();
 			$circle = $circle->checkUserPermission($usercenter);
-
+			return$students = $circle->students()->get();
 			$lastDailyrecord = $circle->lastDailyrecord();
 			if ($lastDailyrecord) {
 				$attendances = Attendance::where('dailyrecord_id', $lastDailyrecord->id)->get();
@@ -229,7 +229,7 @@ class CircleController extends Controller {
 		case 'usercenter':
 
 			$circle = $circle->checkUserPermission($loggedUser);
-
+			$students = $circle->students()->get();
 			$lastDailyrecord = $circle->lastDailyrecord();
 			if ($lastDailyrecord) {
 				$attendances = Attendance::where('dailyrecord_id', $lastDailyrecord->id)->get();
@@ -237,7 +237,7 @@ class CircleController extends Controller {
 				$attendances = [];
 			}
 
-			return view('circle.dashboard', compact('circle', 'attendances'));
+			return view('circle.dashboard', compact('circle','students', 'attendances'));
 			break;
 
 		case 'teacher':
@@ -245,7 +245,7 @@ class CircleController extends Controller {
 			$teacher = $loggedUser->teacherAccount;
 			$usercenter = $teacher->usercenter();
 			$circle = $circle->checkUserPermission($usercenter);
-
+			return$students = $circle->students()->get();
 			$lastDailyrecord = $circle->lastDailyrecord();
 			if ($lastDailyrecord) {
 				$attendances = Attendance::where('dailyrecord_id', $lastDailyrecord->id)->get();
@@ -417,7 +417,7 @@ class CircleController extends Controller {
 
 	//student doesntHave whereDoesntHave
 
-	public function studentCreate(Circle $circle) {
+	public function malestudentCreate(Circle $circle) {
 		$loggedUser = auth()->user();
 		switch ($loggedUser->userType) {
 		case 'supervisor':
@@ -428,13 +428,13 @@ class CircleController extends Controller {
 			$circle = $circle->checkUserPermission($usercenter);
 			
 			$program = $circle->program;
-			$students = Student::whereDoesntHave('circles', function ($q) use ($program) {
+			$malestudents = Student::where('gender','male')->whereDoesntHave('circles', function ($q) use ($program) {
 				$q->where('circle_student.program', $program->id);
 			})->whereHas('userStudentPermission', function ($q) use ($usercenter) {
 				$q->where('user_student_permission.user_id', $usercenter->id);
 			})->get();
 
-			return view('circle.student.create', compact('circle', 'students'));
+			return view('circle.malestudent.create', compact('circle', 'malestudents'));
 			break;
 
 		case 'usercenter':
@@ -442,12 +442,53 @@ class CircleController extends Controller {
 			$circle = $circle->checkUserPermission($loggedUser);
 			
 			$program = $circle->program;
-			$students = Student::whereDoesntHave('circles', function ($q) use ($program) {
+			$malestudents = Student::where('gender','male')->whereDoesntHave('circles', function ($q) use ($program) {
 				$q->where('circle_student.program', $program->id);
 			})->whereHas('userStudentPermission', function ($q) use ($loggedUser) {
 				$q->where('user_student_permission.user_id', $loggedUser->id);
 			})->get();
-			return view('circle.student.create', compact('circle', 'students'));
+
+			return view('circle.malestudent.create', compact('circle', 'malestudents'));
+			break;
+		default:
+			abort(401,'أنت لاتملك الصلاحية ');
+			break;
+		}
+
+	}
+
+	public function femalestudentCreate(Circle $circle) {
+		$loggedUser = auth()->user();
+		switch ($loggedUser->userType) {
+		case 'supervisor':
+			$supervisor = $loggedUser->supervisorAccount;
+			$usercenter = $supervisor->usercenter();
+
+			//check circle
+			$circle = $circle->checkUserPermission($usercenter);
+			
+			$program = $circle->program;
+			$femalestudents = Student::where('gender','female')->whereDoesntHave('circles', function ($q) use ($program) {
+				$q->where('circle_student.program', $program->id);
+			})->whereHas('userStudentPermission', function ($q) use ($usercenter) {
+				$q->where('user_student_permission.user_id', $usercenter->id);
+			})->get();
+
+			return view('circle.femalestudent.create', compact('circle', 'femalestudents'));
+			break;
+
+		case 'usercenter':
+			//check circle
+			$circle = $circle->checkUserPermission($loggedUser);
+			
+			$program = $circle->program;
+			$femalestudents = Student::where('gender','female')->whereDoesntHave('circles', function ($q) use ($program) {
+				$q->where('circle_student.program', $program->id);
+			})->whereHas('userStudentPermission', function ($q) use ($loggedUser) {
+				$q->where('user_student_permission.user_id', $loggedUser->id);
+			})->get();
+
+			return view('circle.femalestudent.create', compact('circle', 'femalestudents'));
 			break;
 		default:
 			abort(401,'أنت لاتملك الصلاحية ');
@@ -477,4 +518,6 @@ class CircleController extends Controller {
 		}
 
 	}
+
+
 }

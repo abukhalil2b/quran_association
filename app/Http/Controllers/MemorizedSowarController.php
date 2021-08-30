@@ -63,6 +63,6 @@ class MemorizedSowarController extends Controller
           MemorizedSowar::whereIn('id',$request->sowarIds)->where('student_id',$student->id)->update(['done'=>1]);  
         }
 
-       return redirect()->route('student.show',['student'=>$student->id]);
+       return redirect()->route('dashboard')->with(['status'=>'success','message' => 'تم']);;
     }
 }

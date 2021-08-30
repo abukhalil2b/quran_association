@@ -46,19 +46,20 @@ class CertificateController extends Controller
             $loggedUser->checkUsercenterHasCourse($course);
           if($request->hasFile('male_certificate_url')){
                 $extension = $request->male_certificate_url->getClientOriginalExtension();
-                $imageUrl = $request->file('male_certificate_url')->storeAs($loggedUser->id,time().'.'.$extension);
-                $course->update(['male_certificate_url'=>$imageUrl]);
+                $path=$loggedUser->id.'/'.$course->id;
+                $imageUrl = $request->file('male_certificate_url')->storeAs($path,'male.'.$extension);
+                $course->update(['male_certificate_url'=>$imageUrl,'path'=>$path]);
                 return redirect()->back()->with(['status'=>'success','message'=>'تم']);
             }
 
             if($request->hasFile('female_certificate_url')){
                 $extension = $request->female_certificate_url->getClientOriginalExtension();
-                $imageUrl = $request->file('female_certificate_url')->storeAs($loggedUser->id,time().'.'.$extension);
-                
-                $course->update(['female_certificate_url'=>$imageUrl]);
+                $path=$loggedUser->id.'/'.$course->id;
+                $imageUrl = $request->file('female_certificate_url')->storeAs($path,'female.'.$extension);
+                $course->update(['female_certificate_url'=>$imageUrl,'path'=>$path]);
                 return redirect()->back()->with(['status'=>'success','message'=>'تم']); 
             } 
-
+            abort(404);
         }
         abort(401);
         
@@ -76,7 +77,6 @@ class CertificateController extends Controller
             return view('certificate.student_with_certificate_index',compact('studentsWithCertificates','course'));
         }
         abort(401);
-
     }
 
     public function addStudentNewCreate(Student $student)
@@ -105,13 +105,13 @@ class CertificateController extends Controller
         $loggedUser = auth()->user();
         if($loggedUser->userType=='usercenter'){
             if($request->studentIds){
-                   foreach ($request->studentIds as $student) {
-                        $student=Student::findOrFail($student);
-                        $loggedUser->checkUsercenterHasStudent($student);
-                    }  
-                     $certificate->students()->attach($request->studentIds);
-                     return redirect()->back()->with(['status'=>'success','message'=>'done']); 
-                }
+               foreach ($request->studentIds as $student) {
+                    $student=Student::findOrFail($student);
+                    $loggedUser->checkUsercenterHasStudent($student);
+                }  
+                $certificate->students()->attach($request->studentIds);
+                return redirect()->back()->with(['status'=>'success','message'=>'done']); 
+            }
             
         }
 
@@ -119,6 +119,8 @@ class CertificateController extends Controller
 
     public function destroy(Course $course,$gender)
     {
+        $subscribers = $course->subscribers()->where('gender',$gender);
+        
         $loggedUser = auth()->user();
         if($loggedUser->userType=='usercenter'){
             //check authorization
@@ -127,11 +129,18 @@ class CertificateController extends Controller
             if($gender=='male'){
                 Storage::delete($course->male_certificate_url);
                 $course->update(['male_certificate_url'=>NULL]);
+
             }
 
             if($gender=='female'){
                 Storage::delete($course->female_certificate_url);
                $course->update(['female_certificate_url'=>NULL]);
+            }
+
+            $subscribers->update(['certificate_url'=>NULL]);
+
+            foreach ($subscribers->get() as $subscriber) {
+                Storage::delete($subscriber->pivot->certificate_url);
             }
 
         }
@@ -145,23 +154,31 @@ class CertificateController extends Controller
         if($loggedUser->userType=='usercenter'){
             //check authorization
             $loggedUser->checkUsercenterHasCourse($course);
-            $loggedUser->checkUsercenterHasStudent($student);
-            $studentCourse=$course->certificates()->where(['course_id'=>$course->id,'student_id'=>$student->id])->first();
+            // $loggedUser->checkUsercenterHasStudent($student);
 
+            $student = $course->subscribers()->where('id',$student->id)->first();
+            if(!$student){
+                abort(404);
+            }
             if($student->gender=='male'){
-                $certificate_url = $studentCourse->certificate->male_certificate_url;
+                $certificate_url = $course->male_certificate_url;
             }
 
             if($student->gender=='female'){
-                $certificate_url = $studentCourse->certificate->female_certificate_url;
+                $certificate_url = $course->female_certificate_url;
             }
 
             if(!$certificate_url){
                 abort(404);
             }
 
+            $course = $student->courses()->where('id',$course->id)->first();
+
+            if($course->pivot->certificate_url){
+               return view('certificate.student.show',compact('course'));
+            }
             $obj = new Arabic();
-            $date ="2021-08-08";
+            $date =date('Y-m-d',time());
            
             $name = $obj->utf8Glyphs($student->name);
             $url = public_path('storage/'.$certificate_url);
@@ -182,8 +199,11 @@ class CertificateController extends Controller
             // $font->valign('top');
             // $font->angle(45);
             });
-            
-            return $image->response();
+            $certificate_url = $course->path.'/'.$student->id.'.jpg';
+            $image->save('storage/'.$certificate_url);
+            $student->courses()->updateExistingPivot($course->id,['certificate_url'=>$certificate_url]);
+            $course = $student->courses()->where('id',$course->id)->first();
+            return view('certificate.student.show',compact('course'));
         }
         abort(401);
 

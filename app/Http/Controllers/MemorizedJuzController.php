@@ -60,7 +60,8 @@ class MemorizedJuzController extends Controller
         if($request->juzIds){
           MemorizedJuz::whereIn('id',$request->juzIds)->where('student_id',$student->id)->update(['done'=>1]);  
         }
-        return redirect()->route('student.show',['student'=>$student->id]);
+        return redirect()->route('dashboard')->with(['status'=>'success','message' => 'تم']);
+        // return redirect()->route('student.show',['student'=>$student->id]);
     }
 
    

@@ -32,7 +32,7 @@
                         <tr>
                             <td>تعريف قصير</td>
                             <td>
-                                <input name="title" class="form-control mt-1" placeholder="تعريف قصير">
+                                <input name="title" class="form-control mt-1" placeholder="تعريف قصير" value="حساب مدرس">
                             </td>
                         </tr>
                         <tr>

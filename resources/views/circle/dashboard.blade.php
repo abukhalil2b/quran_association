@@ -37,19 +37,24 @@
 
 <div class="container">
   <div class="row alert alert-secondary">
-    <div class="col-md-4">
+    <div class="col-md-3">
           <a class="btn-block" href="{{route('circle.teacher.create',['circle'=>$circle])}}">
             <span class="plus-icon">+</span> إضافة مدرس للحلقة
           </a>
     </div>
-    <div class="col-md-4">
+    <div class="col-md-3">
           <a class="btn-block" href="{{route('circle.supervisor.create',['circle'=>$circle])}}">
             <span class="plus-icon">+</span> إضافة مشرف للحلقة
           </a>
           </div>
-    <div class="col-md-4">
-          <a class="btn-block" href="{{route('circle.student.create',['circle'=>$circle])}}">
-            <span class="plus-icon">+</span> إضافة طلاب للحلقة
+    <div class="col-md-3">
+          <a class="btn-block" href="{{route('circle.malestudent.create',['circle'=>$circle])}}">
+            <span class="plus-icon">+</span> إضافة طلاب للحلقة ( {{__('males')}} )
+          </a>
+    </div>
+    <div class="col-md-3">
+          <a class="btn-block" href="{{route('circle.femalestudent.create',['circle'=>$circle])}}">
+            <span class="plus-icon">+</span> إضافة طلاب للحلقة ( {{__('females')}} )
           </a>
     </div>
 
@@ -61,11 +66,14 @@
       <div class="col-md-12">
         <div  class="text-primary">قائمة الطلاب المسجلون في الحلقة</div>
         <ol>
-        	@foreach($circle->students as $student)
+        	@foreach($students as $student)
         	<div>
-            <li class="text-sm">
-              <a href="{{route('student.show',['student'=>$student->id])}}">[{{$student->id}}] {{$student->name}}</a>
-            </li>
+            <div class="text-sm">
+              <a href="{{route('student.show',['student'=>$student->id,'circle'=>$circle->id])}}">[{{$student->id}}] {{$student->name}}</a>
+              <a href="{{route('student.transfer.create',['student'=>$student->id,'circle'=>$circle->id])}}" class="pull-left">{{__('transfer')}}</a>
+              <div class="divider"></div>
+            </div>
+           
           </div>
         	@endforeach
         </ol>

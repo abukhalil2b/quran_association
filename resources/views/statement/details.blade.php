@@ -5,20 +5,22 @@
             <table class="table table-bordered table-striped">
                 <tr>
                     <td>التاريخ</td>
+                    <td>البيان</td>
                     <td>العملية</td>
                     <td>المبلغ</td>
-                    <td>الدورة</td>
                     <td>المرفقات</td>
                     <td>إدارة</td>
                 </tr>
                 @foreach($statements as $statement)
-                <tr>
+                <tr class="{{$statement->state=='income'?'':'btn-secondary'}}">
                     <td>{{$statement->date}}</td>
+                    <td>
+                        <small>{{$statement->details}}</small>
+                    </td>
                     <td>{{$statement->state=='income'?'إيرادات':'مصروفات'}}</td>
                     <td>{{abs($statement->amount)}}</td>
-                    <td>{{$statement->course->title}}</td>
                     <td>
-                        <a href="">download</a>
+                        <a href="">{{__('download')}}</a>
                     </td>
                     <td>
                         <a class="btn" href="">تعديل</a>

@@ -79,7 +79,8 @@ Route::prefix('circle')->group(function () {
 	Route::get('{circle}/teacher/create',[CircleController::class,'teacherCreate'])->name('circle.teacher.create');
 	Route::post('teacher/store',[CircleController::class,'teacherStore'])->name('circle.teacher.store');
 
-	Route::get('{circle}/student/create',[CircleController::class,'studentCreate'])->name('circle.student.create');
+	Route::get('{circle}/malestudent/create',[CircleController::class,'malestudentCreate'])->name('circle.malestudent.create');
+	Route::get('{circle}/femalestudent/create',[CircleController::class,'femalestudentCreate'])->name('circle.femalestudent.create');
 	Route::post('student/store',[CircleController::class,'studentStore'])->name('circle.student.store');
 });
 
@@ -98,11 +99,7 @@ Route::prefix('year')->middleware('superadmin')->group(function () {
 	Route::get('semester-index', [YearController::class,'semesterIndex'])->name('semester.index');
 });
 
-Route::prefix('report')->group(function () {
-	Route::get('create', [ReportController::class,'create'])->name('report.create');
-	Route::post('store', [ReportController::class,'store'])->name('report.store');
-	Route::get('print', [ReportController::class,'print'])->name('report.print');
-});
+
 
 Route::prefix('user')->group(function () {
 	Route::get('teacher/male_index', [TeacherController::class,'maleIndex'])->name('user.teacher.male_index');
@@ -130,7 +127,7 @@ Route::prefix('user')->group(function () {
 });
 
 Route::prefix('student')->group(function () {
-	Route::get('{student}/show', [StudentController::class,'show'])->name('student.show');
+	Route::get('{student}/{circle}/show', [StudentController::class,'show'])->name('student.show');
 	Route::get('male_index', [StudentController::class,'maleIndex'])->name('student.male_index');
 	Route::get('female_index', [StudentController::class,'femaleIndex'])->name('student.female_index');
 	Route::get('can-wirte-program-report/index', [StudentController::class,'canWriteProgramReportIndex'])
@@ -153,7 +150,9 @@ Route::prefix('student')->group(function () {
 	Route::post('{student}/circle/{circle}/update_status', [StudentController::class,'updateStatus'])
 		->name('student.circle.update_status');
 
-	Route::get('{student}/program_report/index', [StudentController::class,'programReportIndex'])->name('student.program_report.index');
+	Route::get('{student}/{circle}/program_report/index', [StudentController::class,'programReportIndex'])->name('student.program_report.index');
+	Route::get('{student}/{circle}/transfer/create', [StudentController::class,'studentTransferCreate'])->name('student.transfer.create');
+	Route::post('{student}/{circle}/transfer/store', [StudentController::class,'studentTransferStore'])->name('student.transfer.store');
 });	
 
 
@@ -183,9 +182,13 @@ Route::prefix('contractor')->group(function () {
 });
 
 Route::prefix('course')->group(function () {
+	Route::post('student/{course}/male_search', [CourseController::class,'studentMaleSearch'])->name('course.student.male_search');
+	Route::post('student/{course}/female_search', [CourseController::class,'studentFemaleSearch'])->name('course.student.female_search');
 	Route::get('student/{course}/index', [CourseController::class,'studentIndex'])->name('course.student.index');
-	Route::get('student/{course}/create', [CourseController::class,'studentCreate'])->name('course.student.create');
+	Route::get('student/{course}/male_create', [CourseController::class,'studentMaleCreate'])->name('course.student.male_create');
+	Route::get('student/{course}/female_create', [CourseController::class,'studentFemaleCreate'])->name('course.student.female_create');
 	Route::post('student/{course}/store', [CourseController::class,'studentStore'])->name('course.student.store');
+	Route::get('student/{student}/{course}/delete', [CourseController::class,'studentDelete'])->name('course.student.delete');
 	Route::get('index', [CourseController::class,'index'])->name('course.index');
 	Route::get('create', [CourseController::class,'create'])->name('course.create');
 	Route::post('store', [CourseController::class,'store'])->name('course.store');
@@ -250,7 +253,9 @@ Route::prefix('statement')->group(function () {
 	Route::get('create', [StatementController::class,'create'])->name('statement.create');
 	Route::post('store', [StatementController::class,'store'])->name('statement.store');
 	Route::post('search', [StatementController::class,'search'])->name('statement.search');
+	Route::get('search', [StatementController::class,'search'])->name('finance_report.index');
 });
+/**  */
 
 /** attendance */
 Route::prefix('attendance')->group(function () {
