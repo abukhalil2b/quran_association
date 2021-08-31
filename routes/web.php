@@ -35,6 +35,9 @@ use Illuminate\Support\Facades\Route;
 |
  */
 
+Route::get('/getphpinfo', function() {
+    return phpinfo();
+});
 
 Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard',[DashboardController::class,'dashboard'])->name('dashboard');
 
