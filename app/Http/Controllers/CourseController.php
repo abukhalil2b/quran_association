@@ -14,14 +14,24 @@ class CourseController extends Controller {
 		$this->middleware('auth');
 	}
 
-	public function studentIndex(Course $course) {
+	public function studentMaleIndex(Course $course) {
 		$loggedUser = auth()->user();
 		$students=[];
 		if($loggedUser->userType=='usercenter')
 		{
-			$students = $course->subscribers()->get();
+			$students = $course->subscribers()->where('gender','male')->get();
 		}
-		return view('course.student.index', compact('course','students'));
+		return view('course.student.male_index', compact('course','students'));
+	}
+
+	public function studentFemaleIndex(Course $course) {
+		$loggedUser = auth()->user();
+		$students=[];
+		if($loggedUser->userType=='usercenter')
+		{
+			$students = $course->subscribers()->where('gender','female')->get();
+		}
+		return view('course.student.female_index', compact('course','students'));
 	}
 	
 	public function studentMaleSearch(Request $request,Course $course) {
@@ -104,7 +114,7 @@ class CourseController extends Controller {
 		return view('course.student.create', compact('course','students','genderSearch'));
 	}
 	
-	public function studentStore(Request $request,Course $course) {
+	public function studentStore(Request $request,Course $course,$gender) {
 		$loggedUser = auth()->user();
 		$ids = $request->studentIds;
 		if(!$ids){
@@ -121,8 +131,14 @@ class CourseController extends Controller {
 			// $filteredIds = $students->whereIn('id',$ids)->pluck('id');
 			
 			$course->subscribers()->syncWithPivotValues($ids,['join_date'=>date('Y-m-d',time())],false);
-			return redirect()->route('course.student.index',['course'=>$course->id])
-			->with(['status'=>'success','message'=>'تم']);
+			if($gender=='male'){
+				return redirect()->route('course.student.male_index',['course'=>$course->id])
+				->with(['status'=>'success','message'=>'تم']);
+			}else{
+				return redirect()->route('course.student.female_index',['course'=>$course->id])
+				->with(['status'=>'success','message'=>'تم']);
+			}
+			
 		}
 	}
 

@@ -10,6 +10,11 @@ class StatementController extends Controller {
 		$this->middleware('auth');
 	}
 
+	public function create() {
+		$months = Statement::selectRaw("MONTH(date) as month , date")->distinct()->get();
+		return view('statement.create', compact('months'));
+	}
+	
 	public function store(Request $request) {
 		$loggedUser = auth()->user();
 		if($loggedUser->userType=='usercenter'){
@@ -34,11 +39,7 @@ class StatementController extends Controller {
 		abort(401);
 
 	}
-
-	public function create() {
-		$months = Statement::selectRaw("MONTH(date) as month , date")->distinct()->get();
-		return view('statement.create', compact('months'));
-	}
+	
 
 	public function details($date) {
 		$statements = Statement::where('date', $date)->get();

@@ -23,14 +23,15 @@
               </div>
             </div>
           </form>
+          <hr>
         	<h5>{{$course->title}}</h5>
           @if(count($students))
-           <form action="{{route('course.student.store',['course'=>$course->id])}}" method="post">
+           <form action="{{route('course.student.store',['course'=>$course->id,'gender'=>$genderSearch])}}" method="post">
            	@csrf
            	@foreach($students as $student)
            	<div class="">
            		<input type="checkbox" name="studentIds[]" value="{{$student->id}}">
-           		{{$student->name}} - <small>ملتحق بـ {{$student->usercenter()->name}}</small>
+           		({{$student->id}}) {{$student->name}} - <small>ملتحق بـ {{$student->usercenter()->name}}</small>
            	</div>
            	@endforeach
             <button class="btn btn-outline-secondary btn-block">

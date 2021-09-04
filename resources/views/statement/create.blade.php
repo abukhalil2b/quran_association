@@ -2,11 +2,7 @@
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-12">
-            @if($errors->any())
-                        @foreach($errors->all() as $error)
-                            <li class="text-danger">{{$error}}</li>
-                        @endforeach
-                    @endif
+
             <div class="card">
                 <div class="card-header">
                     <h4>كتابة التقرير</h4>
@@ -36,7 +32,10 @@
                     	</tr>
                         <tr>
                             <td>مرفق</td>
-                            <td><input type="file" name="file" class="form-control"></td>
+                            <td>
+                                <small class="text-red-400">لاتعمل حاليا</small>
+                                <input type="file" name="file" class="form-control">
+                            </td>
                         </tr>
                         <tr>
                             <td>البيان</td>

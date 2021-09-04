@@ -38,9 +38,13 @@ class Student extends Model {
 
 	public function courses() {
 		return $this->belongsToMany(Course::class, 'course_student', 'student_id', 'course_id')
-			->withPivot('paid','join_date','certificate_url');
+			->withPivot('paid','join_date');
 	}
 
+	public function certificates(){
+    	return $this->hasMany(Certificate::class);
+    }
+    
 	public function semester() {
 		return $this->belongsToMany(Semester::class, 'circle_student', 'student_id', 'semester_id');
 	}

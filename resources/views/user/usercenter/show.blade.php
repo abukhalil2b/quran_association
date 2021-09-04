@@ -4,7 +4,7 @@
     	
         <div class="col-md-6">
     		<h4 class="alert alert-secondary">
-                <a href="{{route('finance_report.index')}}">تقارير المالية</a> |
+                المالية
                 <a href="{{route('statement.create')}}">+اضافة بيان</a>     
             </h4>
         </div>
@@ -26,11 +26,6 @@
     		@endforeach
         </div>
 
-        <div class="col-md-6">
-            <a href="{{route('certificate.index')}}">
-            <h4 class="alert alert-secondary">الشهادات</h4>
-            </a>
-        </div>
 
         <div class="col-md-6">
             <h4 class="alert alert-secondary">

@@ -47,6 +47,7 @@ Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard',[DashboardCont
 // 	// return view('welcome');
 // });
 
+
 Route::get('/',function(){
 	return redirect('/login');
 });
@@ -156,21 +157,17 @@ Route::prefix('student')->group(function () {
 });	
 
 
-
-
 Route::prefix('certificate')->group(function () {
-	Route::get('index',[CertificateController::class,'index'])
-	->name('certificate.index');
-	Route::get('student/{course}/index',[CertificateController::class,'studentWithCertificateIndex'])
-	->name('certificate.student_with_certificate_index');
 
-	Route::get('create/{course}/{gender}',[CertificateController::class,'create'])->name('certificate.create');
-	Route::post('store/{course}/{gender}',[CertificateController::class,'store'])->name('certificate.store');
-	Route::get('destroy/{course}/{gender}',[CertificateController::class,'destroy'])->name('certificate.destroy');
-
+	Route::get('{course}/upload_male_certificate_create',[CertificateController::class,'uploadMaleCertificateCreate'])
+	->name('certificate.upload_male_certificate_create');
+	Route::get('{course}/upload_female_certificate_create',[CertificateController::class,'uploadFemaleCertificateCreate'])
+	->name('certificate.upload_female_certificate_create');
 	
-	Route::get('show/{student}/{course}',[CertificateController::class,'certificateShow'])
-	->name('certificate.show');
+	Route::post('{course}/upload_male_certificate_store',[CertificateController::class,'uploadMaleCertificateStore'])
+	->name('certificate.upload_male_certificate_store');
+	Route::post('{course}/upload_female_certificate_store',[CertificateController::class,'uploadFemaleCertificateStore'])
+	->name('certificate.upload_female_certificate_store');
 
 });
 
@@ -184,10 +181,11 @@ Route::prefix('contractor')->group(function () {
 Route::prefix('course')->group(function () {
 	Route::post('student/{course}/male_search', [CourseController::class,'studentMaleSearch'])->name('course.student.male_search');
 	Route::post('student/{course}/female_search', [CourseController::class,'studentFemaleSearch'])->name('course.student.female_search');
-	Route::get('student/{course}/index', [CourseController::class,'studentIndex'])->name('course.student.index');
+	Route::get('student/{course}/male_index', [CourseController::class,'studentMaleIndex'])->name('course.student.male_index');
+	Route::get('student/{course}/female_index', [CourseController::class,'studentFemaleIndex'])->name('course.student.female_index');
 	Route::get('student/{course}/male_create', [CourseController::class,'studentMaleCreate'])->name('course.student.male_create');
 	Route::get('student/{course}/female_create', [CourseController::class,'studentFemaleCreate'])->name('course.student.female_create');
-	Route::post('student/{course}/store', [CourseController::class,'studentStore'])->name('course.student.store');
+	Route::post('student/{course}/{gender}/store', [CourseController::class,'studentStore'])->name('course.student.store');
 	Route::get('student/{student}/{course}/delete', [CourseController::class,'studentDelete'])->name('course.student.delete');
 	Route::get('index', [CourseController::class,'index'])->name('course.index');
 	Route::get('create', [CourseController::class,'create'])->name('course.create');
@@ -253,7 +251,6 @@ Route::prefix('statement')->group(function () {
 	Route::get('create', [StatementController::class,'create'])->name('statement.create');
 	Route::post('store', [StatementController::class,'store'])->name('statement.store');
 	Route::post('search', [StatementController::class,'search'])->name('statement.search');
-	Route::get('search', [StatementController::class,'search'])->name('finance_report.index');
 });
 /**  */
 

@@ -7,6 +7,9 @@
     "edit":"تعديل",
     "name":"الاسم",
     "admin":"إدارة",
+    "certificate":"شهادة",
+    "certificates":"الشهادات",
+    "subscribers":"المشتركين",
 
     "delete":"حذف",
     "confirm_delete":"تأكيد الحذف",

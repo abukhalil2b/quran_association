@@ -27,10 +27,7 @@ class Course extends Model {
 		'teacher_id',
 		'cate_id',
 		'building_id',
-		'user_id',
-		'male_certificate_url',
-		'path',
-		'female_certificate_url'
+		'user_id'
 	];
 
 
@@ -52,13 +49,11 @@ class Course extends Model {
 
 	public function subscribers() {
 		return $this->belongsToMany(Student::class, 'course_student', 'course_id', 'student_id')
-			->withPivot(['paid','join_date','certificate_url']);
+			->withPivot(['paid','join_date']);
 	}
 
 	public function certificates(){
-    	return $this->belongsToMany(Student::class, 'course_student', 'course_id', 'student_id')
-			->as('certificate')
-			->withPivot(['paid','join_date']);
+    	return $this->hasMany(Certificate::class);
     }
 
 	public function getWeekDaysAttribute($value) {

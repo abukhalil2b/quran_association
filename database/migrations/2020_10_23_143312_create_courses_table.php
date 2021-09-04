@@ -37,9 +37,6 @@ class CreateCoursesTable extends Migration {
 			$table->integer('cate_id')->nullable()->unsigned();
 			$table->integer('building_id')->nullable()->unsigned();
 			$table->integer('user_id')->unsigned();
-			$table->string('male_certificate_url',200)->nullable();
-            $table->string('female_certificate_url',200)->nullable();
-            $table->string('path',100)->nullable();
 			$table->timestamps();
 		});
 	}
