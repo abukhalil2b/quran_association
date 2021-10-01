@@ -85,6 +85,10 @@ Route::prefix('circle')->group(function () {
 	Route::post('student/store',[CircleController::class,'studentStore'])->name('circle.student.store');
 });
 
+Route::prefix('user')->middleware('superadmin')->group(function () {
+	Route::post('{user}/update',[UserController::class,'update'])->name('user.update');
+	Route::get('{user}/edit',[UserController::class,'edit'])->name('user.edit');
+});
 Route::prefix('usercenter')->middleware('superadmin')->group(function () {
 	Route::post('store',[CenterController::class,'usercenterStore'])->name('usercenter.store');
 	Route::get('index',[CenterController::class,'usercenterIndex'])->name('usercenter.index');

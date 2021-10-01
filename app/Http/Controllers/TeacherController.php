@@ -27,7 +27,7 @@ class TeacherController extends Controller {
 			break;
 		case 'usercenter':
 
-			$teachers = Teacher::whereHas('accountOwner',function($q){$q->where('gender','male');})
+			$teachers = Teacher::whereHas('accountOwner',function($q){$q->where(['gender'=>'male','active'=>1]);})
 			->whereHas('userTeacherPermission', function ($q) use ($loggedUser) {
 				$q->where('user_teacher_permission.user_id', $loggedUser->id);
 			})->get();
@@ -35,7 +35,7 @@ class TeacherController extends Controller {
 		case 'supervisor':
 			$supervisor = $loggedUser->supervisorAccount;
 			$usercenter = $supervisor->usercenter();
-			$teachers = Teacher::whereHas('accountOwner',function($q){$q->where('gender','male');})
+			$teachers = Teacher::whereHas('accountOwner',function($q){$q->where(['gender'=>'male','active'=>1]);})
 			->whereHas('userTeacherPermission', function ($q) use ($usercenter) {
 				$q->where('user_teacher_permission.user_id', $usercenter->id);
 			})->get();
@@ -51,11 +51,11 @@ class TeacherController extends Controller {
 		$loggedUser = auth()->user();
 		switch ($loggedUser->userType) {
 		case 'superadmin':
-			$teachers = Teacher::whereHas('accountOwner',function($q){$q->where('gender','female');})->get();
+			$teachers = Teacher::whereHas('accountOwner',function($q){$q->where(['gender'=>'female']);})->get();
 			break;
 		case 'usercenter':
 
-			$teachers = Teacher::whereHas('accountOwner',function($q){$q->where('gender','female');})
+			$teachers = Teacher::whereHas('accountOwner',function($q){$q->where(['gender'=>'female','active'=>1]);})
 			->whereHas('userTeacherPermission', function ($q) use ($loggedUser) {
 				$q->where('user_teacher_permission.user_id', $loggedUser->id);
 			})->get();
@@ -63,7 +63,7 @@ class TeacherController extends Controller {
 		case 'supervisor':
 			$supervisor = $loggedUser->supervisorAccount;
 			$usercenter = $supervisor->usercenter();
-			$teachers = Teacher::whereHas('accountOwner',function($q){$q->where('gender','female');})
+			$teachers = Teacher::whereHas('accountOwner',function($q){$q->where(['gender'=>'female','active'=>1]);})
 			->whereHas('userTeacherPermission', function ($q) use ($usercenter) {
 				$q->where('user_teacher_permission.user_id', $usercenter->id);
 			})->get();

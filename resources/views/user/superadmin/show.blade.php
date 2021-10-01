@@ -71,7 +71,14 @@
 	    			المستخدمين للبرنامج
 	    		</center>
 	    		@foreach($users as $user)
-	    			<div class="px-2">[{{$user->id}}]{{$user->name}} - {{__($user->userType)}} - {{$user->created_at->diffForHumans()}}</div>
+	    			<div class="px-2">
+	    				[{{$user->id}}]{{$user->name}} - {{__($user->userType)}} - {{$user->created_at->diffForHumans()}}
+	    				<div class="pull-left">
+	    					<a href="{{route('user.edit',['user'=>$user->id])}}">تعديل</a>
+	    				</div>
+	    				<div>{{$user->active?__('active'):__('deactive')}}</div>
+	    				<hr>
+	    			</div>
 	    		@endforeach
     		</div>
     		{{ $users->links() }}
@@ -84,7 +91,12 @@
 	    		</center>
 
 	    		@foreach($supervisors as $supervisor)
-	    		<div class="px-2">[{{$supervisor->id}}]{{$supervisor->owner}}  - {{$supervisor->created_at->diffForHumans()}}</div>
+	    		<div class="px-2">
+	    			[{{$supervisor->id}}]{{$supervisor->accountOwner->name}}
+	    			<div>{{$supervisor->created_at->diffForHumans()}}</div>
+
+	    			<hr>
+	    		</div>
 	    		@endforeach
     		</div>
     		{{ $supervisors->links() }}

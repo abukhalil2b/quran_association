@@ -28,6 +28,16 @@ class UserController extends Controller {
 
 
 
+	/** all users */
+	public function edit(User $user) {
+		return view('user.edit', compact('user'));
+	}
+
+	public function update(User $user,Request $request) {
+		$data=['name'=>$request->name,'phone'=>$request->phone,'active'=>$request->active];
+		$user->update($data);
+		return redirect()->back()->with(['status'=>'success','message' => 'تم']);
+	}
 
 	/** Student */
 	public function studentIndex() {

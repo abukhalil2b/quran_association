@@ -52,14 +52,22 @@ class SupervisorController extends Controller {
 		case 'usercenter':
 			$supervisors = Supervisor::whereHas('userSupervisorPermission', function ($q) use ($loggedUser) {
 				$q->where('user_supervisor_permission.user_id', $loggedUser->id);
-			})->get();
+			})
+			->whereHas('accountOwner',function($q){
+				$q->whereActive(1);
+			})
+			->get();
 			break;
 		case 'supervisor':
 			$supervisor = $loggedUser->supervisorAccount;
 			$usercenter = $supervisor->usercenter();
 			$supervisors = Supervisor::whereHas('userSupervisorPermission', function ($q) use ($usercenter) {
 				$q->where('user_supervisor_permission.user_id', $usercenter->id);
-			})->get();
+			})
+			->whereHas('accountOwner',function($q){
+				$q->whereActive(1);
+			})
+			->get();
 			break;
 		default:
 			$supervisors = [];
