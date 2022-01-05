@@ -42,8 +42,12 @@ class StatementController extends Controller {
 	
 
 	public function details($date) {
-		$statements = Statement::where('date', $date)->get();
-		return view('statement.details', compact('statements'));
+		$loggedUser = auth()->user();
+		if($loggedUser->userType=='usercenter'){
+			$statements = Statement::where(['date'=> $date,'user_id'=>$loggedUser->id])->get();
+			return view('statement.details', compact('statements'));			
+		}
+		abort(403);
 	}
 
 	public function search(Request $request) {

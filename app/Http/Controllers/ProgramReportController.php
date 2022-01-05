@@ -95,8 +95,9 @@ class ProgramReportController extends Controller
         if($loggedUser->userType=='teacher'){
             $teacher = $loggedUser->teacherAccount;
             $teacher->checkHisStudent($student);
-            ProgramReport::where(['student_id'=>$student->id,'id'=>$programReport->id])->update($data);
-            return redirect()->route('student.show',['student'=>$student->id])
+            $programReport->update($data);
+            // ProgramReport::where(['student_id'=>$student->id,'id'=>$programReport->id])->update($data);
+            return redirect()->route('student.show',['student'=>$student->id,'circle'=>$programReport->circle_id])
             ->with(['status'=>'success','message' => 'تم التعديل']);
          }
          abort(401);
